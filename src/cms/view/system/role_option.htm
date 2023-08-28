@@ -1,0 +1,47 @@
+<!--include::common/header-->
+<style>
+	.level1{width: 22%;}
+	.level2{width: 36%;}
+	.tpage table{width: 100%;}
+	.tpage td{padding: 0px;line-height: 30px;}
+	.tpage label{padding:2px 5px;}
+</style>
+<div class="pagetop">角色权限设置</div>
+<div class="opbox">
+	<form id="listform" method="post" action="{APP_PATH}system/role_option//*?echo $this->role_id ?*/">
+		<table class="tpage">
+			<thead><tr><th colspan="2">/*?echo $this->role_name;?*/</th></tr></thead>
+			<tbody>
+			<tr><td colspan="2" align="center">权限控制方式：<label><input name="opt_type" /*?if($this->opt_type==0)echo'checked';?*/ type="radio" value="0" />黑名单</label>
+				<label><input name="opt_type" type="radio" value="1" /*?if($this->opt_type==1)echo'checked';?*/ />白名单</label>
+			</td></tr>
+			/*?foreach($this->data['tree'][0] as $id){?*/
+			<tr><td class="level1"><label><input name="opt[]" /*?if(array_key_exists($id,$this->old_opt)) echo 'checked';?*/ type="checkbox" value="/*?echo $id.":".$this->data['options'][$id]['url'];?*/" />/*?
+			   echo $this->data['options'][$id]['name'];
+				
+				?*/</label></td><td>/*?
+					if(array_key_exists($id,$this->data['tree'])){
+						foreach($this->data['tree'][$id] as $id1){
+							?*/<table><tr><td class="level2"><label><input name="opt[]" /*?if(array_key_exists($id1,$this->old_opt))echo'checked';?*/ type="checkbox" value="/*?echo $id1.":".$this->data['options'][$id1]['url'];?*/" />/*?echo $this->data['options'][$id1]['name'];?*/</label></td><td class="level3">/*?
+							if(array_key_exists($id1,$this->data['tree'])){
+								foreach($this->data['tree'][$id1] as $id2){
+								?*/<label><input name="opt[]" /*?if(array_key_exists($id2,$this->old_opt))echo'checked';?*/ type="checkbox" value="/*?echo $id2.":".$this->data['options'][$id2]['url'];?*/" />/*?echo $this->data['options'][$id2]['name'];?*/</label>
+								/*?
+								}
+							}
+							?*/</td></tr></table>/*?
+						}
+					}
+				?*/</td></tr>
+			/*?}?*/
+			<tr><td class="level1"><label>其他权限</label></td><td><textarea class="long_txt" name="opt[]">/*?echo $this->old_opt[0]?*/</textarea></td></tr>
+			</tbody>
+			<tfoot><tr><td></td><td><button type="button" onclick="window.location.href='{APP_PATH}system/roles'">回返</button>
+				<button type="submit">提交</button></td></tr></tfoot>
+		</table>
+	</form>
+</div>
+<div class="opbox explain">
+	注：[其他权限]填写正则表达进url过虑
+</div>
+<!--include::common/footer-->

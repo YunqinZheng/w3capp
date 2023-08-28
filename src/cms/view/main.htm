@@ -1,0 +1,47 @@
+/*?
+$this->title="w3c应用后台管理";
+$otherhead='<link rel="stylesheet" href="{URL_ROOT}static/style/frame.css" type="text/css" />';
+?*/
+<!--include::common/header-->
+<div id="mainframe">
+		<div class="head">
+			<div class="logo"><img src="{URL_ROOT}static/image/logo.png" height="55" width="145" /></div>
+			<div class="menu">
+			<ul class="top-nav"><li v-for="(nav,i) in top_navs" :class="{on:i==top_nav_id}" @click="loadMenu(i)"><a>{{ nav.name }}</a></li></ul>
+			</div>
+			<div class="hr">
+			<div class="uinfo">
+			<dl class="nolink"><dt><span class="icon-uniE613"></span>/*?echo $this->user_name ?></dt></dl>
+			<dl><dt><a href="{URL_ROOT}" target="_blank"><i class="icon-uniE601"></i>网站首页</a></dt>
+				<dt><a href="javascript:personal_set();" ><i class="icon-uniE615"></i>设置</a></dt>
+				<dt><a @click.stop="reload"><i class="icon-uniE647"></i>刷新</a></dt>
+				<dt><a href="{APP_PATH}main/logout"><i class="icon-uniE616"></i>退出</a></dt>
+			</dl>
+			</div>
+			<div class="clear"></div>
+			</div>
+		</div>
+		<div class="frpage">
+			<div class="left_menu">
+				<ul><li v-for="(lm,ni) in left_menus">
+					<template v-if="lm.children.length"><img v-if="lm.is_open" width="18" @click="lm.is_open=false" height="18" src="{URL_ROOT}static/style/img/minus.gif"/><img v-else width="18" @click="lm.is_open=true" height="18" src="{URL_ROOT}static/style/img/plus.gif"/></template><a @click.stop="openMu(lm)">{{ lm.name }}</a>
+					<ul v-if="lm.is_open"><li v-for="(lm2,ni2) in lm.children" :class="{selected:left_nav_id==lm2.id}"><a @click.stop="openMu(lm2)">{{ lm2.name }}</a></li></ul>
+				</li></ul>
+			</div>
+			<div class="main_c">
+				<div class="links">
+				<div class="home-btn"><a @click.stop="indexPage"><img src="{URL_ROOT}static/image/home.png" width="18" height="18" /></a></div>
+				<div class="frame-list" v-if="names.length>1"><div :class="frn_status" @mouseleave="viewCache(0)" @mouseover="viewCache(1)"><h5><span class="icon-uniE608"></span></h5><p>缓存页面</p><ul><li v-for="(n,ni) in names"><a class="openfr" title="新页面打开" @click="openPage(ni)"><span class="icon-uniE60E"></span></a><a class="changefr" title="切换页面" @click="changeFrame(ni)">{{ n }}</a></li></ul></div></div>
+				</div>
+			<iframe v-for="frame in this.frame_list" :style="{display:open_frame==frame.id?'block':'none'}" :name="frame.id" :src="frame.url" frameborder="0"></iframe>
+			</div>
+		</div>
+</div>
+<script type="text/javascript">
+var default_v="<?php echo $this->default_url; ?>";
+var menus={"options":/*?echo Str::toJson($this->menus['options']);?*/,"tree":/*?echo Str::toJson($this->menus['tree']);?*/};
+</script>
+<script type="text/javascript" src="{URL_ROOT}static/script/vue.js"></script>
+<script type="text/javascript" src="{URL_ROOT}static/script/cms/iframe.js"></script>
+
+<!--include::common/footer-->

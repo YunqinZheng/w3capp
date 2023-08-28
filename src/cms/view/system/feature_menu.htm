@@ -1,0 +1,59 @@
+
+<!--include::common/header-->
+<link rel="stylesheet" href="{URL_ROOT}static/style/block.css" type="text/css"/>
+<script async="async">request_js("block_lib",function(){
+		editv.init();
+		editv.add_event("add","{APP_PATH}system/feature_add/$1",null,null);
+		editv.add_event("edit","{APP_PATH}system/feature_edit/$1/$2",null,null);
+		editv.add_event("del","{APP_PATH}system/feature_del/$1",null,null);
+		editv.add_event("submit","{APP_PATH}system/feature_post",null,"getform");
+		
+});</script>
+<div class="pagetop">系统功能菜单设置</div>
+<div class="opbox-top"><button type="button" title="添加顶部链接" onclick="editv.e.add('0')">添加菜单</button></div>
+	<div class="opbox">
+		<form method="post" name='getform' id="getform" target="ajaxf">
+			<input type="hidden" name="action" value="pmenu"/>
+			<table class="tpage" cellpadding="0" cellspacing="0"><thead>
+				<tr><td>名称</td><td>链接</td><td>排序</td><td>操作</td></tr>
+			</thead>
+			<tbody>/*?
+				foreach ($tree_menu as $key => $value) {
+					
+					if("1"==$value['id']){
+						echo '<tr><td>系统设置<input name="name'.$value['id'].'" value="'.$value['name'].'" type="hidden"/></td>
+						<td><input name="url'.$value['id'].'" value="" type="hidden"/></td>
+						<td class="vct"><input name="orderid'.$value['id'].'" value="'.$value['orderid'].'" type="text"  class="mini_txt"/></td>
+						<td class="vct2"><a title="添加子项" href="javascript:editv.e.add(1);">添加</a>
+							&nbsp;&nbsp;&nbsp;
+							<input name="id[]" type="hidden" value="'.$value['id'].'"/>
+						</td></tr>';
+					}else if($value['deep'] <= 1){
+						
+						echo '<tr><td>'.str_repeat("&nbsp;-",$value['deep']*2).'<input name="name'.$value['id'].'" value="'.$value['name'].'" type="text" class="short_txt"/></td>
+						<td><input name="url'.$value['id'].'" value="'.$value['url'].'" type="text" class="long_txt"/></td>
+						<td class="vct"><input name="orderid'.$value['id'].'" value="'.$value['orderid'].'" type="text"  class="mini_txt"/></td>
+						<td class="vct2">';
+						echo '<a title="添加子项" href="javascript:editv.e.add(\''.$value['id'].'\');">添加</a>';
+						if(!$value['has_child'])
+							echo '<a title="删除项" href="javascript:if(confirm(\'确定删除？\'))editv.e.del(\''.$value['id'].'\');">删除</a>';
+						echo '<a href="javascript:editv.e.edit(\''.$value['id'].'\',\''.$value['pid'].'\');" title="编辑修改">编辑</a><input name="id[]" type="hidden" value="'.$value['id'].'"/></td></tr>';
+					}else{
+						echo '<tr><td>'.str_repeat("&nbsp;-",$value['deep']*2).'<input name="name'.$value['id'].'" value="'.$value['name'].'" type="text" class="short_txt"/></td>
+						<td><input name="url'.$value['id'].'" value="'.$value['url'].'" type="text" class="long_txt"/></td>
+						<td class="vct"><input name="orderid'.$value['id'].'" value="'.$value['orderid'].'" type="text"  class="mini_txt"/></td>
+						<td class="vct2">';
+						echo '<a title="删除项" href="javascript:if(confirm(\'确定删除？\'))editv.e.del(\''.$value['id'].'\');">删除</a>';
+						echo '<a href="javascript:editv.e.edit(\''.$value['id'].'\',\''.$value['pid'].'\');" title="编辑修改">编辑</a><input name="id[]" type="hidden" value="'.$value['id'].'"/></td></tr>';
+					}
+					
+				}
+				?*/
+			</tbody>
+			</table>
+			<div class="ctpd"><button type="button" title="添加顶部链接" onclick="editv.e.add('0')">添加菜单</button>
+				<button type="button" onclick="editv.e.submit()">提交更改</button></div>
+		</form>
+	</div>
+	
+<!--include::common/footer-->

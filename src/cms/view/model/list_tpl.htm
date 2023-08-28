@@ -1,0 +1,72 @@
+<script>
+    function ct_add(){
+        window.location.href=APP_PATH+'content/add/?{$ctiden}';
+    }
+    function ct_delete(){
+        if(confirm("你确定彻底删除？删除后将不能恢复")){
+            var f=EId("list_form");
+            f.action=APP_PATH+"content/del/?{$ctiden}";
+            f.submit();
+        }
+
+    }
+    function mark_deleted(){
+        var f=EId("list_form");
+        f.action=APP_PATH+"content/deprecated/?{$ctiden}";
+        f.submit();
+    }
+    function page_goto(page) {
+        $("#search_form input[name=page]").val(page);
+        $("#search_form").submit();
+    }
+</script>
+<div class="pagetop">?{$content_type}-内容管理</div>
+<div class="opbox-top"><form id="search_form" method="post" action="?{$path}content/index/?{$ctiden}">
+    <input type="hidden" name="page" value="\?{$page}"/>
+    <input type="text" name="search" value="\?{$_POST['search']}"  placeholder="关键字"/>
+    <button type="button" onclick="page_goto(1)">查询</button>
+    <button type="button" onclick="ct_add()">发布</button>
+    <button type="button" onclick="ct_delete()" >彻底删除</button>
+    <button type="button" onclick="mark_deleted()" >移到回收站</button></form>
+</div>
+<div class="opbox">
+    <form method="post" action="" id="list_form">
+        <!--要初始化请修改init_hash-->
+        ?{$static_start}
+
+        <!--init--
+            {
+            "init_hash":"w3capp",
+            "content_record":"?{$ctiden}",
+            }
+        --init-->
+        <table class="tpage">
+            <thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox" /></th>
+                <th style="width: 40px;">id</th>
+                <!--?$colspan=count($list_column)+3;$row_tds='';?-->
+                <!--{loop $list_column($name,$val)}-->
+                <!--?$row_tds.='<td>\?{$val[\''.$name.'\']}</td>';?-->
+                <th>?{$val['col_name']}</th>
+                <!--{/loop}-->
+                <th style="width: 65px;">操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            ?{$looplist}
+            <tr><td class="text-center"><input name="rid[]" type="checkbox" value="\?{$val['id']}"/></td>
+                <td>\?{$val['id']}</td>
+                ?{$row_tds}
+                <td><a href="?{$path}content/edit/?{$ctiden}/\?{$val['id']}">编辑</a>
+                    <a href="?{$path}content/view/?{$ctiden}/\?{$val['id']}" target="_blank">查看</a></td>
+            </tr>
+            ?{$loopend}
+            </tbody>
+            <tfoot>
+            <tr><td colspan="?{$colspan}">?{$page_foot}</td></tr>
+            </tfoot>
+        </table>
+        ?{$static_end}
+
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<style>
+    #img_list{min-height: 200px}
+    #img_list li{float:left;}
+    .img_view{width: 160px;height: 185px;overflow: hidden;margin:10px;text-align: center;position: relative;background-color: #fff;}
+    .img_view img{height: 160px;}
+    #img_list li:hover .img_view{overflow: visible; z-index: 1;}
+    .selectbtn{display:none;}
+    .fupload{width: 60%}
+    img.sel{border:#0080C0 2px solid;}
+    #upload_form{display:none;}
+    #img_list{width: 900px;}
+</style>
+<form method="post" id="upload_form" target="ajaxf" action="{APP_PATH}cms/explorer/addFiles" enctype="multipart/form-data"><input type="hidden" name="view_reload" value="1"/><input type="file" name="files[]" multiple="true" /></form>
+<div class="opbox">
+    <ul class="cl" id="img_list" main_dir="?{$main_dir}"></ul>
+    <div class="end_button cl">
+        <div class="Rft"><div id="uploadimg"></div></div>
+        <div class="more_view"><a class="btn btn-default">加载更多</a></div>
+        <!--button type="button" onclick="editv.close()">关闭</button-->
+    </div>
+</div>
+<script type="text/javascript" src="{URL_ROOT}static/script/cms/img_select.js"></script>

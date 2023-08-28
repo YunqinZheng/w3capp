@@ -1,0 +1,142 @@
+<!--include::common/header-->
+<script src="{URL_ROOT}static/script/html5uploader.js" type="text/javascript"></script>
+<style>
+	#upload_form input{display:none;}
+	.dirs{float: left;background: #fff;}
+	.dirs li{line-height: 30px;width: 170px;padding-left: 10px;}
+	.dirs li span{display: inline-block;}
+	.dirs li .icon{width: 10px;height: 10px;border-radius: 5px;background: #003366;visibility: hidden;}
+	.dirs .active{color: #003366;}
+	.dirs li .text{cursor: pointer;padding-left: 10px;}
+	.dirs li.active .icon{visibility: visible;}
+	.dirs li.dir_split{line-height: 24px;border-bottom:1px solid #ddd;border-top:1px solid #ddd;}
+	.offset_l{margin-left: 200px;}
+</style>
+<div class="pagetop">素材文件管理</div>
+	<form method="get" id="page_form">
+		<div class="hide">
+			{GV_INPUT}
+			<input name="theme_id" value="?{$theme_id}" type="hidden"/>
+			<input name="sub_path" type="hidden" value="?{$sub_path}"/>
+			<div id="replacefile"></div>
+		</div>
+	<div class="opbox-top cl">
+		<div class="Lft"><input class="offset_l long_txt" type="text" placeholder="输入文件名或url地址" value="?{$search_file}" name="search_file"/><button type="button" class="search_btn">查找</button></div>
+		<div class="Lft left-offset"><div id="upload_form"></div>
+		</div>
+		<div class="Lft"><button class="btn-del" type="button" onclick="delete_file()">删除</button>
+		</div>
+	</div>
+	</form>
+		<form class="opbox tab_aw" id="list_form">
+			<div class="dirs">
+				<ul>
+					<li class="" dir=""><span class="icon"></span><span class="text">上传目录</span></li>
+					<li class="dir_split">主题目录：</li>
+					<!--? $theme_path='';?-->
+					<!--{loop $themes($t,$theme)}-->
+					<!--?
+                    $mt_dir="data/theme/".$theme['install_dir'].'/';
+                    if($theme_id==$theme['id']){
+                    	$main_dir=$mt_dir;
+                        $theme_path=W3CA_PATH.$mt_dir.$sub_path;
+                    }
+                    ?-->
+					<li dir="?{$theme['id']}" main_dir="?{$mt_dir}"><span class="icon"></span><span class="text">?{$theme['name']}</span></li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<table class="tpage">
+				<thead>
+				<!--?if($page_d==''){?-->
+				<tr><th width="620">文件</th>
+					<th width="90">操作</th>
+					<th>大小</th>
+					<th width="200">创建时间</th>
+				</tr>
+				<!--?}else{?-->
+				<tr><th width="400">服务端保存地址</th>
+					<th>上传文件名</th>
+					<th width="90">操作</th>
+					<th>类型</th>
+					<th>大小</th>
+					<th width="200">创建时间</th>
+				</tr>
+				<!--?}?-->
+				</thead>
+				<tbody>
+				<?php
+				if($theme_path){
+					$dh = opendir($theme_path);
+					while ($file=readdir($dh)){
+						if($file=="."||$file==".."||$file=="/")continue;
+						$fullname=$theme_path.$file;
+						if(filetype($fullname)=="file"){
+							$url='{URL_ROOT}'.$main_dir.$sub_path.$file;
+							$url_u='{<span s="">THEME_PATH</span>}'.$sub_path.$file;
+							$f_size=round(filesize($fullname)/1024).'k';
+							$f_time=date('Y-m-d H:i',filemtime($fullname));
+							$type='file';
+						}else{
+				            $f_size='';
+							$f_time='';
+							$url='';
+							$url_u='{<span s="">THEME_PATH</span>}/'.$sub_path.$file;
+							$type='dir';
+						}
+						?>
+				<tr ft="?{$type}"><td><label class="file_path"><?php if($type=="dir"){ ?>
+					<a href="javascript:;" title="点击打开子目录" class="fop" ec="sub_dir" dir="?{$file}">?{$url_u}</a>
+					<?php }else{ ?><input name="rid[]" type="checkbox" value="?{$file}" />?{html$url_u}</label><?php } ?></td>
+					<td>
+					<?php if($type=="file"){ ?>
+						<?php if(strpos($file,'.php')===false){ ?>
+						<a target="_blank" href="?{$url}" class="pre_view"><span class="icon-uniE643"></span><span class="file_v">查看</span></a>
+						<a target="javascript:;" class="fop" ec="replace" _r="?{$file}"><span class="icon-uniE64E"></span><span class="file_r">替换</span></a>
+						<?php }?>
+					<?php }?>
+					</td>
+					<td>?{$f_size}</td>
+					<td>?{$f_time}</td>
+				</tr>
+				<!--?
+					}
+					closedir($dh);
+				}else foreach ($page_d as $value) {
+					$url='{URL_ROOT}'.$main_dir.$value['file'];
+					echo '<tr><td><label class="file_path"><input name="rid[]" type="checkbox" value="'.$value['id'].'" />'.$url.'</label></td>
+					<td>'.$value['bz'].'</td>
+				    <td><a target="_blank" href="'.$url.'" class="pre_view"><span class="icon-uniE643"></span>查看</a>
+				    <a target="javascript:;" class="fop" ec="replace" _r="'.$value['file'].'"><span class="icon-uniE64E"></span>替换</a></td>
+					<td>'.$value['classify'].'</td>
+					<td>'.round($value['size']/1024).'k</td>
+					<td>'.date('Y-m-d H:i',$value['dateline']).'</td>
+					</tr>';
+				}
+				?-->
+				</tbody>
+			</table>
+			<div class="page_link left-offset"><!--?
+				if($page_d==''){
+					$sub_dirs=explode("/",$sub_path);
+					echo '当前目录：{<a class="fop" ec="todir" s="">THEME_PATH</a>}';
+					if(count($sub_dirs)>1){
+						$s='-&gt;';
+						foreach($sub_dirs as $sd){
+						if($sd){
+							$s.=$sd."/";
+							echo '<a class="fop" ec="todir" s="'.$s.'">'.$sd.'</a>-&gt;';
+						}
+						}
+					}
+					echo '<br/>{<span>THEME_PATH</span>}为界面主题安装目录：'.$main_dir;
+				}else{
+					self::pageObjLink($page_d,"{APP_PATH}cms/explorer/index/[page]");
+				}
+			?--></div>
+			<div class="opbox">
+				注：文件替换后需要浏览器清除缓存后才能看到替换内容
+			</div>
+		</form>
+<script type="text/javascript" src="{URL_ROOT}static/script/cms/explorer_index.js"></script>
+<!--include::common/footer-->

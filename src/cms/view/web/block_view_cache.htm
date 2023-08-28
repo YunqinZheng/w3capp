@@ -1,0 +1,16 @@
+<?php use w3c\helper\Str;?>
+<form method="post" action="{APP_PATH}block/save_cache//*?echo $this->block_id?*/">
+<div class="cl"><span class="labt">模块参数：</span><p><input value="/*?echo $this->args?*/" id="args_val"/>&nbsp;
+<button type="button" onclick="getCacheContent()">刷新</button></p></div>
+<div class="cl"><span class="labt">缓存内容：</span></div>
+<div class="htmlp"><textarea onfocus="if(ct_editor)CKEDITOR.remove(ct_editor);ct_editor=new CKEDITOR.replace(this.id)" id="catch_content" name="cache_content">/*?echo Str::htmlchars($this->cache_content)?*/</textarea>
+</div><script>
+var ct_editor;
+function getCacheContent(){
+	$.get('{APP_PATH}api/data/html//*?echo $this->block_mark?*//'+encodeURIComponent($('#args_val').val()),function(content){
+		ct_editor.html(content);
+	});
+}
+</script>
+<div class="endbts"><button type="submit">提交保存</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>

@@ -1,0 +1,132 @@
+<!--include::common/header-->
+<script>function block_change_type(new_type,bid){
+	if(new_type)
+		editv.e.changeB(bid,new_type);
+	else{
+		alert("请指定模块类型");
+	}
+}</script>
+<style>
+	.thd_4,.thd_5{width:200px;}
+</style><script src="{URL_ROOT}static/ckeditor/ckeditor.js" type="text/javascript" ></script>
+		<script src="{URL_ROOT}static/ckeditor/init_function.js" type="text/javascript"></script>
+		<div class="pagetop">页面模块</div>
+		<div class="opbox-top"><form method="post" id="topform">
+			<table cellpadding="0" cellspacing="0"><tr><td>
+			<select name="blocktype" title="模块类型">
+			/*?
+			foreach($this->block_config as $tk=>$type){
+			echo '<option value="'.$tk.'">'.$type['name'].'</option>';
+			}
+			?*/
+			</select>
+			<button type="button" ec="add">添加</button>
+			</td>
+			<td class="short_txt"></td>
+			<td><button type="button" ec="type_load">刷新类型</button>
+			<button type="button" ec="del" class="btn-del">删除</button>
+				<button type="button" ec="export">导出</button>
+				<button type="button" ec="import">导入</button></td>
+			</tr></table>
+			</form>
+		</div>
+		<div class="opbox"><form method="post" id="ajxform">
+		<table class="tpage">
+		<thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox"></th><th class="thd_1">调用标记</th><th class="thd_2">说明</th><th class="thd_1">类型</th><th class="thd_3">更新时间</th><th class="thd_4">操作</th></tr></thead>
+		<tbody>
+		<?php foreach($this->data as $val){?>
+		<tr><td class="text-center"><input name="rid[]" type="checkbox" value="<?php echo $val['id'];?>"></td><td><?php echo $val['mark'];?></td><td><?php echo $val['remarks'];?></td>
+		<td title="/*?echo $val['type']?*/">/*?echo $this->block_config[$val['type']]['name']?*/</td>
+		<td><?php if($val['update_time']==-1){echo '手动更新';}else if($val['update_time']==0){ echo '动态无缓存';}else{ echo $val['update_time'].'分种';}?></td><td>
+		<?php if($this->block_config[$val['type']]['has_cache']){ ?>
+			<a href="javascript:editv.open_url('{APP_PATH}cms/block/view_cache/<?php echo $val['id'];?>');">缓存</a>
+		<?php } ?>
+		<?php if($this->block_config[$val['type']]['has_tpl']){ ?>
+			<a href="javascript:editv.open_url('{APP_PATH}cms/block/view_tpl/<?php echo $val['id'];?>');">模板</a>
+		<?php } ?>
+		<?php if($this->block_config[$val['type']]['load_data']){ ?>
+			<a href="{APP_PATH}cms/block/view_data_list/<?php echo $val['id'];?>" target="_blank">查看</a>
+		<?php } ?>
+			<a href="javascript:editv.e.editB(?{$val['id']});">属性</a>
+				<a href="javascript:editv.e.initEdit(?{$val['id']});">初始设置</a>
+				<a href="javascript:editv.e.copyBlock(?{$val['id']});">复制</a>
+		</td></tr>
+		<?php }?>
+		</tbody>
+		<tfoot>
+			<tr><td colspan="6"><?php self::pageFoot($this->data->page_index,$this->data->page_size,$this->data->amount,"{APP_PATH}block/index/[page]"); ?></td></tr>
+		</tfoot>
+		</table>
+		<div id="bg"></div>
+		<div id="f_input"></div>
+		</form>
+		<form id="f_exp" target="_blank"></form>
+		</div>
+<div class="hide">
+	<div class="import_view">
+		<form enctype="multipart/form-data" action="{APP_PATH}cms/block/import" class="opbox" method="post"><input type="hidden" value="" name="page_file_var"/>
+			<div><input type="file" name="file"/></div><div><label><input type="checkbox" value="1" name="ignore_exist"/>忽略已经存的模块</label>
+			</div><div class="btn_bottom"><button type="submit">导入</button></div></form>
+	</div>
+</div>
+<script type="text/javascript">
+	if(parent!=this&&parent.request_js){
+        parent.request_js("{URL_ROOT}static/ckeditor/ckeditor.js",null,1);
+        parent.request_js("{URL_ROOT}static/ckeditor/init_function.js",null,1);
+	}
+
+function init_columns(){
+
+}
+window.onload=function(){
+	request_js(["block_lib","form"],function(){
+		editv.init();
+		editv.add_event('changeB',APP_PATH+'cms/block/prototype/$1/$2',null,null);
+		editv.add_event('delB',APP_PATH+'cms/block/del',null,'ajxform');
+		editv.add_event('initEdit',APP_PATH+'cms/block/init/$1',null);
+		editv.block_api={"file_var":"","addform":"topform","edit_ctrl_url":APP_PATH+"block/"};
+		editv.blockEvent();
+		form_input.Hold("#topform").ec("button",{"add":function(){
+				editv.e.addB();
+			},"del":function(){
+				if(confirm('确定删除？')){
+					editv.e.delB();
+				}
+			},"type_load":function(){
+				msg_box.load_start();
+				$.ajax({type:'get',url:APP_PATH+'cms/block/refresh/1',success:function(res){
+						msg_box.load_end();
+						var sel=$("#topform select")[0];
+						sel.innerHTML="";
+						var tjs=res.data;
+						for(var type in tjs){
+							sel.options.add(new Option(tjs[type].name,type));
+						}
+					}});
+			},"export":function(){
+				var bids=[];
+				$("tbody input[type=checkbox]").each(function(){
+					if(this.checked){
+						bids.push('id_list[]');
+						bids.push(this.value);
+					}
+				});
+				if(bids.length){
+					editv.open_url('{APP_PATH}cms/block/export',bids,$("#f_exp")[0]);
+				}else{
+					msg_box.create_short("请选择要导出的模块");
+				}
+
+			},"import":function(){
+				var m=editv.modal("模块导入",$(".import_view"));
+				editv.modalOn(m,"submited",function(html){
+					if(html.indexOf('"error":0')>0){
+						editv.cancelModal(m);
+					}
+					return true;
+				});
+			}});
+	},1);
+}
+</script>
+<!--include::common/footer-->

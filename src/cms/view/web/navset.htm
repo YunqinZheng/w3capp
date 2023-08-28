@@ -1,0 +1,164 @@
+<!--include::common/header-->
+<style>
+.long_txt{width: 98%;}
+.mini_txt input{width:85%;}
+th.mini_txt{width: 45px;}
+.left-mn{margin-right: 10px;margin-left: 0px;}
+.tab_aw h5{line-height: 30px;font-size: 15px;}
+.tab_aw .Lft{background: #fff;padding: 10px;}
+.auto_edit{line-height: 30px;}
+.auto_edit>div{cursor: pointer;}
+.auto_edit span.vi{width: 10px;height: 10px;border-radius: 5px;background: #003366;visibility: hidden;}
+.auto_edit .active{color: #003366;}
+.auto_edit span{display: inline-block;}
+.auto_edit span.text{padding-left: 5px;}
+.auto_edit span.edit,.auto_edit span.del{visibility: hidden;}
+.auto_edit span.save{display: none;}
+.auto_edit .active span.vi,.auto_edit .active:hover  span.edit,.auto_edit .active:hover span.del{visibility: visible;}
+</style>
+<div class="pagetop">导航设置</div>
+<div class="opbox tab_aw">
+	<div class="Lft">
+		<h5>导航分类</h5>
+		<ul class="left-mn">
+			<li class="auto_edit"><div parent="" class="active"><span class="vi"></span><span class="text">默认分类</span></div>
+				/*?foreach($this->nav_type as $key=> $nav){?*/
+				<div parent="?{$nav['id']}" k="?{$key}" n="?{$nav['name']}"><span class="vi"></span><span class="text">?{$nav['name']}（?{$key}）</span>
+				<span class="edit"><i class="icon-uniE65C"></i>编辑</span>
+					<span class="save"><i class="icon-uniE636"></i>保存</span>
+				<span class="del"><i class="icon-uniE611"></i>删除</span></div>
+				/*?}?*/
+			</li>
+			<li class="new_nav">
+				<input type="text" placeholder="新建分类" class="short_txt" />
+				<button type="button" onclick="save_type()">保存</button>
+			</li>
+		</ul>
+	</div>
+<form method="post" id="form">
+	<input type="hidden" name="parent_id" value=""/>
+	<table class="tpage"><thead><tr><th class="short_txt">标记</th>
+		<th class="mini_txt">排序</th>
+		<th style="width: 110px;">导航</th>
+		<th>链接</th><th class="short_txt"></th>
+	</tr></thead>
+		<tbody>
+			<tr class="n_r"><td align="center">新添</td>
+				<td class="rowi"></td>
+				<td><input name="name_new" value="" placeholder="自定义导航" style="width:100px" /></td>
+				<td><input name="url_new" value="" placeholder="导航链接" class="long_txt" /></td>
+				<td><input name="display_new" value="1" type="hidden" /></td>
+			</tr>
+		</tbody>
+		<tfoot><tr><td colspan="5">
+			<input name="allkeys" id="allkeys" type="hidden" />
+			<button type="button" id="save">保存</button></td></tr></tfoot>
+	</table>
+</form>
+</div>
+<script type="text/javascript">
+	function Nav(){
+
+	}
+	Nav.prototype={load:function(pid){
+		var n=this;
+		$.get("{APP_PATH}site/navset{?||&}parent_id="+pid,function(res){
+			n.clear();
+			for(var i in res.data){
+				n.append(i,res.data[i]);
+			}
+			$("#form tbody tr:last-child .rowi").html(n.rowi);
+		});
+		},rowi:0,clear:function(){
+			this.rowi=0;
+			$("#form tbody tr").each(function(){
+				if(this.className!='n_r'){
+					$(this).remove();
+				}
+			});
+		},append:function(key,nav){
+			var row=$('<tr><td>'+key+'</td>' +
+					'<td class="mini_txt"><input key="'+key+'" class="ordids" name="ordid_'+key+'" value="'+this.rowi+++'"/></td>' +
+					'<td><input style="width:100px" name="name_'+key+'" value="'+nav['name']+'" /></td>' +
+					'<td><input class="long_txt" name="url_'+key+'" value="'+nav['url']+'" /></td>' +
+					'<td><label><input name="display_'+key+'" value="1" type="checkbox" '+ (nav['display']?"checked":"")+' />显示</label>' +
+					(key[0]=='N'?'<label><input name="del_'+key+'" value="1" type="checkbox"  />删除</label>':'') +
+					'</td></tr>');
+			row.insertBefore($("#form tbody tr:last-child"));
+		}};
+	var nv=new Nav();
+	nv.load("");
+	$(".auto_edit>div span").click(function(){
+	    if(this.className=="text"){
+            if(this.parentNode.className!='active'){
+                $("#form input[name=parent_id]").val(this.parentNode.getAttribute("parent"));
+                nv.load(this.parentNode.getAttribute("parent"));
+                $(this.parentNode).siblings(".active").attr("class","");
+                this.parentNode.className='active';
+            }
+		}else if(this.className=='edit'){
+	        this.style.display='none';
+            $(this).siblings(".del").hide();
+            $(this).siblings(".save").show();
+            var nav=$(this.parentNode);
+            $(this).siblings(".text").html('<input name="n" value="'+nav.attr("n")+'" class="short_txt"/>');
+		}else if(this.className=='save'){
+            this.style.display='none';
+            $(this).siblings(".edit").show();
+            $(this).siblings(".del").show();
+            var nav=$(this.parentNode);
+            var data={"name":nav.find("input[name=n]").val(),"parent_id":"00","id":nav.attr("k"),"op":"edit"};
+            $.post('{APP_PATH}site/navset',data,function(){
+                nav.find(".text").html(data.name+'（'+nav.attr("k")+'）');
+			});
+
+        }else if(this.className=='del'){
+            var nav=$(this.parentNode);
+            var data={"parent_id":'00',"id":nav.attr("k"),"op":"del"};
+            if(confirm("确定删除分类？对应导航也会被删除"))
+            $.post('{APP_PATH}site/navset',data,function(){
+                $(".auto_edit>div span.text").trigger("click");
+                nav.remove();
+			});
+        }
+
+	});
+	function save_type(){
+        var data={"name":$(".auto_edit .new_nav input").val(),"parent_id":'00',"id":'',"url":"","display":1,"op":"add"};
+        $.post('{APP_PATH}site/navset',data,function(){
+           window.location.reload();
+        });
+	}
+	EId("save").onclick=function(){
+		var allks=$(".ordids");
+		var allkvi=EId("allkeys");
+		var _list=[];
+		if(allks)
+		for(var i=0;i<allks.length;i++){
+			var min=allks[i];
+			var flist=[];
+			if(_list.length==0){
+				flist=allks;
+			}else{
+				flist=_list;
+				min=flist[0];
+				_list=[];
+			}
+			var deli=0;
+			for(var i1=0;i1<flist.length;i1++){
+				if(min.value*1>flist[i1].value*1){
+					deli=i1;
+					min=flist[i1];
+				}
+			}
+			for(var i1=0;i1<flist.length;i1++){
+				if(deli!=i1){
+					_list[_list.length]=flist[i1];
+				}
+			}
+			allkvi.value=allkvi.value==""?min.getAttribute("key"):allkvi.value+","+min.getAttribute("key")
+		}
+		EId("form").submit();
+	}
+</script>
+<!--include::common/footer-->

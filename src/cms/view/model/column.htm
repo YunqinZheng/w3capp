@@ -1,0 +1,38 @@
+<?php use w3c\helper\Str;?>
+<div class="opbox">
+	<form method="post" action="{APP_PATH}model/?{$column_value['id']?"column_edit":"column_add"}/?{$iden}">
+	<div class="infrom"><input name="id" type="hidden" value="/*?echo $column_value['id']?*/">
+	<div class="text_t i_zh_name"><span class="labt">字段名称：</span>
+			<p class="inct"><input type="text" name="zh_name" value="/*?echo $column_value['zh_name']?*/"></p></div>
+		<div class="text_t i_col_name"><span class="labt">表字段(英文)：</span>
+			<p class="inct"><input type="hidden" name="old_column" value="/*?echo $column_value['col_name']?*/">
+				<input type="text" name="col_name" value="/*?echo $column_value['col_name']?*/"></p></div>
+		<div class="text_t i_order"><span class="labt">会员可用：</span>
+			<p class="inct"><label><input type="radio" name="member_able" /*?if($column_value['member_able'])echo 'checked';?*/ value="1"/>可用</label>
+				<label><input type="radio" name="member_able" /*?if(!$column_value['member_able'])echo 'checked';?*/ value="0"/>不可用</label>
+			</p></div>
+		<div class="text_t i_order"><span class="labt">排序：</span>
+			<p class="inct"><input type="text" class="short_txt" name="orderi" value="/*?echo intval($column_value['orderi'])?*/"></p></div>
+		<div class="datat_t i_data_type"><span class="labt">数据类型：</span>
+			<p class="inct"><select id="datat" class="w_auto" value="/*?echo $column_value['data_type']?*/"><option value="varchar(100)">字符(100)</option><option value="varchar(2000)">字符(2000)</option><option value="text">超长文本</option><option value="int">整数</option><option value="float">小数</option><option value="-1">自定义</option></select>
+		<span><input class="short_txt" type="text" style="display:none;" id="datat_1" value="/*?echo $column_value['data_type']?*/"></span>
+		<input name="data_type" id="datat_2" type="hidden" value="/*?echo $column_value['data_type']?$column_value['data_type']:'varchar(100)'?*/"></p></div>
+		<div class="formt_t i_form_input"><span class="labt">表单类型：</span>
+			<p class="inct"><select id="formt" value="/*?echo $column_value['form_input']?*/"><option value="text">文本(text)</option><option value="textarea">多行文本(textarea)</option><option value="hidden">隐藏文本(hidden)</option><option value="radio">单选(radio)</option><option value="checkbox">多选(checkbox)</option>
+				<option value="select">下拉(select)</option>
+				<option value="mselect">下拉多选(select)</option>
+				<option value="html">富文本(编辑器)</option><option value="date">日历</option><option value="datetime">日历时间</option><option value="diycode">自定脚本</option><option value="picupload">图片上传</option><option value="file">文件上传</option><option value="channel">栏目选择</option><option value="-1">自定义</option></select>
+		<span><input class="short_txt" type="text" style="display:none;" id="formt_1" value="/*?echo $column_value['form_input']?*/"></span>
+		<input id="formt_2" name="form_input" type="hidden" value="/*?echo $column_value['form_input']?$column_value['form_input']:'text'?*/"></p></div>
+		<div class="textarea_t i_def_value"><span class="labt">值：</span>
+			<p class="inct"><textarea name="def_value">/*?echo Str::htmlchars($column_value['def_value'])?*/</textarea></p></div>
+		<div><span class="labt">&nbsp;</span><p class="inct"><label><input type="checkbox" name="table_alter" value="1" checked="checked" />表进行更改</label></p></div>
+		<input name="ctiden" type="hidden" value="/*?echo $this->iden?*/">
+		<div class="end_button"><button type="button" onclick="editv.close()">取消</button>
+			<button type="submit">提交</button></div>
+		</div>
+		
+		</form>
+		</div>
+<script>editv.e.diy_select(EId("formt"),EId("formt_1"),EId("formt_2"));editv.e.diy_select(EId("datat"),EId("datat_1"),EId("datat_2"));
+</script>

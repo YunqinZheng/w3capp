@@ -1,0 +1,23 @@
+<!--include::common/header-->
+<div class="pagetop">页面模块</div>
+<div class="opbox-top">
+	<form method="post" action="{APP_PATH}block/editBlock/">
+		<input type="hidden" value="/*?echo $block['id']?*/" name="id" />
+		<div class="infrom">
+			<div class="text_t i_type_name"><span class="labt">调用标记：</span><p><input type="text" readonly name="mark" value="/*?echo $block['mark']?*/"></p></div>
+			<div class="text_t i_type_name"><span class="labt">type：</span><p><input name="type"  type="text" value="/*?echo $block['type']?*/"/></p></div>
+			<div class="text_t i_type_name"><span class="labt">param_str：</span><p><textarea name="param_str" class="long_txt">/*?echo Str::htmlchars($block['param_str'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">extend_arg：</span><p><textarea name="init_config" class="long_txt">/*?echo Str::htmlchars($block['init_config'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">pro_value：</span><p><textarea name="pro_value" class="long_txt">/*?echo Str::htmlchars($block['pro_value'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">data_desc：</span><p><textarea name="data_desc" class="long_txt">/*?echo Str::htmlchars($block['data_desc'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">select_arg：</span><p><textarea name="select_arg" class="long_txt">/*?echo Str::htmlchars($block['select_arg'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">context_edit：</span><p><textarea name="context_edit" class="long_txt">/*?echo Str::htmlchars($block['context_edit'])?*/</textarea></p></div>
+			<div class="text_t i_type_name"><span class="labt">interface_arg：</span><p><textarea name="interface_arg" class="long_txt">/*?echo Str::htmlchars($block['interface_arg'])?*/</textarea></p></div>
+		</div>
+		<div class="inct left-offset">
+			<button type="button" onclick="window.location.href='{APP_PATH}block/'">返回</button>
+			<button type="submit">提交</button>
+		</div>
+	</form>
+</div>
+<!--include::common/footer-->

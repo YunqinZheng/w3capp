@@ -1,0 +1,32 @@
+<form method="post" action="/*?echo $this->url?*/" target="ajaxf">
+<input type="hidden" name="old_tpl" value="?{$old_tpl}"/>
+<div id="prof_field" class="insp"></div>
+	<script>
+		request_js("form",function(){
+		    var init_config=?{$init_config};
+		    var block_info=?{json_encode($block_info)};
+		    var fields2={};
+		    var tplist=?{$tplist};
+		    for(var k in init_config){
+		        if(init_config[k]&&block_info[k]!=undefined){
+					init_config[k]['def_value']=block_info[k];
+                }
+                if(k=="tpl"){
+					init_config[k]['value_list']=tplist?tplist:{};
+                }
+                if(!init_config[k]['data_row'])fields2[k]=init_config[k];
+            }
+		    if(fields2['type']){
+		        var btype=?{$block_type};
+		        var btype2={};
+		        for(k in btype){
+                    btype2[k]=btype[k]['name'];
+                }
+                fields2['type']['value_list']=btype2;
+			}
+            form_input.create_form(fields2,$("#prof_field"));
+            editv.viewResize(editv.view);
+		},1);
+	</script>
+<div class="endbts"><button type="submit">提交保存</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>

@@ -1,0 +1,21 @@
+<!--include::common/header-->
+<div class="pagetop">邮箱设置</div>
+<div class="opbox">
+	<form id="form" method="post">
+	<div class="opbox form-set ddd-3-7"><dl><dt class="text-r">SMTP服务:</dt><dd><input name="smtp" class="long_txt" value="/*?echo $this->info['smtp'] ?*/" /></dd></dl>
+		<dl><dt class="text-r">端口:</dt><dd><input name="smtp_port" class="long_txt" value="/*?echo $this->info['smtp_port'] ?*/"  /></dd></dl>
+		<dl><dt class="text-r">用户:</dt><dd><input name="smtp_user" class="long_txt" value="/*?echo $this->info['smtp_user'] ?*/"  /></dd></dl>
+		<dl><dt class="text-r">密码:</dt><dd><input name="smtp_pwd" class="long_txt" value="/*?echo $this->info['smtp_pwd'] ?*/"  /></dd></dl>
+		<dl><dd><button type="submit">提交</button></dd></dl>
+	</div>
+	</form>
+	<form id="form2" method="post" action="{APP_PATH}Email/post_test">
+		<div class="opbox form-set ddd-3-7">
+			<dl><dt class="title text-r">发送测试</dt></dl>
+			<dl><dt class="text-r">收件人:</dt><dd><input name="receive" class="long_txt" /></dd></dl>
+			<dl><dt class="text-r">内容:</dt><dd><textarea name="message" class="long_txt" ></textarea></dd></dl>
+			<dl><dd><button type="submit">发送</button></dd></dl>
+		</div>
+	</form>
+</div>
+<!--include::common/footer-->

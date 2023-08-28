@@ -1,0 +1,93 @@
+<!--include::common/header-->
+<script>
+	function make_file(type){
+		var olda=$('#getform')[0].action;
+		if(hasAtt(EsNm("columns[]"),"checked")){
+		    $("#getform input[name=file_type]").val(type);
+			$('#getform')[0].action=APP_PATH+'model/form_file/?{$model_id}';
+			$('#getform').submit();
+			$('#getform')[0].action=olda;
+		}else{
+			msg_box.create_short("请勾选生成的表单字段");
+		}
+		
+	}
+
+</script>
+<div class="pagetop">/*?echo $form_info['type_name'].'['.$form_info['content_mark'].']';?*/:表单设置</div>
+<div class="opbox-top"><button type="button" onclick="window.location.href='{APP_PATH}model'">返回</button>
+					<button type="button" onclick="editv.form_get('{APP_PATH}model/column_add/?{$form_info['content_mark']}')">添加</button>
+	<button type="button" class="btn-light" onclick="$('#getform').attr('action','{APP_PATH}model/code_file');$('#getform').submit();">生成代码</button>
+</div>
+		<form method="post" id="getform">
+		<div class="opbox"><input type="hidden" name="file_type"/>
+		<input name="ch_iden" value="<?php echo $form_info['content_mark'];?>" type="hidden"/>
+				<div>
+				<table class="tpage">
+					<thead>
+						<tr><th class="mini_txt text-center"><input type="checkbox" id="select_all" /></th><th class="mini_txt">排序</th><th style="width: 100px">名称</th>
+							<th style="width: 90px">字段</th>
+							<th style="width: 80px">类型</th>
+							<th style="width: 80px">表单</th>
+							<th style="width: 80px">会员可用</th>
+							<th>值</th><th style="width: 90px;"> </th>
+						</tr>
+					</thead><tbody>
+				<!--{loop $form_columns($k,$value)}-->
+				<tr><td class="text-center">
+					<input class="select" name="columns[]" type="checkbox" value="?{$value['id']}" /></td>
+					<td><input type="text" class="mini_txt" name="order_?{$value['id']}" value="?{$value['orderi']}"/><input name="ids[]" value="?{$value['id']}" type="hidden"/></td>
+					<td>?{$value['zh_name']}</td><td>?{$value['col_name']}</td>
+					<td>?{$value['data_type']}</td><td>?{$value['form_input']}</td>
+			<td>?{$value['member_able']?'是':'否'}</td><td>?{htmlspecialchars($value['def_value'])}</td>
+			<td>
+			<a href="javascript:;" onclick="editv.form_get('{APP_PATH}model/column_edit/?{$value['content_mark']}/?{$value['id']}');">编辑</a></td></tr>
+				<!--{/loop}-->
+                        </tbody>
+                  </table>
+				</div>
+                </div>
+
+                    <div class="opbox">
+                        <button type="button" onclick="window.location.href=APP_PATH+'model'">返回</button>
+                        <button type="button" onclick="editv.open_url('?{$update_url}',null,$('#getform')[0])">更新排序</button>
+                        <button type="button" onclick="make_file(0)">生成表单</button>
+                        <button type="button" onclick="make_file(1)">生成列表</button>
+                        <button type="button" class="btn-del" onclick="delete_row($('input.select'),'{APP_PATH}model/column_del/')">删除</button>
+                    </div>
+                </form>
+            <script type="text/javascript" src="{URL_ROOT}static/script/block_lib.js"></script>
+        <script>
+        $("#select_all").click(function(){
+            $(".select").each(function(){this.checked=$("#select_all")[0].checked;});
+        });
+        editv.init();
+        editv.e.diy_select=function(sel,intp,inthd){
+            if(inthd.value){
+                var i=0
+                for(;i<sel.options.length;i++){
+                    if(inthd.value==sel.options[i].value){
+                        sel.options[i].selected=true;
+                        break;
+                    }
+                }
+                if(i==sel.options.length){
+                    sel.options[i-1].selected=true;
+                    intp.style.display="";
+                }
+            }
+            sel.onchange=function(){
+                if(this.value=="-1"){
+                    intp.style.display="";
+                }else{
+                    intp.style.display="none";
+                    inthd.value=this.value;
+                    intp.value=this.value;
+                }
+            };
+            intp.onblur=function(){
+                inthd.value=this.value;
+            }
+        }
+        </script>
+<!--include::common/footer-->

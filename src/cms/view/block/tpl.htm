@@ -1,0 +1,42 @@
+<?php use w3c\helper\Str;?>
+<form method="post" id="tpl_form" action="{APP_PATH}block/save_tpl/">
+<input name="bid" value="/*?echo $this->block_info['id']?*/" type="hidden"/>
+    <div class="opbox"><label><input type="checkbox" name="tpl_type" value="1" />自定义模板</label>
+        模板列表：<select name="tpl_val"><option value="">选择模板</option><!--? echo self::arrayToOptions($tplist,$block_info['tpl']);?--></select>
+    </div>
+<div class="htmlp"><textarea id="tpl_content" name="tpl_content">/*?echo Str::htmlchars($this->block_tpl_content)?*/</textarea>
+</div>
+<div class="endbts"><button type="submit">提交保存</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>
+<script>
+    $("#tpl_form input[name=tpl_type]").change(function(){
+        if(this.checked){
+            $("#tpl_form select[name=tpl_val]")[0].disabled=true;
+            $("#tpl_content")[0].disabled=false;
+        }else {
+            $("#tpl_form select[name=tpl_val]")[0].disabled=false;
+            $("#tpl_content")[0].disabled=true;
+        }
+    });
+    /*? if($block_info['tpl']=="-1"){?*/
+    $("#tpl_form input[name=tpl_type]")[0].checked=true;
+    $("#tpl_form select[name=tpl_val]")[0].disabled=true;
+    $("#tpl_content")[0].disabled=false;
+    /*? }else{?*/
+    $("#tpl_form select[name=tpl_val]")[0].disabled=false;
+    $("#tpl_content")[0].disabled=true;
+    /*?}?*/
+    $("#tpl_form select[name=tpl_val]").change(function(){
+        if(this.value!=''){
+            $("#tpl_content")[0].disabled=true;
+            var tpl=this.value;
+            $.ajax({"type":"post","method":"post","url":"{APP_PATH}block/view_tpl/?{$block_info['id']}/1","data":{"tpl":this.value},
+            "success":function(content){
+                if(tpl==-1)
+                $("#tpl_content")[0].disabled=false;
+                $("#tpl_content").val(content);
+            }
+            });
+        }
+    });
+</script>

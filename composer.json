@@ -1,0 +1,19 @@
+{
+    "name": "w3capp/lite",
+    "description": "w3capp frame base source code.",
+    "type": "library",
+    "require-dev": {
+        "workerman/workerman": "^4.0"
+    },
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Zheng Yunqin",
+            "email": "w3capp@163.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"w3capp\\": ""}
+    }
+}

@@ -1,0 +1,88 @@
+<!--include::common/header-->
+<style>
+.pdl{padding-left:20px;}.wmp{width:85%;}
+</style>
+<div class="pagetop">栏目频道</div>
+	<form method="post" id="mainform" action="{APP_PATH}channel/sub_update">
+	<div class="opbox">
+		<table class="tpage" id="channel_tab">
+			<thead>
+				<tr><th class="colbx"><label><input type="checkbox" onclick="selectAll('rid[]')" />全选</label></th>
+					<th style="width:50px;">排序</th>
+					<th>栏目名称</th>
+					<th style="width: 90px">列表页</th>
+					<th style="width: 90px">内容页</th>
+					<th style="width: 90px">路径</th>
+					<th style="width:250px;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+		<?php
+		 foreach($channels as $chid=>$channel){?>
+		<tr><td><label><input name="rid[]" id="chr_?{$chid}" pid="?{$channel['pid']}" type="checkbox" value="?{$chid}"/>?{$chid}</label></td>
+			<td><input name="order_?{$channel['id']}" value="?{$channel['order_val']}" type="text" class="mini_txt"/></td>
+			<td><span style="padding-left:?{$channel['depth']*20}px;">|--</span><input name="ch_name_?{$channel['id']}" value="?{$channel['ch_name']}" type="text"/></td>
+			<td>?{$channel['list_tpl']}</td>
+			<td>?{$channel['view_tpl']}</td>
+			<td>?{$channel['path']}</td>
+			<td><input name="cid[]" type="hidden" value="?{$channel['id']}"/>
+				<?php
+				echo $channel['innav']<2?('<input name="innav_'.$channel['id'].'" type="hidden" value="'.$channel['innav'].
+				'"/><label><input value="1"'.($channel['innav']?" checked='true'":"").' class="inv" _n="innav_'.$channel['id'].'" type="checkbox"/>导航</label>'):'';
+				?>
+				<label><input value="1"?{$channel['hidden']?" checked='true'":""} name="hidden_?{$channel['id']}" type="checkbox"/>隐藏</label>
+				<a href="{APP_PATH}channel/edit_channel/?{$chid}">编辑</a>
+				<a href="{APP_PATH}channel/view_channel/?{$chid}" target="_blank">查看</a>
+				<?php if($channel['be_publish']){ echo ' <a href="{APP_PATH}content/index/'.$channel['frame_mod'].'{?||&}channel='.$chid.'">内容</a>';}?>
+				<input name="path_?{$chid}" value="?{$channel['path']}" type="hidden"/></td></tr>
+		<?php
+
+
+		}?>
+			</tbody>
+		</table>
+		<div class="opbox"><button type="button" onclick="cadd()">添加</button><button type="button" onclick="cdelete()">删除</button><button type="submit">提交</button>
+		<button type="button" onclick="edit_home()">编辑首页</button>
+		</div>
+	<div ><span class="explain">注：最多只能设置200个栏目</span></div>
+	</div>
+	</form>
+	<script type="text/javascript">
+		$("input.inv").change(function(){
+		    $("input[name="+this.getAttribute("_n")+"]").val(this.checked?1:0);
+		});
+		function cadd(){
+		    if($("#mainform tbody tr").length>=200){
+                msg_box.create_short("最多只能设置200个栏目");
+		        return;
+			}
+			window.location.href="{APP_PATH}channel/add_channel";
+		}
+		function edit_home(){
+			window.open("{APP_PATH}index.php#edit_page");
+		}
+		function cdelete(){
+			var rins=ENm("rid[]");
+			var ids="";
+			for(var i=0;i<rins.length;i++){
+				if(rins[i].checked){
+					ids+=ids==""?chcids(rins[i].value):","+chcids(rins[i].value);
+				}
+			}
+			if(ids==""){
+				return alert("请选择后再删除!");
+			}
+			if(confirm("如有子栏目，关联的子栏目也会同时删除,你确定删除码?"))
+			window.location.href="{APP_PATH}channel/del_channel/"+ids;
+		}
+		function chcids(pid){
+			var idv=pid;
+			$("#channel_tab input[pid="+pid+"]").each(function(){
+				idv=idv+","+chcids(this.value);
+			});
+
+			return idv;
+		}
+
+	</script>
+<!--include::common/footer-->

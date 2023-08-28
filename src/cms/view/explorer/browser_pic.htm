@@ -1,0 +1,114 @@
+<!--include::common/header-->
+<style>
+	#img_list li{float:left;}
+	.img_view{width: 160px;height: 160px;overflow: hidden;margin:10px;text-align: center;position: relative;background-color: #fff;}
+	.img_view img{height: 160px;}
+	#img_list li:hover .img_size{color: #0f74a8;background: #fff;border-radius: 5px;}
+	#img_list li:hover .img_view{overflow: visible;z-index: 1;}
+	#img_list .img_size{position: absolute;right: 0px;top: 0px;font-size: 12px;}
+	#img_list li:hover img{position: absolute;box-shadow: 0px 0px 10px #0f0f0f;left: 0px;}
+	.selectbtn{display:none;}
+	.fupload{width: 60%}
+	img.sel{border:#0080C0 2px solid;}
+	#upload_form{display:none;}
+</style>
+<form method="post" id="upload_form" target="_self" action="{APP_PATH}cms/explorer/addFiles" enctype="multipart/form-data"><input type="file" name="files[]" multiple="true" /></form>
+<div class="opbox">
+	<div class="cl">
+		<div class="Lft fupload"><button type="button" onclick="$('#upload_form input').click()">上传文件</button></div>
+		<div class="selectbtn"><button type="button" onclick="return_imgs()">确定</button></div>
+	</div>
+	<ul class="cl" id="img_list"></ul>
+	<div class="more_view"><a>加载更多</a></div>
+</div>
+	<script type="text/javascript">
+		function img_loaded(img){
+			$(img.parentNode).append('<div class="img_size">'+img.naturalWidth+'x'+img.naturalHeight+'</div>');
+		}
+	$("#upload_form input").change(function(){this.form.submit();});
+
+		/*?echo 'var page='.$this->data->page_index?*/;
+		/*?echo 'var count='.$this->data->amount?*/;
+		/*?echo 'var data='.\w3c\helper\Str::toJson($this->data).';';
+		 
+		 if(!$this->mselect){
+		 echo 'var CKEditorFuncNum='.$_GET['CKEditorFuncNum'].";var page_size=".$this->data->page_size.";";
+		 }?*/
+		var isloading=false;
+		function select_pic(img){
+			
+            
+            /*?if($this->mselect){?*/
+           		if(img.className=="sel"){
+           			img.className="";
+           			img.parentNode.style.overflow="hidden";
+           		}else{
+           			img.className="sel";
+           			img.parentNode.style.overflow="visible";
+           		}
+           		if($("img.sel").length){
+           			$(".selectbtn").show();
+           		}else{
+           			$(".selectbtn").hide();
+           		}
+           	/*?}else{?*/
+           	var funcNum = CKEditorFuncNum;
+            var fileUrl = img.getAttribute("src");
+            if(window.opener)
+            window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+			window.close();
+			/*?}?*/
+		}
+		function return_imgs(){
+			var urls=[];
+			$("img.sel").each(function(){
+				urls[urls.length]=this.src;
+			});
+			window.opener.imgselected(urls);
+			window.close();
+		}
+		function displayimg(list,infirst,sel){
+			for(var i in list.record){
+				var val=list.record[i];
+				var item='<div class="img_view"><img onload="img_loaded(this);" class="'+(sel?'sel':'')+'" title="点击选择" onclick="select_pic(this);" src="{URL_ROOT}?{$main_dir}'+val['file']+'"/></div>';
+				if(infirst){
+					if($("#img_list li").length){
+						var li=document.createElement('li');
+						li.innerHTML=item;
+						$("#img_list")[0].insertBefore(li,$("#img_list li")[0]);
+					}else{
+						$("#img_list").append('<li>'+item+'</li>');
+					}
+				}else{
+					$("#img_list").append('<li>'+item+'</li>');
+				}
+				
+			}
+			
+		}
+		if(count&&data){
+			displayimg(data,false,false);
+		}
+		function load(){
+			if(count<=page_size*page){
+				$(".more_view").hide();
+				return;
+			}
+			if(isloading)return;
+			isloading=true;
+			$.get(APP_PATH+"cms/explorer/ckeditor_pic/"+(page++)+"/"+count,function(pics){
+				if(pics.error){
+					$(".more_view").hide();
+				}else{
+					displayimg(pics.data,false,false);
+					isloading=false;
+				}
+				
+			});
+		}
+		$(".more_view").click(function(){
+			load();
+		});
+		setInterval(function(){var pre_sel=$("#uploadformpre");var now=pre_sel.val()*1;pre_sel.val(now+4);},4000);
+	</script>
+<!--include::common/footer-->

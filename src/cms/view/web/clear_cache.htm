@@ -1,0 +1,13 @@
+<!--include::common/header-->
+<script type="text/javascript">
+    $.post('{APP_PATH}site/clear_cache',{"json":1},function(res){
+        if(res.error==0){
+            msg_box.create_short("缓存数据已清理","right",function(){
+                window.history.go(-1);
+            });
+        }else{
+            alert(res);
+        }
+    });
+</script>
+<!--include::common/footer-->

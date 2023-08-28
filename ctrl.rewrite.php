@@ -1,0 +1,9 @@
+<?php
+/*
+W3cApp::$ctrl_table[url规则]="[路径:]控制器:路由";
+*/
+W3cApp::$ctrl_table['index.html']="\\cms\\controller\\webCtrl";
+W3cApp::$ctrl_table['index.php']="\\cms\\controller\\webCtrl";
+W3cApp::$ctrl_table['Main']="\\cms\\controller\\mainCtrl";
+#W3cApp::$ctrl_table['/([A-Za-z]+)_list_(\d+)\.html$/']="\\ctrl\\Web:channel/$1/$2";
+#W3cApp::$ctrl_table['/([A-Za-z]+)_view_(\d+)\.html$/']="\\ctrl\\Web:view/$1/$2";

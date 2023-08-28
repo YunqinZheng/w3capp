@@ -1,0 +1,111 @@
+/*?$menui=2;?*/
+<!--parent_start::member/frame-->
+<!--extends_headEnd_start-->
+<script src="{URL_ROOT}static/script/form.js"></script>
+<link type="text/css" rel="stylesheet" href="{URL_ROOT}static/style/block.css" />
+<script src="{URL_ROOT}static/script/block_lib.js"></script>
+<style></style>
+<!--extends_headEnd_end-->
+<!--extends_container_start-->
+<div class="path"><a href="{APP_PATH}app_store/app">我的应用</a><span>&gt;</span><a href="{APP_PATH}app_store/app/content_type//*?echo $client['client_id']?*/">/*?echo $client['app_name']?*/<span>&gt;</span>内容管理-模型列表</a><span>&gt;</span>
+    分类管理
+</div>
+<div class="container" ng-app="category" ng-controller="listCtrl0">
+    <div class="row">
+        <div class="input-append">
+            <input type="text" class="span2" id="search_content" value="" class="span2" placeholder="搜索分类"/>
+            <button type="button" class="btn btn-default" ng-click="search()">搜索</button>
+        </div>
+        <table class="table" id="tb_0">
+            <thead><tr><th width="26"></th><th>分类名称</th><th width="170"></th></tr></thead>
+            <tbody>
+
+            </tbody>
+            <tfoot><tr><th colspan="3"><div class="page_footer"></div></th></tr></tfoot>
+        </table>
+        <div><button class="btn btn-default" ng-click="add(0)">添加顶级分类</button></div>
+    </div>
+</div>
+<!--extends_container_end-->
+<!--extends_pageFooter_start-->
+<script>
+    editv.init();
+    function add_rows(tab,record){
+        tab.find("tbody").html('');
+        var pid=tab.attr("id");
+        for(var i=0;i<record.length;i++){
+            var val=record[i];
+
+            tab.find("tbody").append('<tr ng-repeat="val in record"><td width="26"><img width="22" height="22" src="'+val.icon+
+                '"/></td><td><a href="javascript:;" onclick="show_childen('+i+',\''+val.id+'\',\''+pid+'\')"><span class="icon-uniE621"></span>'+val.category_name+'</a></td>' +
+                '            <td width="170">' +
+                '                <a href="javascript:;"  onclick="edit(\''+val.id+'\')"><span class="icon-uniE65F"></span>编辑</a>' +
+                '                <a href="javascript:;"  onclick="d_delete(\''+val.id+'\')"><span class="icon-uniE611"></span>删除</a>' +
+                '                <a href="javascript:;" onclick="add(\''+val.id+'\')"><span class="icon-uniE635"></span>添加</a>' +
+                '            </td></tr>');
+        }
+    }
+    function add_tbody(tab,i,id){
+        var tr=document.createElement("tr");
+        if(tab.find("tbody tr").length-1>i)
+        {
+            tab.find("tbody")[0].insertBefore(tr,tab.find("tbody tr")[i+1]);
+        }else{
+            tab.find("tbody").append(tr);
+        }
+        $(tr).append("<td colspan=\"3\" class=\"child_tab\" ng-controller=\"listCtrl"+id+"\"><table id=\"tb_"+id
+            +"\" class=\"table\"><tbody></tbody></table><div class=\"page_footer\"></div></td>");
+    }
+    var edit=function (id) {
+        editv.form_get("{APP_PATH}app_store/category//*?echo $client_id?*//update/"+id);
+    };
+    var d_delete=function(id){
+        if(confirm("确定删除?"))
+            $.get("{APP_PATH}app_store/category//*?echo $client_id?*//delete/"+id,function(){location.reload()});
+    };
+    var search=function () {
+        pageGoto(1,"0");
+    };
+    var show_childen=function(i,id,pid){
+        var tab=$("#"+pid);
+        if($("#tb_"+id).length==0){
+            add_tbody(tab,i,id);
+            tab.find("tbody tr:eq("+i+") .icon-uniE621").attr("class","icon-uniE634");
+            pageGoto(1,id);
+        }else{
+
+            if(tab.find("tbody tr:eq("+i+") .icon-uniE621").length){
+                $("#tb_"+id).show();
+                tab.find("tbody tr:eq("+i+") .icon-uniE621").attr("class","icon-uniE634");
+            }else{
+                $("#tb_"+id).hide();
+                tab.find("tbody tr:eq("+i+") .icon-uniE634").attr("class","icon-uniE621");
+            }
+        }
+
+    };
+    var add=function($pid){
+        editv.form_get("{APP_PATH}app_store/category//*?echo $client_id?*//add/"+$pid);
+    };
+    function pageGoto(page,pid) {
+        msg_box.load_start();
+        var tab=$("#tb_"+pid);
+        $.get("{APP_PATH}app_store/category//*?echo $client_id?*//childen/"+pid+"/{?||&}search="+$("#search_content").val()+"&page="+page,function (result) {
+            msg_box.load_end();
+            if((!result.data||!tab,result.data.record)&&page==1){
+                if(pid=="0"){
+                    tab.find(".page_footer").html("没有相关数据！");
+                }else{
+                    tab.hide();
+                }
+                return;
+            }
+            add_rows(tab,result.data.record);
+            make_index_page(tab.find(".page_footer"),result.data.page_index,result.data.page_size,result.data.amount,"javascript:pageGoto([page],'"+pid+"');");
+        });
+
+    }
+    pageGoto(1,"0");
+</script>
+<!--extends_pageFooter_end-->
+<!--parent_end::member/frame-->

@@ -1,0 +1,52 @@
+<?php use w3c\helper\Str;?>
+<form method="post" action="?{$init_action}" target="ajaxf" class="init_block no-scroll-y">
+	<input type="hidden" name="id" value="?{$block_id}" />
+    <input type="hidden" name="areaid" value="?{$areaid}"/>
+    <input type="hidden" name="blocktype" value="?{$block_type}"/>
+    <input type="hidden" name="page_file_var" value="?{$page_file_var}">
+    <div class="init_items">
+        <div class="init_field insp"><dl><dt class="tc">*标记：</dt>
+            <dd><input name="mark" required type="text" placeholder="模块唯一标记" value="?{$prototype_form['mark']['def_value']}" class="long_txt"/></dd></dl></div>
+        <div class="init_field insp"><dl><dt class="tc">名称：</dt>
+            <dd><input name="remarks"  type="text" placeholder="模块名称" value="?{$prototype_form['remarks']['def_value']}" class="long_txt"/></dd>
+        <dd><label><input type="checkbox" name="def_column" value="update_time">缓存时间</label>
+            <!-- label><input type="checkbox" name="def_column" value="tpl">模版选择</label --></dd></dl></div>
+	<!--{loop $prototype_form($column,$val)}-->
+        <!--? if($column=='mark'||$column=='remarks')continue; ?-->
+        <input name="def_value[?{$column}]" value="?{$val['def_value']}" type="hidden" />
+        <!--{if($val['form_input']=='hidden'||$column=='type')}-->
+        <div class="hide_row" col_v="?{$column}">
+        <input name="column[?{$column}]" col_v="?{$column}" value="?{$column}" type="hidden" />
+        <input name="col_name[?{$column}]" value="?{$val['col_name']}" type="hidden" />
+        <input name="form_input[?{$column}]" value="?{$val['form_input']}" type="hidden" />
+        <input name="value_set[?{$column}]" value="?{$val['def_value']}" type="hidden" />
+        </div>
+        <!--{else}-->
+        <!--? if(!empty($val['diycode'])){$val['def_value']=Str::htmlchars($val['diycode']);}?-->
+		<div class="init_row insp"><dl><dt><label>字段：</label><input class="t" name="column[?{$column}]" col_v="?{$column}" type="text" readonly placeholder="column" title="默认字段名不可修改" value="?{$column}"/></dt>
+			<dt><label>字段名：</label><input class="t" name="col_name[?{$column}]" type="text" placeholder="提示文字" title="中文名称" value="?{$val['col_name']}"/></dt>
+        <dt class="long">
+            <input name="form_input[?{$column}]" type="hidden" value="?{$val['form_input']}"/>
+		</dt></dl>
+         <dl>
+             <dt class="longx"><textarea name="value_set[?{$column}]" placeholder="默认值（选项）设置">?{$val['def_value']}</textarea></dt>
+    </dl></div>
+
+        <!--{/if}-->
+	<!--{/loop}-->
+    </div>
+    <script type="text/javascript">
+        editv.e.editFields(?{$init_config});
+        var citems=$(editv.view).find("input[name=def_column]");
+        $(editv.view).find(".init_row .t").each(function(){
+            var col=this.value;
+            citems.each(function(){
+                if(this.value==col){
+                    $(this.parentNode).remove();
+                }
+            });
+        });
+    </script>
+    <div class="insp text-right"><a href="javascript:;" onclick="editv.e.addColumn()">+添加字段</a></div>
+<div class="endbts"><button type="submit">提交保存</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>

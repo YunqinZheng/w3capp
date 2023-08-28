@@ -1,0 +1,49 @@
+<div class="opbox-top">
+	<form method="post" action="{APP_PATH}model/import">
+		<div class="infrom">
+				<div class="text_t i_type_name"><span class="labt">选项：</span><p><label><input type="checkbox" name="import_im" value="1"/>替换已存在的模型</label></p></div>
+				<div class="text_t i_ch_iden upoffs"><span class="labt"><span class="explain">*</span>上传文件：</span><div><p id="sql_upload"></p><input value="" name="file_url" type="hidden"/><span></span></div></div>
+
+				<div class="end_button">
+				<button type="button" onclick="editv.close()">取消</button>
+				<button type="submit">提交</button>
+				</div>
+		</div>
+	</form>
+</div>
+<script>
+    request_js("html5uploader",function(){
+        var v=$("#?V_ID");
+        $("#sql_upload").html5uploader({fileTypeExts:"text/sql,text/txt,text/plain;*.txt,*.sql",
+        auto:true,itemTemplate:'<li id="${fileID}file"><div class="progress"><div class="progressbar"></div></div><span class="filename">${fileName}</span></li>',
+        url:"{APP_PATH}model/import_file",
+        onUploadSuccess:function(file,res){
+            //console.log(res);
+            if(typeof res == "string")res=JSON.parse(res);
+            if(res.error===0){
+                $("#sql_upload").siblings("span").html(file.name+"上传成功！");
+                $("#sql_upload").siblings("input").val(res.data.file);
+            }else{
+                msg_box.alertMsg(res.message);
+            }
+        }});
+        v.find("form").submit(function(){
+            if(v.find("input[name=file_url]").val()==""){
+                msg_box.alertMsg("请上传导入文件（sql,txt）");
+                return false;
+            }
+            msg_box.load_start();
+            editv.actionImport_ok=function(){
+                msg_box.load_end();
+                editv.close();
+                msg_box.create_short("导入成功","right");
+                if(typeof if_reload =="function"){
+                    if_reload();
+				}else{
+                    setTimeout(function(){window.location.href=window.location.href;},1000);
+				}
+            };
+            return true;
+        });
+    });
+</script>

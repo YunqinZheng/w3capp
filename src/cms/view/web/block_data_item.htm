@@ -1,0 +1,16 @@
+<form method="post" action="{APP_PATH}block/alter_data/">
+    <input type="hidden" name="block_id" value="?{$block_id}"/>
+    <input type="hidden" name="replace_id" value="?{$replace_id}"/>
+    <input type="hidden" name="column_names" value=""/>
+    <div class="opbox item-datas"></div>
+    <div class="endbts"><button type="button" onclick="editv.e.item_reset()" class="btn-del">重置</button><button type="submit">提交保存</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>
+<script>
+    var fields_val=?{$item};
+    var column_names=[];
+    for(var i in fields_val){
+        column_names.push(i);
+    }
+    $(editv.view).find("input[name=column_names]").val(column_names.join(","));
+    editv.e.item_form(fields_val,$(editv.view).find(".item-datas"));
+</script>

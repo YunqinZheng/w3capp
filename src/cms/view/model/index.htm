@@ -1,0 +1,68 @@
+<!--include::common/header-->
+<div class="pagetop">
+	内容模型
+</div>
+<form id="getform" method="get">
+	<input name="ids" type="hidden"/>
+	<div class="opbox-top">
+		<button type="button" onclick="add_type()">
+			添加
+		</button>
+		<button type="button" onclick="editv.form_get('{APP_PATH}model/import');">
+			导入
+		</button>
+		<button type="button" onclick="del_type()" class="btn-del">
+			删除
+		</button>
+	</div>
+</form>
+<div class="opbox">
+	<form method="post" id="table_form">
+	<table class="tpage">
+		<thead>
+			<tr>
+				<th class="colb">
+				<input onclick="selectAll('rid[]')" type="checkbox" />
+				</th>
+				<th>名称</th><th>标识</th><th>会员表单</th><th>后台表单</th><th style="width:80px">会员可发布</th><th style="width:280px">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!--{loop $ctypes($key,$type)}-->
+			<tr>
+				<td class="text-center">
+				<input name="rid[]" type="checkbox" value="?{$type['id']}"/>
+				</td>
+				<td>?{$type['type_name']}</td>
+				<td>?{$type['content_mark']}</td>
+				<td>?{$type['member_form']?$type['member_form']:'未设置'}</td>
+				<td>?{$type['main_form']?$type['main_form']:'未设置'}</td>
+				<td>?{$type['member_publish']?'是':'否'}</td>
+				<td class="text-center"><a href="javascript:;" onclick="editv.form_get('{APP_PATH}model/edit_model/?{$type['id']}');">设置</a>
+					<a href="{APP_PATH}model/form_model/?{$type['content_mark']}">表单字段</a>
+				<a href="{APP_PATH}model/make_block/?{$type['content_mark']}">生成模块</a>
+				<a href="{APP_PATH}model/export/?{$type['content_mark']}" target="_blank">导出</a></td>
+			</tr>
+		<!--{/loop}-->
+		</tbody>
+		<tfoot><tr><td colspan="7">
+			<?php $this->pageObjLink($this->ctypes,"{APP_PATH}model/index/[page]"); ?>
+		</td></tr>
+		</tfoot>
+	</table>
+	</form>
+</div>
+<script type="text/javascript" src="{URL_ROOT}static/script/block_lib.js"></script>
+<script type="text/javascript">
+
+editv.init();
+function add_type(){
+	editv.form_get("{APP_PATH}model/add_model/");
+}
+function del_type(){
+	if(confirm("该删除不会drop对应的表，确定要删除？")){
+		editv.open_url('{APP_PATH}model/del_model',null,$('#table_form')[0]);
+	}
+}
+</script>
+<!--include::common/footer-->

@@ -1,0 +1,24 @@
+
+<div class="opbox-top">
+	<form method="post" action="{APP_PATH}model/?{$action}/?{$typev['id']}">
+		<div class="infrom">
+				<div class="hidden_t i_id"><input name="id" type="hidden" value="?{$typev['id']}"></div>
+				<div class="text_t i_type_name"><span class="labt">名称：</span><p><input type="text" name="type_name" value="/*?echo $this->typev['type_name']?*/"></p></div>
+				<div class="text_t i_ch_iden"><span class="labt">标识：</span><p><input type="text" placeholder="英文或数字" name="mark" /*?if($this->typev['id']){echo 'readonly';}?*/ value="/*?echo $this->typev['content_mark']?*/"><span class="explain">*</span></p></div>
+				<div class="text_t"><span class="labt">&nbsp;</span><p><label><input type="checkbox" value="1" name="member_publish" /*?if($this->typev['member_publish']){echo 'checked';}?*//>会员可发布</label></p></div>
+				/*?if($this->typev['id']){?*/
+				<div class="text_t i_extends"><span class="labt">会员表单：</span>
+				<p><select name="member_form" title="模板目录：?{$member_form_dir}"><option value="">空</option><!--? echo self::arrayToOptions($this->mb_forms,$this->typev['member_form']); ?--></select><span class="explain">*</span></p>
+				</div>
+				<div class="text_t i_extends"><span class="labt">后台表单：</span><p><select name="main_form" title="模板目录：master/app/content/view/form"><option value="">空</option><!--? echo self::arrayToOptions($this->mn_forms,$this->typev['main_form']); ?--></select><span class="explain">*</span></p>
+				</div>
+				/*?}else{?*/
+				<div class="text_t i_extends"><span class="labt">&nbsp; </span><label><input type="checkbox" value="1" name="no_tabel" />不用创建表结构</label></div>
+				/*?}?*/
+				<div class="end_button">
+				<button type="button" onclick="editv.close()">取消</button>
+				<button type="submit">提交</button>
+				</div>
+		</div>
+	</form>
+</div>

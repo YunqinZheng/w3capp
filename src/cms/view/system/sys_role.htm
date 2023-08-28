@@ -1,0 +1,52 @@
+<!--include::common/header-->
+<link rel="stylesheet" href="/*?echo W3CA_URL_ROOT;?*/static/style/block.css" type="text/css"/>
+<script>
+	request_js("block_lib",function(){
+		editv.init();
+	});
+	function addData(){
+		editv.form_get("{APP_PATH}system/role_add");
+	}
+	function delByIds(){
+		EId("listform").action='{APP_PATH}system/role_del';
+		EId("listform").submit();
+	}
+	function editData(id){
+		editv.form_get("{APP_PATH}system/role_edit/"+id);
+	}
+	function editOption(id){
+		window.location.href="{APP_PATH}system/role_option/"+id;
+	}
+</script>
+<div class="pagetop">系统角色设置</div>
+<div class="opbox-top">
+	<form method="get" name='getform' id="getform">
+		<table>
+			<tr><td><button type="button" onclick="addData()">添加</button>
+				<button type="button" onclick="delByIds()">删除</button></td></tr>
+		</table>
+	</form>
+</div>
+<div id="page">
+	<div class="thh">
+		<span class='rp'></span>
+	</div>
+	<form id="listform" method="post">
+	<table class="tpage">
+		<thead><tr><th class="colb"></th><th class="short_txt">ID</th><th>角色名</th><th>备注</th><th></th></tr></thead>
+		<tbody>/*?
+		        foreach($this->list_info as $row){
+		        	?*/<tr><td><input type="checkbox" name='rid[]' value='/*?echo $row['id']?*/' /></td>
+		        		<td>/*?echo $row['id']?*/</td><td>/*?echo $row['role_name']?*/</td><td>/*?echo $row['note']?*/</td>
+		        		<td>/*?if($row['id']!=1){?*/<a href="javascript:editData('/*?echo $row['id'];?*/');">编辑</a>
+		        			<a href="javascript:editOption('/*?echo $row['id'];?*/');">权限</a>/*?}?*/</td>
+		        	</tr>
+		        	/*?
+		        } 	
+		        ?*/</tbody><tfoot>
+		        	<tr><td colspan="5">注：最多只能设置15种角色</td></tr>
+		        </tfoot>
+	</table>
+	</form>
+</div>
+<!--include::common/footer-->

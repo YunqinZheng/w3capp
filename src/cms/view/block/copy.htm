@@ -1,0 +1,12 @@
+<form method="post" id="copy_block" action="{APP_PATH}cms/block/copy" target="ajaxf" class="init_block no-scroll-y">
+	<input type="hidden" name="block_id" value="?{$block['id']}" />
+    <div class="init_items">
+        <div class="init_field insp"><dl><dt class="tc">*新标记：</dt>
+            <dd><input name="new_mark" required type="text" placeholder="模块唯一标记" value="?{$block['mark']}2" class="long_txt"/></dd></dl></div>
+        <div class="init_field insp"><dl><dt class="tc">新名称：</dt>
+            <dd><input name="new_remarks"  type="text" placeholder="模块名称" value="?{$block['remarks']}2" class="long_txt"/></dd>
+        </dl></div>
+
+    </div>
+<div class="endbts"><button type="submit">保存复制</button>&nbsp;<button type="button" onclick="editv.close();">取消</button></div>
+</form>

@@ -1,0 +1,98 @@
+<!--include::common/header-->
+<style>
+    body{height:auto;width:auto;}
+    .infrom{width:auto;}
+    #block_display img{max-height: 100px;}
+    .edit-inter dt{float: left;margin-right:10px;}
+    a.item-edit{color:#999;font-size: 12px;text-decoration:none;}
+    a.ireplaced{color:#f55;}
+    .diplay_split{line-height: 30px;border-bottom: 1px #dddddd solid;margin-top:10px;}
+</style>
+<script type="text/javascript">
+    var interface_arg=?{$block_info['interface_arg']?$block_info['interface_arg']:'""'};
+    var api_arg="";
+    var primary="?{$block_info['primary_key']}";
+    var edit_desc=?{$edit_desc};
+    var info=?{json_encode($block_info)};
+    var post_values=?{empty($_POST)?'""':json_encode($_POST)};
+    function submit_edit(){
+        editv.open_url("{APP_PATH}block/alter_data/?{$block_info['id']}",null,$("#edit_form")[0]);
+        return false;
+    }
+
+</script>
+<div class="pagetop"><?php echo $this->title; ?></div>
+<div class="opbox">
+    <form method="post" action="/*?echo $this->url?*/">
+        <div class="infrom">
+            <div class="cl">
+                <div class="labt">属性：</div>
+                <div>?{$block_info['pro_value']}</div>
+            </div>
+            <div class="cl">
+                <div class="labt">接口参数：</div>
+                <div id="interface"></div>
+                <div class="left-offset"><button type="submit">刷新</button></div>
+            </div>
+            <div class="diplay_split cl"><div class="labt">显示结果：</div></div>
+            <div class="left-offset">
+            <div class="cl opbox" id="block_display">
+                ?{$block_display}
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    request_js("block_lib",function(){
+        editv.init();
+        editv.add_event('item_reset',APP_PATH+"block/reset_data",function () {
+            return {"block_id":?{$block_info['id']},"replace_id":$(editv.view).find("input[name=replace_id]").val()};
+        });
+        editv.add_event('editDat',APP_PATH+"block/data_item/?{$block_info['id']}/$1",null,null,function(){
+            if(!edit_desc){msg_box.create_short("内容无法编辑！",'alter');return false;};
+            editv.form.html('');
+            if(post_values){
+                var fc={};
+                for(var pn in post_values){
+                    fc[pn]={"form_input":"hidden","def_value":post_values[pn]};
+                }
+                form_input.create_form(fc,editv.form);
+            }
+            return true;
+        });
+        editv.e.item_form=function (values,container){
+
+            for(column in edit_desc){
+                if(values[column]){
+                    edit_desc[column]['def_value']=values[column];
+                }
+            }
+            form_input.create_form(edit_desc,container);
+        }
+        if(primary){
+            $("#block_display").on("click",".item-edit",function(){
+                var id=this.getAttribute('data-id');
+                editv.e.editDat(id);
+            });
+        }
+    },1);
+    request_js("form",function(){
+        var inter_form={};
+        for(var k in interface_arg){
+            var ks=k.replace(/[\{|\}]/g,'');
+            if(typeof interface_arg[k]=='string'){
+                var def_value='';
+                if(post_values[ks])
+                    def_value=post_values[ks];
+                else if(info[ks]){
+                    def_value=info[ks];
+                }
+
+                inter_form[ks]={"form_input":"text","col_name":ks,'def_value':def_value};
+            }
+        }
+        form_input.create_form(inter_form,$("#interface"));
+    },1);
+</script>
+<!--include::common/footer-->
