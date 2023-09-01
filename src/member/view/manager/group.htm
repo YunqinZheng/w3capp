@@ -1,0 +1,83 @@
+<!--include::common/header-->
+	<div class="pagetop">/*? echo $this->title?*/</div>
+
+	<style>
+        #glist{margin:20px;width: 800px;border:1px solid #c1c1c1;}
+		.labt3,.labt2,.labt1{float: left;width:160px;display:block;padding:0px 8px; }
+		.labt3{width:400px}
+		.labt2 input[type=text]{width: 150px;}
+		.text_t{margin-bottom:1px;padding: 5px 10px;background:#eaeaea;}
+        #glist .text_t:hover{background-color: #eeeeee;}
+		.infrom .labt1{width: 90px;}
+        #glist .text_t:nth-child(2n)
+        {
+            background:#e0e0e0;
+        }
+        #glist .text_t:nth-child(2n):hover{
+            background:#eeeeee;
+        }
+        .offsetLeft{padding-left: 150px;}
+    </style>
+	<div class="opbox-top">
+		<form method="post" id="glist"><input type="hidden" name="delete_items" value="0">
+			<div class="infrom">
+				<div class="text_t cl"><span class="labt1">组ID</span><span class="labt2">称号</span><span class="labt3">可发布内容</span></div>
+				/*?foreach($group_list as $id=>$group){?*/
+				<div class="text_t cl"><label class="labt1"><input type="checkbox" value="?{$id}" />?{$id}
+                    <input type="hidden" name="id[]" value="?{$id}" /></label>
+					<span class="labt2"><input value="?{$group['name']}" type="text" name="name_?{$id}"/></span>
+					<span class="labt3" data-id="?{$id}" menu="?{$group['publish_menu']}"></span></div>
+				/*?}?*/
+				<div class="text_t cl" id="lastr" maxid="?{$id}">
+                    <div class="offsetLeft">
+                        <button type="button" onclick="del_group()">删除组</button>
+					<button type="button" onclick="add_group()">添加组</button>
+				    <button type="submit">提交保存</button>
+                    </div>
+				</div>
+			</div>
+		</form>
+	</div>
+<script type="text/javascript">
+    /*? echo 'var content_models='.Str::toJson($content_models).";"; ?*/
+    function del_group(){
+        $(".labt1 input:checked").each(function(){
+            $("#glist input[name=delete_items]").val($("#glist input[name=delete_items]").val()+","+this.value);
+            this.parentNode.parentNode.remove();
+        });
+    }
+    function add_group(){
+        var last=EId("lastr");
+        var list=$("#glist .infrom")[0];
+        var maxid=last.getAttribute("maxid")*1+1;
+        if(maxid>150){
+            msg_box.create_short('会员组已经超过限制');
+            return;
+        }
+        var div=document.createElement("div");
+        div.className="text_t cl";
+        var checkbox='';
+        for(var ci in content_models.record){
+            var ctmd=content_models.record[ci];
+            checkbox+= '<label><input type="checkbox" name="new_publish_menu_'+maxid+'[]" value="'+ctmd['content_mark']+'"/>'+ctmd['type_name']+'</label>&nbsp;';
+        }
+        div.innerHTML='<label class="labt1"><input type="checkbox" value="'+(maxid)+'" /><input type="hidden" name="new[]" value="'+(maxid)+'" />'+(maxid)+'</label>'+
+            '<span class="labt2"><input type="text" placeholder="会员组名" name="new_name_'+(maxid)+'" /></span><span class="labt3">'+checkbox+'</span>';
+        list.insertBefore(div,last);
+        last.setAttribute("maxid",maxid);
+    }
+    $(".labt3").each(function () {
+        var id=this.getAttribute("data-id");
+        if(id){
+            var menu=this.getAttribute("menu").split(",");
+            var checkbox='';
+            for(var ci in content_models.record){
+                var ctmd=content_models.record[ci];
+                var ch=menu.indexOf(ctmd['content_mark'])>-1?'checked':'';
+                checkbox+= '<label><input type="checkbox" '+ch+' name="publish_menu_'+id+'[]" value="'+ctmd['content_mark']+'"/>'+ctmd['type_name']+'</label>&nbsp;';
+            }
+            this.innerHTML=checkbox;
+        }
+    });
+</script>
+<!--include::common/footer-->

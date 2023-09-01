@@ -1,5 +1,5 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
 class Sql{
     static public function getSql($sql_opt){
         $sql="select ".(empty($sql_opt['select'])?"*":$sql_opt['select'])." from ".$sql_opt['from'];

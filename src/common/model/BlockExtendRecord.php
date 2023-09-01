@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_block_extend数据记录类
  * @property string $block_id block_id
@@ -9,7 +10,7 @@ namespace common\model;
  * @property string $context_edit 内容编辑设置
  * @property string $init_config 初始设置
  */
-class BlockExtendRecord extends \W3cRecord{
+class BlockExtendRecord extends Record{
     protected $primaryName="block_id";
     
     static public function recordName(){

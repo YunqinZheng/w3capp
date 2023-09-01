@@ -1,0 +1,64 @@
+<!--include::common/header-->
+<script>
+    function ct_add(){
+        window.location.href=APP_PATH+'content/add/comment';
+    }
+    function ct_delete(){
+        if(confirm("你确定彻底删除？删除后将不能恢复")){
+            var f=EId("list_form");
+            f.action=APP_PATH+"content/del/comment";
+            f.submit();
+        }
+
+    }
+    function mark_deleted(){
+        var f=EId("list_form");
+        f.action=APP_PATH+"content/deprecated/comment";
+        f.submit();
+    }
+    function page_goto(page) {
+        $("#search_form input[name=page]").val(page);
+        $("#search_form").submit();
+    }
+</script>
+<div class="pagetop">评论内容管理</div>
+<div class="opbox-top"><form id="search_form" method="post" action="{APP_PATH}content/index/comment">
+    <input type="hidden" name="page" value="?{$page}"/>
+    <input type="text" name="search" value="?{$_POST['search']}"  placeholder="关键字"/>
+    <button type="button" onclick="page_goto(1)">查询</button>
+    <button type="button" onclick="ct_add()">添加</button>
+    <button type="button" onclick="ct_delete()" >彻底删除</button></form>
+</div>
+<div class="opbox">
+    <form method="post" action="" id="list_form">
+        <table class="tpage">
+            <thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox" /></th>
+                <th style="width: 40px;">id</th>
+                                                                <th>会员ID</th>
+                                                <th>文章id</th>
+                                                <th>评论时间</th>
+                                                <th>点赞</th>
+                                                <th>评论</th>
+                                <th style="width: 65px;">操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <!--{loop $list_data($key,$val)}-->            <tr><td class="text-center"><input name="rid[]" type="checkbox" value="?{$val['id']}"/></td>
+                <td>?{$val['id']}</td>
+                <td>?{$val['member_id']}</td>
+                <td>?{$val['article_id']}</td>
+                <td>?{html$val['add_time']?date("Y-m-d H:i",$val['add_time']):''}</td>
+                <td>?{$val['support']}</td>
+                <td>?{$val['comment']}</td>
+                <td><a href="{APP_PATH}content/edit/comment/?{$val['id']}">编辑</a>
+                    <a href="{APP_PATH}content/view/comment/?{$val['id']}">查看</a></td>
+            </tr>
+            <!--{/loop}-->            </tbody>
+            <tfoot>
+            <tr><td colspan="8"><!--?self::pageObjLink($list_data,"javascript:page_goto([page]);");?--></td></tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<!--include::common/footer-->

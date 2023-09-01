@@ -1,0 +1,65 @@
+<!--include::common/header-->
+<script>
+			function ct_add(){
+				window.location.href='{APP_PATH}content/add//*?echo $this->ctiden?*/';
+			}
+			function ct_delete(){
+				if(confirm("你确定彻底删除？删除后将不能恢复")){
+					var f=EId("list_form");
+					f.action="{APP_PATH}content/del//*?echo $this->ctiden?*/";
+					f.submit();
+				}
+				
+			}
+			function mark_deleted(){
+				var f=EId("list_form");
+				f.action="{APP_PATH}content/deprecated//*?echo $this->ctiden?*/";
+				f.submit();
+			}
+		</script>
+		<div class="pagetop"><?php echo $content_type;?><?php echo $chname;?>-内容管理</div>
+		<div class="opbox-top"><form method="get" action="">
+			<input type="text" name="w_title" placeholder="标题或者ID"/>
+			<button type="button" class="btn-search" uiclick="{APP_PATH}content/index//*?echo $this->ctiden?*/">查询</button>
+			<button type="button" onclick="ct_add()">发布</button>
+			<button type="button" onclick="ct_delete()" >彻底删除</button>
+			<button type="button" onclick="mark_deleted()" >移到回收站</button></form>
+		</div>
+		<div class="opbox">
+		<form method="post" action="" id="list_form">
+		<table class="tpage">
+			<thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox" /></th>
+				<th style="width: 40px;">id</th><th style="width: 245px;">标题</th><th>关键字</th><th>描述</th><th style="width: 45px;">查看数</th>
+				<th style="width: 55px;">作者</th><th style="width: 75px;">发布时间</th><th style="width: 40px;">操作</th>
+			</tr>
+			</thead>
+			<tbody><!--?
+		foreach ($list_data as $key => $d) {
+			echo '<tr><td class="text-center"><input name="rid[]" type="checkbox" value="'.$d['id'].'"/></td>
+			<td>'.$d['id'].'</td>
+			<td>';
+			$channel_path=$this->c_channels[$d['chid']]['path'];
+			if($d['chid']&&$channel_path){
+				echo '<a href="{APP_PATH}web/view/'.$channel_path.'/'.$d['id'].'" target="_blank">'.$d['title']."</a>";
+			}else{
+				echo '<a href="{APP_PATH}content/view/'.$ctiden."/".$d['id'].'" target="_blank">'.$d['title'].'</a>';
+			}
+			echo '</td>
+			<td>'.$d['keywords'].'</td>
+			<td>'.$d['description'].'</td>
+			<td>'.$d['views'].'</td>
+			<td>'.$d['author'].'</td>
+			<td>'.Str::human_time($d['dateline']).'</td>
+			<td><a href="{APP_PATH}content/edit/'.$ctiden."/".$d['id'].'">编辑</a>
+			</td></tr>';
+		}
+			?--></tbody>
+			<tfoot>
+				<tr><td colspan="9"><?php
+				self::pageFoot($list_data->page_index,$list_data->page_size,$list_data->amount);
+				?></td></tr>
+			</tfoot>
+		</table>
+		</form>
+</div>
+<!--include::common/footer-->

@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_channel_form数据记录类
  * @property string $id id
@@ -12,7 +13,7 @@ namespace common\model;
  * @property string $content_mark content_mark
  * @property string $member_able 会员可用
  */
-class ChannelFormRecord extends \W3cRecord{
+class ChannelFormRecord extends Record{
         protected $primaryName="id";
     
     static public function recordName(){

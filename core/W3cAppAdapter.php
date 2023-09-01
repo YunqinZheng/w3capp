@@ -17,7 +17,7 @@ class W3cAppAdapter{
      * @param $table要加前缀
      */
     public function __construct($table){
-        $this->current_driver=W3cCore::_dbInstance($this->dbDriver(),$this->dbConfigIndex());
+        $this->current_driver=Core::_dbInstance($this->dbDriver(),$this->dbConfigIndex());
         $this->setTablePre($this->current_driver->config['tab_pre']);
         $this->table=$table;
     }
@@ -210,7 +210,7 @@ class W3cAppAdapter{
 
     /**
      * @param bool $count
-     * @return \W3cAppDataApi
+     * @return W3cAppDataApi
      */
     function selectAll($count=false){
 
@@ -232,7 +232,7 @@ class W3cAppAdapter{
     }
     /**
      * @param bool $count
-     * @return \W3cAppDataApi
+     * @return W3cAppDataApi
      */
     function query($count=false){
         $this->commend("");

@@ -1,9 +1,9 @@
 <?php
 namespace w3capp;
-class Template{
+use w3capp\helper\Cache;
+class Template extends Core{
     //模版完整路径
 	protected $tpl_dirs;
-	protected $default_tpl;
 	//编译常量
     protected $tpl_const=array();
 	protected $edit_export;
@@ -21,28 +21,24 @@ class Template{
     public function __construct()
     {
 
-        $this->tpl_dirs=[W3CA_PATH.W3CA_DIR.'/tpl/'];
-        $this->default_tpl=W3CA_THEME_TPL."default/";
+        $this->tpl_dirs=[];
         $this->getTplConst('<!--{/loop}-->','<?php }?>');
         $this->getTplConst('<!--{/if}-->','<?php }?>');
         $this->getTplConst('<!--{else}-->','<?php }else{ ?>');
         $this->export_dir='data/cache/template/';
-        if(!is_dir(W3CA_PATH.$this->export_dir)){
-            if(@mkdir(W3CA_PATH.$this->export_dir,0777,true)==false){
+        if(!is_dir(W3CA_MASTER_PATH.$this->export_dir)){
+            if(@mkdir(W3CA_MASTER_PATH.$this->export_dir,0777,true)==false){
                 throw new Exception('mkdir error: '.$this->export_dir);
             }
         }
     }
 
-    function setDefaultTplPath($p){
-        $this->default_tpl=$p;
-    }
     /**
 	 * 设置模板目录
 	 * @param $path 一般为绝对路径，右边要"/"
 	 */
 	function setTplDir($path){
-		$this->tpl_dirs[0]=$path;
+		array_unshift($this->tpl_dirs,$path);
 	}
 
     /**
@@ -58,8 +54,8 @@ class Template{
      */
 	function setExportDir($d){
         $this->export_dir=$d;
-	    if(file_exists(W3CA_PATH.$d)==false){
-	        return mkdir(W3CA_PATH.$d);
+	    if(file_exists(W3CA_MASTER_PATH.$d)==false){
+	        return mkdir(W3CA_MASTER_PATH.$d);
         }
         return true;
     }
@@ -371,7 +367,7 @@ class Template{
 	protected function template($tplfile){
 	    if(count($this->tpl_list)>120)return '编译的模版文件超过了上限';
 		if($tplct=file_get_contents($tplfile)){
-		    $file_=str_replace(W3CA_PATH,"",$tplfile);
+		    $file_=str_replace(W3CA_MASTER_PATH,"",$tplfile);
 		    if($this->tpl_list&&$file_==end($this->tpl_list))
 		        return '';
 			$this->tpl_list[]=$file_;
@@ -383,20 +379,20 @@ class Template{
 
 	function clearTplCache($f_name,$dir_key){
 	    $viewname=str_replace("/", "_", $f_name);
-	    $load_file=W3CA_PATH.$this->export_dir.$dir_key.$viewname.".php";
+	    $load_file=W3CA_MASTER_PATH.$this->export_dir.$dir_key.$viewname.".php";
 	    return unlink($load_file);
 	}
 	function file($tplfile,$toDir){
 	    if(!file_exists($tplfile)){
 	        return null;
 	    }
-	    $load_file=W3CA_PATH.'data/cache/'.rtrim($toDir,'/');
+	    $load_file=W3CA_MASTER_PATH.'data/cache/'.rtrim($toDir,'/');
 	    if(!file_exists($load_file)){
 	        mkdir($load_file);
 	    }
-	    $load_file.='/'.W3CA_YUN_DAT.str_replace([W3CA_PATH,"/","\\",":","?"],'',$tplfile);
+	    $load_file.='/'.W3CA_YUN_DAT.str_replace([W3CA_MASTER_PATH,"/","\\",":","?"],'',$tplfile);
 	    if(file_exists($load_file)==false||filemtime($tplfile)>filemtime($load_file)){
-	        $this->tpl_const=array_merge(W3cApp::$instance->_tpl_const(),$this->tpl_const);
+	        $this->tpl_const=array_merge(self::$app->instance->_tpl_const(),$this->tpl_const);
 	        $tpl_ct=$this->template($tplfile);
 	        file_put_contents($load_file, $tpl_ct);
 	    }
@@ -413,21 +409,12 @@ class Template{
                 return $file;
             }
         }
-
-        $tplfile=$this->default_tpl.$name.".htm";
-        $tplfile2=$this->default_tpl.$name.".php";
-        if(file_exists($tplfile2)){
-            return $tplfile2;
-        }else if(!is_file($tplfile)) {
-            //模板不存在
-            echo '模板不存在:' . $tplfile;
-            return null;
-        }
-        return $tplfile;
-
+		//模板不存在
+        echo '模板不存在:' . $name;
+        return null;
 	}
 	protected function tplKey($dir_key){
-	    $cache=new \w3c\helper\Cache();
+	    $cache=new Cache();
 	    $dir_keys=$cache->value(W3CA_YUN_DAT."tpl2dir");
 
 	    if($dir_keys){
@@ -451,11 +438,11 @@ class Template{
      * 保存编译用到的参数
      */
     protected function saveParseParam($file_var,$file_param){
-        $store_file=W3CA_PATH.$this->export_dir.$file_var.".arg";
+        $store_file=W3CA_MASTER_PATH.$this->export_dir.$file_var.".arg";
         return file_put_contents($store_file,serialize($file_param));
     }
     public function readParseParam($file_var){
-        $store_file=W3CA_PATH.$this->export_dir.$file_var.".arg";
+        $store_file=W3CA_MASTER_PATH.$this->export_dir.$file_var.".arg";
         $param=unserialize(file_get_contents($store_file));
         foreach ($param as $key=>$value){
             $this->$key=$value;
@@ -478,7 +465,7 @@ class Template{
 		}
 	    $viewname=str_replace("/", "_", $fname);
 		$this->file_var=$file_name=$this->tplKey($dir_key).$viewname.".php";
-	    $load_file=W3CA_PATH.$this->export_dir.$file_name;
+	    $load_file=W3CA_MASTER_PATH.$this->export_dir.$file_name;
 		$this->div_ini_id=10000+W3CA_UTC_TIME%10000;
 		$file_var="\$this->file_var";
 	    $class_cont="<?php ".$file_var."='".$file_name."';";
@@ -491,9 +478,9 @@ class Template{
             }
 	        $this->edit_export=$this->tpl_list=$this->load_blocks=array();
 	        //固定变量
-	        $this->tpl_const=array_merge(W3cApp::$instance->_tpl_const(),$this->tpl_const);
+	        $this->tpl_const=array_merge(self::$app->instance->_tpl_const(),$this->tpl_const);
 	        $tpl_ct=$this->template($tplfile);
-	        $class_vars="\$this->tpl_dir='".base64_encode(str_replace("'","",$this->tpl_dirs[0]))."';\$this->default_tpl='".base64_encode(str_replace("'","",$this->default_tpl))."';";
+	        $class_vars="\$this->tpl_dir='".base64_encode(str_replace("'","",$this->tpl_dirs[0]))."';";
 	        if($this->load_blocks){
 	            $class_vars.="\$this->block_marks=".$this->varCode($this->load_blocks,true).";";
 	        }
@@ -515,10 +502,9 @@ class Template{
                 "load_blocks"=>$this->load_blocks,
                 "tpl_list"=>$this->tpl_list,
                 "block_areas"=>$this->edit_export,
-                "default_tpl"=>$this->default_tpl,
                 "tpl_dirs"=>$this->tpl_dirs]);
 
-	        $class_cont.=$class_vars."\$this->blocksInit($infos_var); \\W3cApp::template()->clearTimeout(".$file_var.",array(\"".implode("\",\"",$this->tpl_list)."\"));?>".$tpl_ct;
+	        $class_cont.=$class_vars."\$this->blocksInit($infos_var); self::$app->template()->clearTimeout(".$file_var.",array(\"".implode("\",\"",$this->tpl_list)."\"));?>".$tpl_ct;
 	        if(file_put_contents($load_file, preg_replace('/([;\}\{])\s*\?><\?php/','$1',$class_cont))&&$this->block_manager){
                 $this->block_manager->updateBlock($file_name,$this->load_blocks);
             }
@@ -554,10 +540,10 @@ class Template{
     }
 	//清除过期模板
 	function clearTimeout($cf,$tpls){
-	    $tf=W3CA_PATH.$this->export_dir.$cf;
+	    $tf=W3CA_MASTER_PATH.$this->export_dir.$cf;
 		$time0=filemtime($tf);
 		foreach ($tpls as $t) {
-			if(filemtime(W3CA_PATH.$t)>$time0){
+			if(filemtime(W3CA_MASTER_PATH.$t)>$time0){
 				if(!unlink($tf)){
 					echo "<!--clear error!-->";
 				}
@@ -576,7 +562,7 @@ class Template{
      * @return array
      */
 	function clearFile($file,$tpl=""){
-		if(unlink(W3CA_PATH.$this->export_dir.$file)){
+		if(unlink(W3CA_MASTER_PATH.$this->export_dir.$file)){
 		    if($tpl){
                 $param=$this->readParseParam($file);
                 $this->parse($tpl, $param['dir_key']);

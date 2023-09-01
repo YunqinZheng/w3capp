@@ -1,7 +1,7 @@
 <?php
 namespace cms\model;
 use common\model\BlockDataRecord;
-use w3c\helper\Str;
+use w3capp\helper\Str;
 
 class BlockData extends BlockDataRecord {
 	static function itemJson($bid,$replace_id){

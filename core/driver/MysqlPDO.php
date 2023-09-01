@@ -1,8 +1,8 @@
 <?php
-namespace w3c\driver;
-use w3c\driver\DataInterface;
-use w3c\helper\Str;
-
+namespace w3capp\driver;
+use w3capp\driver\DataInterface;
+use w3capp\helper\Str;
+use w3capp\W3cAppDataApi;
 /**
  * mysql类
  */
@@ -162,7 +162,7 @@ class MysqlPDO implements DataInterface{
 		//if($sth->execute()===false){
         //    throw new \ErrorException(var_export($sth->errorInfo(),true));
         //}
-		$data_api=new \W3cAppDataApi([]);
+		$data_api=new W3cAppDataApi([]);
 		$data_api->setReuseAble(true);
 		$data_api->onInited(function($api,$prepare_val)use($sql){
             if (is_array($prepare_val)) {

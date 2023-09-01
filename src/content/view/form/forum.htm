@@ -1,0 +1,16 @@
+/*?$editdata=$this->edit_data?$this->edit_data:array (
+  'title' => '',
+  'channel_id' => '0',
+  'pic' => '',
+);?*/<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">版块名称:</span><p class="inct"><input type="text" name="title" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline chidden"><input name="channel_id" type="hidden" value="/*?echo Str::htmlchars($editdata['channel_id']);?*/"/></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo Str::htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo Str::htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline cdatetime"><span class="labt">发布时间:</span><div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?date('Y-m-d H:i:s',$editdata['dateline']):'';?*/"/><div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div><script>request_js("date",function(){date_view("dateline",0)});</script></div></div>
+<div class="formline ctext"><span class="labt">作者:</span><p class="inct"><input type="text" name="author" value="/*?echo Str::htmlchars($editdata['author']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">查看数:</span><p class="inct"><input type="text" name="views" value="/*?echo Str::htmlchars($editdata['views']);?*/"/></p></div>
+<div class="formline cpicupload"><script src="{URL_ROOT}static/yunfile/jquery.uploadify.min.js"></script><span class="labt">图标</span><div class="inct"><input name="pic" type="hidden" value="/*?echo $editdata['pic']?*/" /><input id="file_pic_pic" data_input="pic" name="f_pic_pic" type="file" data="/*?echo $this->_m(":Material")->file_path($editdata['pic']);?*/"/>
+		<link rel="stylesheet" href="{URL_ROOT}static/yunfile/upload.css"><script>
+		up2local_pic("file_pic_pic","图标");
+		</script></div></div>
+<input type="hidden" value="YToxMzp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjEwOiJjaGFubmVsX2lkIjtzOjY6ImhpZGRlbiI7czo4OiJrZXl3b3JkcyI7czo0OiJ0ZXh0IjtzOjExOiJkZXNjcmlwdGlvbiI7czo4OiJ0ZXh0YXJlYSI7czo4OiJkYXRlbGluZSI7czo4OiJkYXRldGltZSI7czo2OiJhdXRob3IiO3M6NDoidGV4dCI7czo1OiJ2aWV3cyI7czo0OiJ0ZXh0IjtzOjM6InBpYyI7czo5OiJwaWN1cGxvYWQiO3M6MzoidHBsIjtzOjY6ImhpZGRlbiI7czo0OiJ0eXBlIjtzOjY6ImhpZGRlbiI7czo0OiJtYXJrIjtzOjY6ImhpZGRlbiI7czo3OiJyZW1hcmtzIjtzOjY6ImhpZGRlbiI7czoxMToidXBkYXRlX3RpbWUiO3M6NjoiaGlkZGVuIjt9" name="data_/*?echo $this->cookie_pre?*/"/>

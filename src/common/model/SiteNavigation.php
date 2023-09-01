@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_site_navigation数据记录类
  * @property string $id id
@@ -8,7 +9,7 @@ namespace common\model;
  * @property string $url 导航连接
  * @property string $display 是否显示
  */
-class SiteNavigation extends \W3cRecord{
+class SiteNavigation extends Record{
     protected static $seting;
     static public function recordName(){
         return 'site_navigation';

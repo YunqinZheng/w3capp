@@ -1,5 +1,5 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
 use common\model\SiteConfig;
 
 class EmailSmtp {

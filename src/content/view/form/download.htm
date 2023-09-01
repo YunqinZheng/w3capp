@@ -1,0 +1,30 @@
+<script src="{URL_ROOT}static/script/html5uploader.js?v=2022" type="text/javascript"></script>
+/*?$editdata=empty($edit_data)?array (
+  'file_url' => '',
+):$edit_data;?*/<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">标题:</span><p class="inct"><input type="text" name="title" value="/*?echo htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline cchannel"><span class="labt">所属栏目:</span><p class="inct"><select name="channel_id">/*? echo arrayToOptions($channels,$editdata['channel_id']);?*/</select></p></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline cdatetime"><span class="labt">发布时间:</span><div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?date("Y-m-d H:i:s",$editdata['dateline']):'';?*/"/><div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div><script>request_js("date",function(){date_view("dateline",0)});</script></div></div>
+<div class="formline cfile"><span class="labt">上传PDF:</span><div class="inct"><input id="file_url" name="file_url" type="text" value="/*?echo htmlchars($editdata['file_url']);?*/"/><div id="pdf_file"></div></div></div>
+
+		<input type="hidden" value="YToxMTp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjEwOiJjaGFubmVsX2lkIjtzOjc6ImNoYW5uZWwiO3M6ODoia2V5d29yZHMiO3M6NDoidGV4dCI7czoxMToiZGVzY3JpcHRpb24iO3M6ODoidGV4dGFyZWEiO3M6ODoiZGF0ZWxpbmUiO3M6ODoiZGF0ZXRpbWUiO3M6ODoiZmlsZV91cmwiO3M6NDoiZmlsZSI7czozOiJ0cGwiO3M6NjoiaGlkZGVuIjtzOjQ6InR5cGUiO3M6NjoiaGlkZGVuIjtzOjQ6Im1hcmsiO3M6NjoiaGlkZGVuIjtzOjc6InJlbWFya3MiO3M6NjoiaGlkZGVuIjtzOjExOiJ1cGRhdGVfdGltZSI7czo2OiJoaWRkZW4iO30=" name="data_/*?echo $this->cookie_pre?*/"/>
+<script>
+//$("#input_form")[0].enctype="multipart/form-data";
+var pdfup=new UploadButton();
+pdfup.view("pdf_file",function(){
+	var set={formData:{token:window.uploadset.formData.token,classify:"file",fext:"pdf"}};
+	set.fileTypeExts="application/pdf";
+	set.url=APP_PATH+"cms/explorer/upload";
+	set.maxSize=20*1024*1024;
+	set.chunkSize=204800;
+	set.auto=true;
+	set.onUploadSuccess=function(f,r){
+		var d=JSON.parse(r);
+		$("#file_url").val(d.data.file_path);
+		$("#pdf_file input[type=file]").val('');
+		$("#pdf_file input[type=file]")[0].outerHTML=$("#pdf_file input[type=file]")[0].outerHTML;
+	};
+	return set;
+});
+</script>

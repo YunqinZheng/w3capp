@@ -1,0 +1,67 @@
+<!--include::common/header-->
+<script>
+    function ct_add(){
+        window.location.href=APP_PATH+'content/add/download';
+    }
+    function ct_delete(){
+        if(confirm("你确定彻底删除？删除后将不能恢复")){
+            var f=EId("list_form");
+            f.action=APP_PATH+"content/del/download";
+            f.submit();
+        }
+
+    }
+    function mark_deleted(){
+        var f=EId("list_form");
+        f.action=APP_PATH+"content/deprecated/download";
+        f.submit();
+    }
+    function page_goto(page) {
+        $("#search_form input[name=page]").val(page);
+        $("#search_form").submit();
+    }
+</script>
+<div class="pagetop">PDF下载-内容管理</div>
+<div class="opbox-top"><form id="search_form" method="post" action="{APP_PATH}content/index/download">
+    <input type="hidden" name="page" value="?{$page}"/>
+    <input type="text" name="search" value="?{$_POST['search']}"  placeholder="关键字"/>
+    <button type="button" onclick="page_goto(1)">查询</button>
+    <button type="button" onclick="ct_add()">发布</button>
+    <button type="button" onclick="ct_delete()" >彻底删除</button>
+    <button type="button" onclick="mark_deleted()" >移到回收站</button></form>
+</div>
+<div class="opbox">
+    <form method="post" action="" id="list_form">
+        <!--要初始化请修改init_hash-->
+        <!--?$this->block_args['defaultList']=['page_index'=>$page,'page_size'=>10];?-->
+            <!--static_start::defaultList|列表|query\Page-->
+        <!--init--
+            {
+            "init_hash":"w3capp3","update_time":0,
+            "content_record":"download"
+            }
+        --init-->
+        <table class="tpage">
+            <thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox" /></th>
+                <th style="width: 40px;">id</th>
+                                                                <th>标题</th>
+                                                <th>发布时间</th>
+                                <th style="width: 65px;">操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <!--{loop $data($key,$val)}-->            <tr><td class="text-center"><input name="rid[]" type="checkbox" value="?{$val['id']}"/></td>
+                <td>?{$val['id']}</td>
+                <td>?{$val['title']}</td><td>?{date('Y-m-d H:i',$val['dateline'])}</td>                <td><a href="{APP_PATH}content/edit/download/?{$val['id']}">编辑</a>
+                    <a href="{APP_PATH}content/view/download/?{$val['id']}" target="_blank">查看</a></td>
+            </tr>
+            <!--{/loop}-->            </tbody>
+            <tfoot>
+            <tr><td colspan="5"><!--?\W3cUI::pageObjLink($data,"javascript:page_goto([page]);");?--></td></tr>
+            </tfoot>
+        </table>
+        <!--static_end::defaultList-->
+    </form>
+</div>
+<!--include::common/footer-->

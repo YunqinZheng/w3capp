@@ -1,5 +1,5 @@
 <?php
-namespace w3c\driver;
+namespace w3capp\driver;
 interface DataInterface{
     public function tryCommit($program,$catch,$final);
     public function beginTransaction();
@@ -26,7 +26,7 @@ interface DataInterface{
 
     /**
      * @param $q string
-     * @return \W3cAppDataApi
+     * @return W3cAppDataApi
      */
     public function getIterator($q);
     public function tableExisted($table_name);

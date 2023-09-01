@@ -1,6 +1,7 @@
 <?php 
 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_sys_feature_menu数据记录类
  * @property string $id id
@@ -10,7 +11,7 @@ namespace common\model;
  * @property string $orderid 排序
  * @property string $keyid keyid
  */
-class SysFeatureMenu extends \W3cRecord{
+class SysFeatureMenu extends Record{
     protected $primaryName="id";
     
     static public function recordName(){

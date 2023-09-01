@@ -1,4 +1,5 @@
 <?php
+namespace w3capp;
 use w3capp\helper\Str;
 class UI extends Core {
 	var $block_args;
@@ -8,7 +9,7 @@ class UI extends Core {
     protected $all_block;
     protected $fun_block_obj;
     protected $tpl_dir;
-    protected $default_tpl;
+
     protected $attach_block_marks;
     var $return_page;
 
@@ -276,7 +277,7 @@ class UI extends Core {
     }
     protected function outputParam(){
         $ctrl_path=empty($this->edit_page_controler)?"cms/block":$this->edit_page_controler;
-        $block_api=["file_var"=>$this->file_var,"addform"=>"addblockform","page_arg"=>["tpl"=>$this->tpl,"tpl_mark"=>$this->tpl_mark,"tpl_dir"=>$this->tpl_dir,"default_tpl"=>$this->default_tpl,"attachs"=>$this->attach_block_marks],
+        $block_api=["file_var"=>$this->file_var,"addform"=>"addblockform","page_arg"=>["tpl"=>$this->tpl,"tpl_mark"=>$this->tpl_mark,"tpl_dir"=>$this->tpl_dir,"attachs"=>$this->attach_block_marks],
             "edit_ctrl_url"=>W3cApp::route($ctrl_path)];
         $page_param=W3cApp::template()->readParseParam($this->file_var);
         $block_api['blocks_info']=$this->all_blocks_info;

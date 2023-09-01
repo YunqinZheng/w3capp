@@ -1,5 +1,5 @@
 <?php
-namespace w3c\driver;
+namespace w3capp\driver;
 class Mongo implements DataInterface {
     private $client;
     private $collection_pre;

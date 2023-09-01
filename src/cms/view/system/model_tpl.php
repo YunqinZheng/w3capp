@@ -44,6 +44,7 @@ foreach ($strings as $l=>$ss){
 }
 ?>
 namespace ?{$space_name};
+use w3capp\Record;
 /**
  * ?{$table_name}数据记录类
 <?php
@@ -51,7 +52,7 @@ foreach($property as $c=>$desc){
     echo " * @property string \$$c $desc\n";
 }
 ?> */
-class ?{$class_name} extends \W3cRecord{
+class ?{$class_name} extends Record{
     <?php if($primary!='id'){
     echo '    protected $primaryName="'.$primary.'";
     ';

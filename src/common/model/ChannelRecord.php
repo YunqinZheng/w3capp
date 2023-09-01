@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_channel数据记录类
  * @property string $id id
@@ -18,7 +19,7 @@ namespace common\model;
  * @property string $static_path 固定路径
  * @property string $path 访问路径
  */
-class ChannelRecord extends \W3cRecord{
+class ChannelRecord extends Record{
     
     static public function recordName(){
         return 'channel';

@@ -1,0 +1,86 @@
+/*?
+$display_button=false;
+$editdata=empty($edit_data)?array (
+  'article_text' => '',
+  'author' => '',
+):$edit_data;
+if(empty($editdata['sort_id'])){
+    echo '<input name="sort_id" value="100" type="hidden"/>';
+}
+if(empty($editdata['pic'])){
+$editdata['pic_url']='';
+}else{
+$editdata['pic_url']=$mate_path.$editdata['pic'];
+}
+?*/
+<link rel="stylesheet" href="{URL_ROOT}static/yunfile/upload.css">
+<script type="text/javascript" src="{URL_ROOT}static/script/block_lib.js"></script>
+<script src="{URL_ROOT}static/ckeditor/ckeditor.js" ></script>
+<script src="{URL_ROOT}static/ckeditor/init_function.js"></script>
+<script src="{URL_ROOT}static/script/html5uploader.js" type="text/javascript"></script>
+<div class="main-edit cl">
+    <div class="right-inputs">
+
+        <div class="formline"><span class="labt">关键字:</span><div class="inct">
+            <div><textarea name="keywords">/*?echo Str::htmlchars($editdata['keywords']);?*/</textarea></div></div></div>
+        <div class="formline"><span class="labt">描述:</span><div class="inct">
+            <div><textarea name="description">/*? echo Str::htmlchars($editdata['description']);?*/</textarea></div></div></div>
+
+        <div class="formline cpicupload">
+            <span class="labt">封面</span>
+            <div class="inct">
+                <input name="pic" id="pic_url" type="hidden" value="/*?echo $editdata['pic'];?*/" />
+                <input id="file_pic_pic" data_input="#pic_url" name="f_pic_pic" type="hidden" data="/*?echo $editdata['pic_url'];?*/"/>
+                <script type="text/javascript">
+                    up2local_pic("file_pic_pic","封面");
+                </script>
+            </div>
+        </div>
+        <div class="line">
+            <dl class="w5">
+                <dd class="formline cchannel">
+                    <span class="labt">所属栏目:</span><p class="inct"><select name="channel_id">/*? echo self::arrayToOptions($channels,$editdata['channel_id']);?*/</select></p>
+                </dd>
+            </dl>
+            <dl class="w5"><dd class="formline cdatetime">
+                <span class="labt">发布时间:</span>
+                <div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?date("Y-m-d H:i:s",$editdata['dateline']):'';?*/"/>
+                    <div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div>
+                    <script type="text/javascript">request_js("date",function(){date_view("dateline",0)});</script></div>
+            </dd></dl>
+        </div>
+        <!-- <div class="line">
+            <dl class="w5"><dd class="formline cselect">
+                <span class="labt">作者:</span><p class="inct">
+                <input type="text" name="author" value="/*?echo Str::htmlchars($editdata['author']);?*/"/></p>
+            </dd></dl>
+            <dl class="w5">
+                <dd class="formline ctext">
+                    <span class="labt">查看数:</span>
+                    <p class="inct"><input type="text" name="views" value="/*?echo Str::htmlchars($editdata['views']);?*/"/></p>
+                </dd>
+            </dl>
+        </div> -->
+        <!--div class="line">
+            <dl class="w5"><dd class="formline cselect">
+                <span class="labt">关联会员ID:</span><p class="inct">
+                <input type="text" name="member_id" value="/*?echo Str::htmlchars($editdata['member_id']);?*/"/></p>
+            </dd></dl>
+        </div-->
+        <div class="end_button">
+            <div><a class="btn btn-default" href="{APP_PATH}content/index/?{$ct_type['content_mark']}"><span class="icon-uniE602"></span>返回</a>&nbsp;<button class="btn btn-sub" type="submit"><span class="icon-uniE60B "></span>提交发布</button></div>
+        </div>
+    </div>
+    <div class="main-p">
+        <div class="h1"><input type="text" name="title" placeholder="文章标题" title="title" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></div>
+        <div class="formline chtml">
+            <textarea id="idarticle_text" placeholder="文章内容" name="article_text">/*?echo Str::htmlchars($editdata['article_text']);?*/</textarea>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    editv.init();
+    init_ckeditor("idarticle_text");
+</script>

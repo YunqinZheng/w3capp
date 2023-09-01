@@ -2,16 +2,17 @@
 namespace cms\controller;
 use cms\model\FeatureMenu;
 use cms\model\SysUser;
-
+use w3capp\Controller;
+use w3capp\W3cApp;
 /**
  * 管理平台
  */
-class mainCtrl extends \W3cController{
+class mainCtrl extends Controller{
     var $default_url;
     var $user_info;
     function __construct(){
         $this->default_url=empty($_COOKIE['mreferer'])?'':$_COOKIE['mreferer'];
-        \W3cApp::template()->setDefaultTplPath(W3CA_MASTER_PATH.'app/common/view/');
+        W3cApp::template()->setDefaultTplPath(W3CA_MASTER_PATH.'app/common/view/');
     }
     public function index($a=null){
         if(!empty($a)&&$a!="index"&&$a!="index.php"){
@@ -25,10 +26,10 @@ class mainCtrl extends \W3cController{
         $html->menus=FeatureMenu::get_option_tree($opt_ids,$this->user_info->role_option_type);
         $html->user_name=$this->user_info['name'];
         //echo $this->default_url;
-        if($this->default_url!=""&&stripos($this->default_url, \W3cApp::route("main"))===false){
+        if($this->default_url!=""&&stripos($this->default_url, W3cApp::route("main"))===false){
             $html->default_url=$this->default_url;
         }else{
-            $html->default_url=\W3cApp::route("main/msgs");
+            $html->default_url=W3cApp::route("main/msgs");
         }
         $html->user_info=$this->user_info;
         setcookie("mreferer","",-1,"/");
@@ -43,20 +44,20 @@ class mainCtrl extends \W3cController{
         if(SysUser::validate()){
             $this->user_info=SysUser::getLoginUser();
             $this->user_info->readRole();
-            if(\W3cApp::$instance==$this&&($fun=="index"||$fun=="msgs")){
+            if(W3cApp::$instance==$this&&($fun=="index"||$fun=="msgs")){
                 return true;
             }
         }else{
             //未登录
-            \W3cApp::setCookie(["mreferer",$_SERVER['REQUEST_URI'],3600,"/"]);
-            echo "<script type='text/javascript'>var url='".\W3cApp::route("main/login")."'; if(window.top!=window.self){alert('登录超时,请重登录！');window.parent.location.href=url;}
+            W3cApp::setCookie(["mreferer",$_SERVER['REQUEST_URI'],3600,"/"]);
+            echo "<script type='text/javascript'>var url='".W3cApp::route("main/login")."'; if(window.top!=window.self){alert('登录超时,请重登录！');window.parent.location.href=url;}
 			else window.location.href=url;</script>";
             exit;
         }
-        if(\W3cApp::$admin==$this->user_info['id'])
+        if(W3cApp::$admin==$this->user_info['id'])
             return true;
         $pass=false;
-        $ctrl_name=str_replace("\\controller\\","/",\W3cApp::$ctrl_name);
+        $ctrl_name=str_replace("\\controller\\","/",W3cApp::$ctrl_name);
         if($this->user_info->role_option_type){
             //白名单规则
             if(empty($this->user_info->role_options)){
@@ -109,7 +110,7 @@ class mainCtrl extends \W3cController{
             if($tl>0){
                 $t=str_repeat('0',$tl).$t;
             }
-            $html->hash_code=openssl_encrypt($t.".w3capp.com", 'aes-128-cbc',\W3cApp::$install_config['register_key'],OPENSSL_ZERO_PADDING,\W3cApp::$install_config['register_iv']);
+            $html->hash_code=openssl_encrypt($t.".w3capp.com", 'aes-128-cbc',W3cApp::$install_config['register_key'],OPENSSL_ZERO_PADDING,W3cApp::$install_config['register_iv']);
             $html->output();
 
         }else{
@@ -120,14 +121,14 @@ class mainCtrl extends \W3cController{
                 return $this->_referer_to("数据请求错误！");
             }
             $encrypted = $_POST['hash_code'];
-            $decrypted = openssl_decrypt($encrypted, 'aes-128-cbc', \W3cApp::$install_config['register_key'], OPENSSL_ZERO_PADDING , \W3cApp::$install_config['register_iv']);
+            $decrypted = openssl_decrypt($encrypted, 'aes-128-cbc', W3cApp::$install_config['register_key'], OPENSSL_ZERO_PADDING , W3cApp::$install_config['register_iv']);
             if(abs(time()%100000-$decrypted)>30){
                 return $this->_referer_to("请求超时！");
             }
             $user=SysUser::validate($_POST['name'],$_POST['pwd']);
             if($user){
                 $user->login();
-                $this->_referer_to(null,\W3cApp::route("main"));
+                $this->_referer_to(null,W3cApp::route("main"));
                 exit();
             }else{
                 return $this->_referer_to("用户不存在或密码错误！");
@@ -140,7 +141,7 @@ class mainCtrl extends \W3cController{
      */
     public function logout(){
         SysUser::getLoginUser()->logout();
-        return $this->_referer_to(null,\W3cApp::route("main/login"));
+        return $this->_referer_to(null,W3cApp::route("main/login"));
     }
     /**
      * 首界面

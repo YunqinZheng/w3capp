@@ -1,5 +1,6 @@
 <?php
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_channel_type数据记录类
  * @property string $id id
@@ -9,7 +10,7 @@ namespace common\model;
  * @property string $main_form 后台表单
  * @property string $member_publish 会员可单独发布
  */
-class ChannelTypeRecord extends \W3cRecord{
+class ChannelTypeRecord extends Record{
 
     static public function recordName(){
         return 'channel_type';

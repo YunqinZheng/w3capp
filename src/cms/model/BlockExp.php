@@ -2,7 +2,7 @@
 namespace cms\model;
 use common\model\BlockExtendRecord;
 use common\model\BlockRecord;
-
+use w3capp\W3cApp
 /**
  * Class BlockExp
  * @package cms\model
@@ -35,8 +35,8 @@ class BlockExp {
             }
         }
         $file_name=date('Y-m-d').".block";
-        if(\W3cApp::$holder_response){
-            return \W3cApp::setResponse(200,["Content-type"=>"application/json;",
+        if(W3cApp::$holder_response){
+            return W3cApp::setResponse(200,["Content-type"=>"application/json;",
                 'Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\Str::toJson($export_result));
         }else{
             header('Content-type: application/json;');
@@ -84,8 +84,8 @@ class BlockExp {
             }
         }
         $file_name=preg_replace('/\d|(\.php)/','',$this->file_var).".json";
-        if(\W3cApp::$holder_response){
-            return \W3cApp::setResponse(200,['Content-type'=>'application/json;','Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\str::toJson($export_result));
+        if(W3cApp::$holder_response){
+            return W3cApp::setResponse(200,['Content-type'=>'application/json;','Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\str::toJson($export_result));
         }else{
             header('Content-type: application/json;');
             header('Content-Disposition: attachment; filename="'.$file_name.'"');
@@ -147,7 +147,7 @@ class BlockExp {
             $this->block_manager->areaAdd($key,$value['blocks']);
         }
         if($file){
-            \W3cApp::template()->clearFile($file);
+            W3cApp::template()->clearFile($file);
         }
         return true;
     }

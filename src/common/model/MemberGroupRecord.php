@@ -1,13 +1,14 @@
 <?php
 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_member_group数据记录类
  * @property string $id id
  * @property string $name name
  * @property string $publish_menu publish_menu
  */
-class MemberGroupRecord extends \W3cRecord{
+class MemberGroupRecord extends Record{
     
     static public function recordName(){
         return 'member_group';

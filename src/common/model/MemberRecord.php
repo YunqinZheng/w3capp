@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_member数据记录类
  * @property string $id id
@@ -20,7 +21,7 @@ namespace common\model;
  * @property string $salt salt
  * @property string $email_checked email_checked
  */
-class MemberRecord extends \W3cRecord{
+class MemberRecord extends Record{
     
     static public function recordName(){
         return 'member';

@@ -1,0 +1,130 @@
+<!--include::common/header-->
+<!--?
+        $arg=['page_index'=>$page,'page_size'=>20];
+        $w=[];
+        if(false==empty($_POST['search'])){
+            $w[]=['like'=>['title',$_POST['search']]];
+        }
+        if(empty($_POST['channel_id'])){
+            $_POST['channel_id']='';
+        }else{
+            $w[]=['channel_id'=>$_POST['channel_id']];
+        }
+        if($w){
+            $arg["condition"]=['and'=>$w];
+        }
+        $this->block_args['defaultList']=$arg;
+?-->
+<script type="text/javascript">
+    function ct_add(){
+        window.location.href=APP_PATH+'content/add/article';
+    }
+    function ct_delete(){
+        if(confirm("你确定彻底删除？删除后将不能恢复")){
+            var f=EId("list_form");
+            f.action=APP_PATH+"content/del/article";
+            f.submit();
+        }
+
+    }
+    function mark_deleted(){
+        var f=EId("list_form");
+        f.action=APP_PATH+"content/deprecated/article";
+        f.submit();
+    }
+    function page_goto(page) {
+        $("#search_form input[name=page]").val(page);
+        $("#search_form").submit();
+    }
+    function update_sort(){
+        var ids=[];
+        var val={};
+        $("#list_form .stid").each(function(){
+            var id=this.getAttribute("rid");
+            ids.push(id);
+            val['sort_'+id]=this.value;
+        });
+        val['ids']=ids.join(",");
+        $.post(APP_PATH+'content/save/article_sort',val,function(rs){
+            if(rs.error){
+                msg_box.create_short(rs.message);
+            }else if(rs.error==0){
+                msg_box.create_short("更新成功！","right",function(){
+                    $("#search_form").submit();
+                });
+            }else{
+                alert(rs);
+            }
+        });
+    }
+</script>
+<div class="pagetop">文章-内容管理</div>
+<div class="opbox-top">
+    <div class="Rft">数值小排前<button type="button" onclick="update_sort()">更新排序</button></div>
+    <form id="search_form" method="post" action="{APP_PATH}content/index/article">
+    <input type="hidden" name="page" value="?{$page}"/>
+        <select name="channel_id">
+            <option value="">发布栏目</option>/*? echo self::arrayToOptions($channels,$_POST['channel_id']);?*/
+        </select>
+    <input type="text" class="mid_txt" name="search" value="?{$_POST['search']}"  placeholder="标题关键字"/>
+    <button type="button" onclick="page_goto(1)">查询</button>
+    <button type="button" onclick="ct_add()">添加</button>
+    <button type="button" onclick="ct_delete()" >彻底删除</button>
+    <button type="button" onclick="mark_deleted()" >移到回收站</button>
+    </form>
+</div>
+<div class="opbox">
+    <form method="post" action="" id="list_form">
+        <!--要初始化请修改init_hash-->
+        <!--static_start::defaultList|列表|query\Page-->
+        <!--init--
+            {
+            "data_output":"data",
+            "update_time":0,
+            "content_record":"article",
+            "order":{"a.sort_id":"asc","a.`id`":"desc"},
+            "alias":"a",
+            "select":"a.`id`,a.title,a.keywords,a.dateline,a.member_id,a.views,m.`name`,c.ch_name,a.sort_id",
+            "join":"left join [pre]member m on a.member_id=m.id left join [pre]channel c on a.channel_id=c.id"
+            }
+        --init-->
+        <!--static_end::defaultList-->
+        <table class="tpage">
+            <thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox" /></th>
+                <th style="width: 40px;">id</th>
+                <th>标题</th>
+                <!--th>会员ID</th-->
+                <!-- th>会员名称</th-->
+                <th>所属栏目</th>
+                <th>关键字</th>
+                <th>发布时间</th>
+                <th>查看数</th>
+                <th style="width: 40px;">排序值</th>
+                <th style="width: 65px;">操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <!--{loop $data($key,$val)}-->
+            <tr><td class="text-center"><input name="rid[]" type="checkbox" value="?{$val['id']}"/></td>
+                <td>?{$val['id']}</td>
+                <td>?{$val['title']}</td>
+                <!-- td>?_$val['member_id']_</td>
+                <td>?_$val['name']_</td -->
+                <td>?{$val['ch_name']}</td>
+                <td>?{$val['keywords']}</td>
+                <td>?{Str::human_time($val['dateline'])}</td>
+                <td>?{$val['views']}</td>
+                <td><input type="text" class="stid minixt" rid="?{$val['id']}" value="?{$val['sort_id']}"></td>
+                <td><a href="{APP_PATH}content/edit/article/?{$val['id']}">编辑</a>
+                    <a href="{APP_PATH}content/view/article/?{$val['id']}" target="_blank">查看</a></td>
+            </tr>
+            <!--{/loop}-->
+            </tbody>
+            <tfoot>
+            <tr><td colspan="9"><div class="Rft"><button type="button" onclick="update_sort()">更新排序</button></div><!--?\W3cUI::pageObjLink($data,"javascript:page_goto([page]);");?--></td></tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<!--include::common/footer-->

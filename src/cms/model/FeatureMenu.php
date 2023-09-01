@@ -1,7 +1,7 @@
 <?php
 namespace cms\model;
 use common\model\SysFeatureMenu;
-use w3c\helper\Str;
+use w3capp\helper\Str;
 
 class FeatureMenu extends SysFeatureMenu {
 	//id, pid, name, url, orderid

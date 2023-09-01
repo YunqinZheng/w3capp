@@ -1,28 +1,40 @@
 <?php
 
-//ini_set('error_reporting', 64|256|1|4|16);
-//ini_set('display_errors','On');//64|256|1|4|16
-error_reporting($install_cf['error_level']);
-ini_set('date.timezone',$install_cf['timezone']);//PRC
-define('W3CA_OPEN_DEBUG',true);
+if(!defined('W3CA_OPEN_DEBUG'))
+	define('W3CA_OPEN_DEBUG',true);
 
 //前台模版目录
-define('W3CA_THEME_TPL',W3CA_PATH."TPL/");
+define('W3CA_THEME_TPL',W3CA_MASTER_PATH."TPL/");
 
-//当前时间
-define("W3CA_UTC_TIME",time());
-
-//随机数a-z|0-9,用于生成临时数据,程序按装后不要修改'JIT2G3F4'
-define("W3CA_YUN_DAT",$install_cf['random_key']);
-//url访问目录，除去url中http://+dns分部；默认'/'
-define("W3CA_URL_ROOT",$install_cf['app_dir']);
 //字符集
 define("W3CA_DB_CHAR_SET", "utf8");
-//默认的控制器
-define("W3CA_DEF_CTRL", "\\cms\\controller\\webCtrl");
-//define("W3CA_DEF_DB", $install_cf['db_default']);
 
-require_once W3CA_MASTER_PATH.'core/W3cCore.php';
-require_once W3CA_MASTER_PATH.'core/W3cApp.php';
-require W3CA_MASTER_PATH."ctrl.rewrite.php";
-spl_autoload_register("W3cApp::loadClass");
+define("W3CAPP_LIB_DIR",__DIR__);
+require_once W3CAPP_LIB_DIR."/core/W3cAppCom.php";
+spl_autoload_register(function($classn){
+	$class_list=["w3capp\\Controller"=>"/core/Controller",
+		"w3capp\\Core"=>"/core/Core",
+		"w3capp\\InstallConfig"=>"/core/InstallConfig",
+		"w3capp\\Record"=>"/core/Record",
+		"w3capp\\Template"=>"/core/Template",
+		"w3capp\\TplParent"=>"/core/TplParent",
+		"w3capp\\W3cAppAdapter"=>"/core/W3cAppAdapter",
+		"w3capp\\UI"=>"/core/UI",
+		"w3capp\\W3cAppDataApi"=>"/core/W3cAppDataApi",
+		"w3capp\\W3cAppSession"=>"/core/W3cAppSession"];
+	if(empty($class_list[$classn])){
+		if(strpos($classn,'\\controller\\')){
+			require_once W3CA_MASTER_PATH.'app/'.str_replace("\\controller\\",'/',$classn).".php";
+		}else if(strpos($classn,'\\model\\')){
+			include_once W3CA_MASTER_PATH.'app/'.str_replace("\\model\\",'/model/',$classn).".php";
+		}else if(strpos($classn,'api\\block\\')===0){
+			include_once W3CA_MASTER_PATH.'app/'.str_replace("\\",'/',$classn).".php";
+		}else if(strpos($classn,'w3capp\\')===0){
+			$file=W3CAPP_LIB_DIR.'/core/'.strtr($classn,["\\"=>"/"]).".php";
+			require_once $file;
+		}
+	}else{
+		$file=W3CAPP_LIB_DIR.$class_list[$classn].".php";
+		require_once $file;
+	}
+},true,true);

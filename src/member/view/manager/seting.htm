@@ -1,0 +1,45 @@
+<!--include::common/header-->
+	<div class="pagetop">/*? echo $this->title?*/</div>
+	<div class="opbox-top">
+		<form method="post">
+			<div class="infrom">
+				<div class="text_t"><span class="labt">注册开启：</span><p class="inct"><label><input type="radio" name="open_regist" /*?if($this->data['open_regist'])echo'checked';?*/ value="1">开启</label>
+					<label><input type="radio" name="open_regist" /*?if(!$this->data['open_regist'])echo'checked';?*/ value="0">关闭</label>
+				</p></div>
+				<div class="text_t"><span class="labt">会员验证：</span><p class="inct"><label><input type="radio" name="check_type" /*?if($this->data['check_type']=='email')echo'checked';?*/  value="email">邮箱</label>
+					<label><input type="radio" name="check_type" /*?if(!$this->data['check_type'])echo'checked';?*/  value="">无</label>
+				</p></div>	
+				<div class="text_t"><span class="labt">协议说明：</span><p class="inct"><textarea name="agreement" class="big_text">/*?echo $this->data['agreement'];?*/</textarea></p></div>
+				<div class="text_t"><span class="labt">不可注册用名：</span><p class="inct"><textarea placeholder="用英文逗号“,”分开" name="black_names" class="ll_txt">/*?echo $this->data['black_names'];?*/</textarea></p></div>
+				<div><hr/>
+				<h4>qq登录设置</h4>
+					<p class="inct">appid:<input type="text" class="long_txt" name="qq_appid" placeholder="appid/client_id" value="?{$data['qq_appid']}"/>
+					appkey:<input type="text" class="long_txt" name="qq_appkey" placeholder="appkey/appsecret" value="?{$data['qq_appkey']}"/>
+					</p>
+				</div>
+				<div><hr/>
+					<h4>新浪微博登录设置</h4>
+					<p class="inct">appid:<input type="text" class="long_txt" name="wb_client_id" placeholder="appid/client_id" value="?{$data['wb_client_id']}"/>
+						appkey:<input type="text" class="long_txt" name="wb_client_secret" placeholder="appkey/appsecret" value="?{$data['wb_client_secret']}"/>
+					</p>
+				</div>
+				<div><hr/>
+				<h4>微信公众号对接</h4>
+				<p class="inct">appid:<input type="text" class="long_txt" name="wx_appid" placeholder="appid/client_id" value="?{$data['wx_appid']}"/>
+					appkey:<input type="text" class="long_txt" name="wx_appkey" placeholder="appkey/appsecret" value="?{$data['wx_appkey']}"/>
+				</p>
+				</div>
+                <div><hr/>
+                    <h4>支付宝对接</h4>
+                    <p class="inct">appid:<input type="text" class="long_txt" name="alipay_appid" placeholder="appid" value="?{$data['alipay_appid']}"/></p>
+                    <p class="inct">public_key:<br/><textarea class="big_text" name="alipay_public_key" placeholder="支付宝公钥">?{$data['alipay_public_key']}</textarea></p>
+					<p class="inct">private_key:<br/><textarea class="big_text" name="alipay_private_key" placeholder="开发者私钥">?{$data['alipay_private_key']}</textarea></p>
+                </div>
+				<hr/>
+				<div style="margin-top: 40px;" class="inct">
+				<button type="submit" class="big_btn">提交</button>
+				</div>
+			</div>
+		</form>
+	</div>
+<!--include::common/footer-->

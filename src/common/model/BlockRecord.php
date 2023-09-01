@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_block数据记录类
  * @property string $id id
@@ -16,7 +17,7 @@ namespace common\model;
  * @property string $hidden 是否隐藏
  * @property string $init_hash 初始标记
  */
-class BlockRecord extends \W3cRecord{
+class BlockRecord extends Record{
     
     static public function recordName(){
         return 'block';

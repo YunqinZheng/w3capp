@@ -4,9 +4,10 @@ use common\model\BlockExtendRecord;
 use common\model\BlockRecord;
 use common\model\PageBlockRecord;
 use common\model\PageFrameRecord;
-use w3c\helper\ContentForm;
+use w3capp\helper\ContentForm;
+use w3capp\Core;
 
-class PageBlock extends \W3cCore {
+class PageBlock extends Core {
     static public function encodeAttr($info){
         $d=array();
         $new_info=array();

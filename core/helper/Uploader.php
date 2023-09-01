@@ -1,5 +1,5 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
 class Uploader{
 	private $save_dir;
 	/**
@@ -33,7 +33,7 @@ class Uploader{
 	 * 自动生成的文件名的第一部分
 	 */
 	//protected $file_name1="";
-	protected $main_dir=W3CA_PATH;
+	protected $main_dir="./";
 	function mainDir($d){
         $this->main_dir=$d;
     }

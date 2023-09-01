@@ -3,7 +3,7 @@ namespace cms\controller;
 use cms\model\Theme;
 use cms\model\Material;
 use member\model\Member;
-use w3c\helper\Uploader;
+use w3capp\helper\Uploader;
 
 class explorerCtrl extends mainCtrl{
     function index($page=1){
@@ -145,7 +145,7 @@ class explorerCtrl extends mainCtrl{
     function picform(){
 
         echo json_encode(array("formData"=>array("token"=>self::_form_hash(),"classify"=>"image"),
-            "uploader"=>\W3cApp::route('cms/explorer/pic_post'),
+            "uploader"=>W3cApp::route('cms/explorer/pic_post'),
             "fileObjName"=>"file","multi"=>false,
             "fileTypeExts"=>"*.jpg;*.jpeg;*.gif;*.png;",
             "fileSizeLimit"=>"2MB"));

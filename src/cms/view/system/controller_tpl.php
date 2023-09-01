@@ -1,7 +1,7 @@
 namespace ?{$space_name};
 use ?{$space_m};
 
-class ?{$class_name} extends \medium\W3cEnter{
+class ?{$class_name} extends W3cEnterCtrl{
 <!--{if(in_array('index',$_POST['action_name']))}-->
     public function index($page=1){
         $list_obj=?{$space_m_name}::adaptTo([]);

@@ -4,7 +4,7 @@ use cms\model\FeatureMenu;
 use cms\model\SysUser;
 use cms\model\UserRole;
 use common\model\SysFeatureMenu;
-
+use w3capp\W3cApp;
 class systemCtrl extends mainCtrl{
 	/**
 	 * 用户角色
@@ -92,8 +92,8 @@ class systemCtrl extends mainCtrl{
 				$rns.=$rns?",".$value['role_name']:$value['role_name'];
 			}
 		}
-		if(\W3cApp::$holder_response){
-		    return \W3cApp::setResponse(200,["Content-type"=>"text/javasript;charset=".W3CA_DB_CHAR_SET],'document.write("'.$rns.'")');
+		if(W3cApp::$holder_response){
+		    return W3cApp::setResponse(200,["Content-type"=>"text/javasript;charset=".W3CA_DB_CHAR_SET],'document.write("'.$rns.'")');
         }else{
             header("Content-type:text/javasript;charset=".W3CA_DB_CHAR_SET);
             echo 'document.write("'.$rns.'")';
@@ -115,7 +115,7 @@ class systemCtrl extends mainCtrl{
 		if(in_array($this->user_info['id'],$_POST['rid'])){
             return $this->_referer_to("您不能删除你自己");
 		}
-		if(in_array(\W3cApp::$admin, $_POST['rid'])){
+		if(in_array(W3cApp::$admin, $_POST['rid'])){
             return $this->_referer_to("您不能删除系统管理员");
 		}
 		foreach ($_POST['rid'] as $userid){

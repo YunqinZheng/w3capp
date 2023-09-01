@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_material数据记录类
  * @property string $id id
@@ -11,7 +12,7 @@ namespace common\model;
  * @property string $member_id member_id
  * @property string $access_key access_key
  */
-class MaterialRecord extends \W3cRecord{
+class MaterialRecord extends Record{
     
     static public function recordName(){
         return 'material';

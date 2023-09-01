@@ -1,5 +1,6 @@
 <?php
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_sys_user数据记录类
  * @property string $id id
@@ -14,7 +15,7 @@ namespace common\model;
  * @property string $option_type option_type
  * @property string $specify_rights specify_rights
  */
-class SysUserRecord extends \W3cRecord{
+class SysUserRecord extends Record{
 
     static public function recordName(){
         return 'sys_user';

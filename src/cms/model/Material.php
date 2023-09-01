@@ -1,7 +1,7 @@
 <?php
 namespace cms\model;
 use common\model\MaterialRecord;
-use w3c\helper\Uploader;
+use w3capp\helper\Uploader;
 
 class Material extends MaterialRecord{
     var $file_info;

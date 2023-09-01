@@ -1,0 +1,23 @@
+/*?$editdata=$this->edit_data?$this->edit_data:array (
+  'keywords' => '',
+  'chid' => '',
+  'description' => '',
+  'views' => '',
+  'message' => '',
+);?*/
+<input name="forum_id" type="hidden" value="1" />
+<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">标题:</span><p class="inct"><input type="text" name="title" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo Str::htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline cchannel"><span class="labt">所属栏目:</span><p class="inct"><select name="chid">/*? echo self::arrayToOptions($this->model_channels,$editdata['chid']);?*/</select></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo Str::htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline cdatetime"><span class="labt">发布时间:</span><div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?$editdata['dateline']:'';?*/"/><div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div><script>request_js("date",function(){date_view("dateline",0)});</script></div></div>
+<div class="formline ctext"><span class="labt">作者:</span><p class="inct"><input type="text" name="author" value="/*?echo Str::htmlchars($editdata['author']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">查看数:</span><p class="inct"><input type="text" name="views" value="/*?echo Str::htmlchars($editdata['views']);?*/"/></p></div>
+<div class="formline chtml"><script src="{URL_ROOT}static/editor/kindeditor-min.js" charset="utf-8"></script>
+			<script charset="utf-8" src="{URL_ROOT}static/editor/lang/zh_CN.js"></script><span class="labt">主题内容:</span>
+			<div class="htmlp left-offset"><textarea id="message" name="message">/*?echo Str::htmlchars($editdata['message']);?*/</textarea></div>
+		<script>
+	window.editor_message;
+	editor_message = KindEditor.create('#message',{formatUploadUrl:false,uploadJson:"{APP_PATH}Material/editor_upload"});
+		</script></div>
+<input type="hidden" value="YToxMzp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjg6ImtleXdvcmRzIjtzOjQ6InRleHQiO3M6NDoiY2hpZCI7czo3OiJjaGFubmVsIjtzOjExOiJkZXNjcmlwdGlvbiI7czo4OiJ0ZXh0YXJlYSI7czo4OiJkYXRlbGluZSI7czo4OiJkYXRldGltZSI7czo2OiJhdXRob3IiO3M6NDoidGV4dCI7czo1OiJ2aWV3cyI7czo0OiJ0ZXh0IjtzOjc6Im1lc3NhZ2UiO3M6NDoiaHRtbCI7czozOiJ0cGwiO3M6NjoiaGlkZGVuIjtzOjQ6InR5cGUiO3M6NjoiaGlkZGVuIjtzOjQ6Im1hcmsiO3M6NjoiaGlkZGVuIjtzOjc6InJlbWFya3MiO3M6NjoiaGlkZGVuIjtzOjExOiJ1cGRhdGVfdGltZSI7czo2OiJoaWRkZW4iO30=" name="data_/*?echo $this->cookie_pre?*/"/>

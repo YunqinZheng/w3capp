@@ -2,7 +2,7 @@
 namespace w3capp;
 class Record implements \ArrayAccess,\Iterator{
     /**
-     * @var \W3cappAdapter
+     * @var W3cappAdapter
      */
     //private $modal;
     //数据库保存值
@@ -107,16 +107,7 @@ class Record implements \ArrayAccess,\Iterator{
     }
     */
 
-    /**
-     * 返回当前实例的model
-     * @return W3cMyAdapter
-     */
-    /*public function m(){
-        if(!$this->modal){
-            $this->modal=static::myAdapter();
-        }
-        return $this->modal;
-    }*/
+
     public static function adapterClass(){
         return W3cApp::$install_config['db_adapter'];
     }
@@ -291,7 +282,7 @@ class Record implements \ArrayAccess,\Iterator{
         return $modal->where($condition)->select($columns)->queryFirst();
     }
 
-    static function  record($condition,$create=false){
+    static function record($condition,$create=false){
         $modal=static::myAdapter();
         $columns=static::allColumnStr();
         $data=$modal->where($condition)->select($columns)->queryFirst();
@@ -313,7 +304,7 @@ class Record implements \ArrayAccess,\Iterator{
      * @param $condition
      * @param string $order
      * @param int $limit
-     * @return \W3cAppDataApi
+     * @return W3cAppDataApi
      * @throws Exception
      */
     static function findAll($condition,$order='',$limit=0){

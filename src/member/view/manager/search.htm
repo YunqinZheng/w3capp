@@ -1,0 +1,52 @@
+<!--include::common/header-->
+	<div class="pagetop">/*? echo $this->title?*/</div>
+	<script type="text/javascript">
+		function add(){
+			window.location.href=APP_PATH+'member/manager/add';
+		}
+		function del(){
+			var f=EId("list_form");
+			f.action=APP_PATH+"member/manager/delete";
+			f.submit();
+		}
+		function pageGoto(i){
+			EId("search_form")['page'].value=i;
+			EId("search_form").submit();
+		}
+		function search_member(){
+			EId("search_form")['page'].value=0;
+			EId("search_form").submit();
+		}
+	</script>
+	<div >
+		<div class="opbox-top">
+			<form action="{APP_PATH}member/manager" id="search_form" method="get">
+				{GV_INPUT}
+				<input type="hidden" name="count" value="/*?echo $_GET['c']?*/" />
+				<input type="hidden" name="page" value="/*?echo $_GET['page']?*/" />
+				<table><tr><td><input placeholder="会员id/名称/email" type="text" name="search" value="/*?echo $_GET['search']?*/" /></td><td><button type="button" onclick="search_member()">查找</button></td><td class="short_txt"></td>
+				<td><button type="button" onclick="add()">添加</button><button type="button" onclick="del()" class="btn-del">删除</button></td></tr></table>
+			</form>
+		</div>
+		<div class="opbox">
+			<form method="post" id="list_form">
+				<table class="tpage"><thead><tr><th class="colb"><input onclick="selectAll('rid[]')" type="checkbox"></th><th>ID</th><th>会员</th><th>Email</th><th>会员组</th><th>操作</th></tr></thead>
+					<tbody>
+						/*?foreach($this->list as $member){?*/
+						<tr><td align="center"><input name="rid[]" type="checkbox" value="/*?echo $member['id']?*/" /></td><td>/*?echo $member['id']?*/</td>
+							<td><a href="{APP_PATH}member//*?echo urlencode($member['name'])?*/" target="_blank">/*?echo $member['name']?*/</a></td><td>/*?echo $member['email']?*/</td>
+							<td>?{$member['group_name']}</td>
+							<td><a href="{APP_PATH}member/manager/edit//*?echo $member['id']?*/">编辑</a>
+								<a href="{APP_PATH}member/manager/login//*?echo $member['id']?*/" target="_blank">前端登录</a>
+							</td>
+						</tr>
+						/*?}?*/
+					</tbody>
+					<tfoot>
+						<tr><td colspan="6">/*?echo self::pageFoot($this->list->page_index,$this->list->page_size,$this->list->amount)?*/</td></tr>
+					</tfoot>
+				</table>
+			</form>
+		</div>
+	</div>
+<!--include::common/footer-->

@@ -1,11 +1,12 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_site_config数据记录类
  * @property string $id id
  * @property string $conf_val conf_val
  */
-class SiteConfig extends \W3cRecord{
+class SiteConfig extends Record{
     
     static public function recordName(){
         return 'site_config';

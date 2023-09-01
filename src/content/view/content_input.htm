@@ -1,0 +1,16 @@
+<!--include::common/header-->
+<div class="pagetop">/*?echo $this->title?*/</div>
+<div class="opbox-top">
+<form method="post" enctype="multipart/form-data" id="input_form" action="<?php echo $action_url?>">
+
+<!--include::{CONTENT_FORM}-->
+    <!--{if($display_button)}-->
+    <div class="end_button">
+    <div><a class="btn btn-default" href="{APP_PATH}content/index/?{$ct_type['content_mark']}">返回</a>&nbsp;<button type="submit">提交发布</button></div>
+    </div>
+    <!--{/if}-->
+    <input type="hidden" name="content_id" value="<?php echo $editdata['id'] ?>"/>
+
+</form>
+</div>
+<!--include::common/footer-->

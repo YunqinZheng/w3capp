@@ -1,5 +1,5 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
 /**
  * PHP 汉字转拼音
  * @author Jerryli(hzjerry@gmail.com)

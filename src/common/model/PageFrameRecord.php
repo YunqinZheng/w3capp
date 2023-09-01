@@ -1,5 +1,6 @@
 <?php
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_page_frame数据记录类
  * @property string $id id
@@ -10,7 +11,7 @@ namespace common\model;
  * @property string $css_code css_code
  * @property string $tpl 显示模板
  */
-class PageFrameRecord extends \W3cRecord{
+class PageFrameRecord extends Record{
 
     static public function recordName(){
         return 'page_frame';

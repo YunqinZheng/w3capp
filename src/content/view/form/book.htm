@@ -1,0 +1,43 @@
+/*?$editdata=$edit_data?$edit_data:array (
+  'book_name' => '',
+  'member_id' => '0',
+  'cover_img' => '',
+  'bid_price' => '0',
+  'borrow_able' =>1,
+  'read_time' => '',
+  'translater' => '',
+  'dateline'=>time(),
+  'views'=>'0',
+  'publishers' => '',
+);?*/<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">标题:</span><p class="inct"><input type="text" name="title" autocomplete="off" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">书名:</span><p class="inct"><input type="text" name="book_name" value="/*?echo Str::htmlchars($editdata['book_name']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">所属会员ID:</span><p class="inct"><input type="text" name="member_id" value="/*?echo Str::htmlchars($editdata['member_id']);?*/"/></p></div>
+<div class="formline cpicupload"><span class="labt">书封面:</span><div class="inct"><input name="cover_img" type="hidden" value="/*?echo $editdata['cover_img'];?*/" />
+  <input id="file_pic_cover_img" name="f_pic_cover_img" type="file" data="/*?echo $editdata['cover_img'];?*/" data_input="cover_img"/>
+		<link rel="stylesheet" href="{URL_ROOT}static/yunfile/upload.css"><script>
+    if(typeof FormData=="function"){
+        request_js("html5uploader",function () {
+            up2local_pic("file_pic_cover_img","书封面");
+        },1);
+    }else{
+        request_js("{URL_ROOT}static/yunfile/jquery.uploadify.min.js",function () {
+            up2local_pic("file_pic_cover_img","书封面");
+        },1);
+    }
+
+		</script></div></div>
+<div class="formline cchannel"><span class="labt">所属栏目:</span><p class="inct"><select name="channel_id">/*? echo self::arrayToOptions($model_channels,$editdata['channel_id']);?*/</select></p></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo Str::htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo Str::htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline cdatetime"><span class="labt">发布时间:</span><div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?date('Y-m-d H:i',$editdata['dateline']):'';?*/"/><div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div><script>request_js("date",function(){date_view("dateline",0)});</script></div></div>
+<div class="formline ctext"><span class="labt">作者:</span><p class="inct"><input type="text" name="author" value="/*?echo Str::htmlchars($editdata['author']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">查看数:</span><p class="inct"><input type="text" name="views" value="/*?echo Str::htmlchars($editdata['views']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">标价:</span><p class="inct"><input type="text" name="bid_price" value="/*?echo Str::htmlchars($editdata['bid_price']);?*/"/></p></div>
+<div class="formline cradio"><span class="labt">是否可借:</span><p class="inct">/*? echo self::arrayToRadio(array(
+  1=> '可借',
+  2=>'不可借',
+  ), "borrow_able",$editdata['borrow_able']);?*/</p></div>
+<div class="formline ctext"><span class="labt">建议阅读时长:</span><p class="inct"><input type="text" name="read_time" value="/*?echo Str::htmlchars($editdata['read_time']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">翻译:</span><p class="inct"><input type="text" name="translater" value="/*?echo Str::htmlchars($editdata['translater']);?*/"/></p></div>
+<div class="formline ctext"><span class="labt">出版商:</span><p class="inct"><input type="text" name="publishers" value="/*?echo Str::htmlchars($editdata['publishers']);?*/"/></p></div>
+<input type="hidden" value="YToyMTp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjk6ImJvb2tfbmFtZSI7czo0OiJ0ZXh0IjtzOjk6Im1lbWJlcl9pZCI7czo2OiJoaWRkZW4iO3M6OToiY292ZXJfaW1nIjtzOjk6InBpY3VwbG9hZCI7czoxMDoiY2hhbm5lbF9pZCI7czo3OiJjaGFubmVsIjtzOjg6ImtleXdvcmRzIjtzOjQ6InRleHQiO3M6MTE6ImRlc2NyaXB0aW9uIjtzOjg6InRleHRhcmVhIjtzOjg6ImRhdGVsaW5lIjtzOjg6ImRhdGV0aW1lIjtzOjEwOiJkZXByZWNhdGVkIjtzOjY6ImhpZGRlbiI7czo2OiJhdXRob3IiO3M6NDoidGV4dCI7czo1OiJ2aWV3cyI7czo0OiJ0ZXh0IjtzOjk6ImJpZF9wcmljZSI7czo0OiJ0ZXh0IjtzOjExOiJib3Jyb3dfYWJsZSI7czo1OiJyYWRpbyI7czo5OiJyZWFkX3RpbWUiO3M6NDoidGV4dCI7czoxMDoidHJhbnNsYXRlciI7czo0OiJ0ZXh0IjtzOjEwOiJwdWJsaXNoZXJzIjtzOjQ6InRleHQiO3M6MzoidHBsIjtzOjY6ImhpZGRlbiI7czo0OiJ0eXBlIjtzOjY6ImhpZGRlbiI7czo0OiJtYXJrIjtzOjY6ImhpZGRlbiI7czo3OiJyZW1hcmtzIjtzOjY6ImhpZGRlbiI7czoxMToidXBkYXRlX3RpbWUiO3M6NjoiaGlkZGVuIjt9" name="data_/*?echo $this->cookie_pre?*/"/>

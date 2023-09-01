@@ -1,16 +1,19 @@
 <?php
 
-namespace ctrl;
+namespace cms\controller;
 use cms\model\Theme;
-use w3c\helper\Sql;
-require_once W3CA_MASTER_PATH."core/driver/SqlitePDO.php";
-class sqlite_installCtrl extends \W3cController{
+use w3capp\helper\Sql;
+use w3capp\driver\SqlitePDO;
+use w3capp\Controller;
+use w3capp\InstallConfig;
+use w3capp\UI;
+class sqlite_installCtrl extends Controller{
     public function __construct(){
-        if(is_file("./data/install.config.php")&&(empty($_GET[\W3cApp::URI_KEY])||$_GET[\W3cApp::URI_KEY]!="mysql_install/success")){
+        if(is_file("./data/install.config.php")&&(empty($_GET[W3cApp::URI_KEY])||$_GET[W3cApp::URI_KEY]!="mysql_install/success")){
 			if(W3CA_OPEN_DEBUG){
 				return $this->_show_message('删除<strong>data/install.config.php</strong>文件才能进行安装!');
 			}else{
-				return \W3cUI::show404();
+				return UI::show404();
 			}
         }
     }
@@ -38,8 +41,7 @@ class sqlite_installCtrl extends \W3cController{
         }
         try{
 
-            $driver_class="\\driver\\SqlitePDO\\db";
-            $pdo=$driver_class::init(["dsn"=>"sqlite:".$db_file]);
+            $pdo=SqlitePDO::init(["dsn"=>"sqlite:".$db_file]);
             $sql_file=W3CA_PATH."data/install_sqlite.sql";
             if(!is_file($sql_file)){
                 return $this->_message("data/install_sqlite.sql not found!");
@@ -62,11 +64,11 @@ class sqlite_installCtrl extends \W3cController{
                 return $this->_message("sys_user init error2");
             }
 
-            $cache=new \w3c\helper\Cache();
+            $cache=new \w3capp\helper\Cache();
             if($cache->saveValue("init_post",serialize($_POST),600)===false){
                 return $this->_message("cache error!!");
             }else{
-                return $this->_referer_to(null,"install.php?".\W3cApp::URI_KEY."=sqlite_install/init_admin&name=".$pre_val['name']);
+                return $this->_referer_to(null,"install.php?".W3cApp::URI_KEY."=sqlite_install/init_admin&name=".$pre_val['name']);
             }
 
         }catch (\PDOException $e){
@@ -81,28 +83,26 @@ class sqlite_installCtrl extends \W3cController{
             $this->_assign("ctr_name",'sqlite_install');
             $this->_tpl("system/init_admin")->output();
         }else{
-            $cache=new \w3c\helper\Cache();
+            $cache=new \w3capp\helper\Cache();
             $init_=$cache->value("init_post");
             if(empty($init_)){
                 return $this->_message("init post save error!");
             }
             $init_val=unserialize($init_);
             try {
-
-                $driver_class="\\driver\\SqlitePDO\\db";
-                $pdo=$driver_class::init(["dsn"=>"sqlite:".$init_val['db_file']]);
+                $pdo=SqlitePDO::init(["dsn"=>"sqlite:".$init_val['db_file']]);
                 $user_ex=$pdo->getFirst("select * from ".$init_val['db_table_pre']."sys_user where ".Sql::parse(["name"=>$_POST['old_name']]));
                 if($user_ex){
                     if($pdo->update(array("pwd"=>md5($_POST['password'].$user_ex['pwd_hash']),"specify_rights"=>"{page_edit}","name"=>$_POST['username']),
                         $init_val['db_table_pre']."sys_user",Sql::parse(["name"=>$_POST['old_name']]))===false){
                         return $this->_message("administrator save error!");
                     }else{
-                        $installer=new \W3cInstallConfig();
+                        $installer=new InstallConfig();
                         if($installer->save(array('dsn'=>"sqlite:".$init_val['db_file'],"tab_pre"=>$init_val['db_table_pre']),
                             "SqlitePDO","W3cMyAdapter")){
-                            \W3CApp::$install_config=$installer;
-                            \W3CApp::$db_config=$installer->db_config;
-                            \W3cApp::$entrance="index.php";
+                            W3cApp::$install_config=$installer;
+                            W3cApp::$db_config=$installer->db_config;
+                            W3cApp::$entrance="index.php";
                             //header("location:".app_path()."w3c_install/complete");
                             //$this->_tpl("system/install_success")->output();
                             $theme=new Theme(["id"=>"default"]);

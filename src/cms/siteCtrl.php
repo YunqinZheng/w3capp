@@ -4,6 +4,7 @@ namespace cms\controller;
 use common\model\SiteConfig;
 use common\model\SiteNavigation;
 use cms\model\Theme;
+use w3capp\W3cApp;
 
 class siteCtrl extends mainCtrl{
 
@@ -16,7 +17,7 @@ class siteCtrl extends mainCtrl{
         $themes=Theme::getInstalledTheme();
 		$html->assign("themes",$themes);
 		$html->assign("set_data",$sets);
-		$html->action_url=\W3cApp::route("site/save");
+		$html->action_url=W3cApp::route("site/save");
 		$html->output();
 	}
 	/**

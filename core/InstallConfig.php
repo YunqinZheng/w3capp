@@ -1,6 +1,6 @@
 <?php
 namespace w3capp;
-class InstallConfig implements ArrayAccess {
+class InstallConfig implements \ArrayAccess {
     protected $config=array();
     public function __construct()
     {
@@ -25,11 +25,12 @@ class InstallConfig implements ArrayAccess {
         $this->config['register_key']=uniqid();
         $this->config['register_iv']="www.w3capp.com/v";
         if(empty($_SERVER['REQUEST_URI'])){
-            die("request install.php in web");
+            //die("request install.php in web");
+			$this->config['url_dir']="./";
         }else if(strpos($_SERVER['REQUEST_URI'],"/install.php")>0){
-            list($this->config['app_dir'])=explode("install.php",$_SERVER['REQUEST_URI']);
+            list($this->config['url_dir'])=explode("install.php",$_SERVER['REQUEST_URI']);
         }else{
-            $this->config['app_dir']="/";
+            $this->config['url_dir']="/";
         }
 
         $this->config['open_rewrite']=0;

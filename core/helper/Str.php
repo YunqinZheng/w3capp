@@ -1,5 +1,6 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
+use w3capp\W3cAppDataApi;
 class Str{
 
 //人性化时间
@@ -52,7 +53,7 @@ class Str{
     }
 
     static public function toJson($array){
-        if($array instanceof \W3cAppDataApi){
+        if($array instanceof W3cAppDataApi){
             return self::toJson($array->toArray());
         }
         if(W3CA_DB_CHAR_SET=="utf8"&&is_array($array))return json_encode($array);
@@ -70,10 +71,10 @@ class Str{
                 $echo.=',';
             }
             if($start_=='[')
-                $echo.=is_array($value)||$array instanceof \W3cAppDataApi?\w3c\helper\Str::toJson($value):"\"".strtr(str_replace('\\','\\\\',$value),array("\n"=>"\\n","\r"=>"\\r","\t"=>"\\t","\""=>"\\\""))."\"";
+                $echo.=is_array($value)||$array instanceof W3cAppDataApi?self::toJson($value):"\"".strtr(str_replace('\\','\\\\',$value),array("\n"=>"\\n","\r"=>"\\r","\t"=>"\\t","\""=>"\\\""))."\"";
             else{
                 $key=strtr(str_replace('\\','\\\\',$key),array("\n"=>"\\n","\r"=>"\\r","\t"=>"\\t","\""=>"\\\""));
-                $echo.="\"$key\":".(is_array($value)||$array instanceof \W3cAppDataApi?\w3c\helper\Str::toJson($value):"\"".strtr(str_replace('\\','\\\\',$value),array("\n"=>"\\n","\r"=>"\\r","\t"=>"\\t","\""=>"\\\""))."\"");
+                $echo.="\"$key\":".(is_array($value)||$array instanceof W3cAppDataApi?self::toJson($value):"\"".strtr(str_replace('\\','\\\\',$value),array("\n"=>"\\n","\r"=>"\\r","\t"=>"\\t","\""=>"\\\""))."\"");
             }
         }
 

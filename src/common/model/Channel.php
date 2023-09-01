@@ -1,6 +1,6 @@
 <?php
 namespace common\model;
-use w3c\helper\Sql;
+use w3capp\helper\Sql;
 
 class Channel extends ChannelRecord{
     /**

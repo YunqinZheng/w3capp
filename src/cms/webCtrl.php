@@ -1,6 +1,7 @@
 <?php
 namespace cms\controller;
-//use cms\model\IpCheck;
+use w3capp\UI;
+use w3capp\W3cApp;
 use common\model\Channel;
 use cms\model\ContentType;
 use common\controller\W3cEnterCtrl;
@@ -21,7 +22,7 @@ class webCtrl extends W3cEnterCtrl{
 	
 	function index($a=null){
         if(!empty($a)&&$a!="index"&&$a!="index.php"&&$a!="index.html"){
-            return \W3cUI::show404();
+            return UI::show404();
         }
 		$this->pageClass="index";
 		$html=$this->_tpl("index");
@@ -61,7 +62,7 @@ class webCtrl extends W3cEnterCtrl{
 		$this->pageClass="content";
 		$content_record=ContentType::contentRecord($this->channel['frame_mod'],$cntid);
 		if(empty($content_record['id'])){
-			return \W3cUI::show404();
+			return UI::show404();
 		}
 		if($content_record['channel_id']>0&&$content_record['channel_id']!=$this->channel['id']){
             return $this->_referer_to("访问路径不正确");
@@ -111,7 +112,7 @@ class webCtrl extends W3cEnterCtrl{
             }
         }
 		if(empty($ch)||$ch['hidden']){
-            return \W3cUI::show404();
+            return UI::show404();
         }
         $this->channel=$ch;
 		if($this->channel['id']){

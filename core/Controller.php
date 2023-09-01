@@ -10,8 +10,8 @@ class Controller extends Core {
 		return true;
 	}
 	public function index($arg=null){
-		if(\W3cApp::$holder_response){
-			\W3cApp::setResponse(200,["Content-Type:text/html;charset=".W3CA_DB_CHAR_SET],"<b>Welcome to W3CApp!</b>");
+		if(W3cApp::$holder_response){
+			W3cApp::setResponse(200,["Content-Type:text/html;charset=".W3CA_DB_CHAR_SET],"<b>Welcome to W3CApp!</b>");
 		}else{
 			echo "<b>Welcome to W3CApp!</b>";
 		}
@@ -24,7 +24,7 @@ class Controller extends Core {
 		if(empty($uri)){
 			return array('index');
 		}else {
-			return is_array($uri)?$uri:explode("/", $uri);
+			return $uri;
 			
 		}
 	}
@@ -36,13 +36,13 @@ class Controller extends Core {
 	public function _tpl_const(){
 		return array(
 		"{ACTION}"=>$this->action,
-		'{URL_ROOT}'=>W3CA_URL_ROOT,
+		'{URL_ROOT}'=>W3cApp::getConfig("app_dir"),
 		'{THEME_PATH}'=>'',
         '{REF_VAR}'=>'',
-		'{APP_PATH}'=>\W3cApp::route(""),
-        '{GV_INPUT}'=>\W3cApp::$rewriteurl?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
-		'{?||&}'=>\W3cApp::$rewriteurl?'?':'&',
-		'{&||?}'=>\W3cApp::$rewriteurl?'&':'?',
+		'{APP_PATH}'=>W3cApp::route(""),
+        '{GV_INPUT}'=>W3cApp::$rewriteurl?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
+		'{?||&}'=>W3cApp::$rewriteurl?'?':'&',
+		'{&||?}'=>W3cApp::$rewriteurl?'&':'?',
 		'/*?'=>'<?php ','?*/'=>' ?>','<!--?'=>"<?php ","?-->"=>" ?>");
 	}
 
@@ -63,10 +63,10 @@ class Controller extends Core {
 	       $block->display($arg);
 	}
 	public function _action_unfound($fun,$arg){
-		W3cUI::show404();
+		UI::show404();
 	}
     protected function _view_return($view,$tpl_mark="main"){
-        W3cUI::outputInside($view,$tpl_mark);
+        UI::outputInside($view,$tpl_mark);
     }
 	protected function _json_return($error,$message="",$data=null){
 
@@ -111,10 +111,10 @@ class Controller extends Core {
     protected function _tpl($tpl)
     {
         if(W3cApp::$ctrl_app){
-            $app_view_path=W3CA_PATH.W3CA_DIR.'/app/'.W3cApp::$ctrl_app.'/view/';
+            $app_view_path=W3CA_MASTER_PATH.'app/'.W3cApp::$ctrl_app.'/view/';
             W3cApp::template()->setTplDir($app_view_path);
         }
-        $view = new W3cUI($tpl);
+        $view = new UI($tpl);
         return $view;
     }
 }

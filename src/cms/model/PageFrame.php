@@ -3,6 +3,7 @@ namespace cms\model;
 use common\model\BlockRecord;
 use common\model\PageFrameRecord;
 use common\model\PageLayoutRecord;
+use w3capp\W3cApp;
 
 class PageFrame extends PageFrameRecord{
     protected static $store_css=[];
@@ -369,7 +370,7 @@ class PageFrame extends PageFrameRecord{
             self::saveCss($this->block_css,W3CA_PATH.$info['css_file']);
         }
         if(false==empty($info['page_file_var'])){
-            \W3cApp::template()->clearFile($info['page_file_var']);
+            W3cApp::template()->clearFile($info['page_file_var']);
         }
         return $this->save();
     }

@@ -1,5 +1,8 @@
 <?php
 namespace cms\controller;
+use w3capp\W3cApp;
+use w3capp\helper\ContentForm;
+use w3capp\helper\Str;
 use cms\model\BlockData;
 use cms\model\BlockExp;
 use cms\model\PageFrame;
@@ -9,9 +12,7 @@ use common\model\BlockExtendRecord;
 use common\model\BlockRecord;
 use common\model\PageBlockRecord;
 use common\model\PageLayoutRecord;
-use w3c\helper\ContentForm;
 use cms\model\PageBlock;
-use w3c\helper\Str;
 
 class blockCtrl extends mainCtrl{
     protected $prototype_block;
@@ -34,7 +35,7 @@ class blockCtrl extends mainCtrl{
 
 	//清缓存
 	function refetch($cache){
-	    \W3cApp::template()->clearFile($cache);
+	    W3cApp::template()->clearFile($cache);
 		//@unlink(W3CA_PATH."data/cache/template/".$cache);
 		echo "ok";
 	}
@@ -52,7 +53,7 @@ class blockCtrl extends mainCtrl{
         }
 		if($rs){
 			if($_POST['file_var']){
-                \W3cApp::template()->clearFile($_POST['file_var']);
+                W3cApp::template()->clearFile($_POST['file_var']);
 			}
 			return $this->_json_return(0,"");
 		}else{
@@ -112,7 +113,7 @@ class blockCtrl extends mainCtrl{
                     $bex->save();
                 }
                 if(empty($_POST['file_var'])==false){
-                    \W3cApp::template()->clearFile($_POST['file_var']);
+                    W3cApp::template()->clearFile($_POST['file_var']);
                     return $this->_view_return(array("error"=>"0",
                         "msg"=>"复制成功","param"=>$newBr->getAttributes(),
                         "action"=>"copyFinish",
@@ -162,7 +163,7 @@ class blockCtrl extends mainCtrl{
                 return $this->_referer_to("未选择要导出的模块");
             }
 		    $exp=new BlockExp(self::_pb());
-            $exp->setTplExpDir(\W3cApp::template()->getExportDir());
+            $exp->setTplExpDir(W3cApp::template()->getExportDir());
             $export_error=$exp->exportFile($_POST['file_var'],$_POST['area'],$_POST['mark_list']);
             if($export_error){
                 return $this->_referer_to($export_error);
@@ -211,7 +212,7 @@ class blockCtrl extends mainCtrl{
         }else{
             $frame->removeBlock($mark);
             if($_POST['page_file_var']){
-                \W3cApp::template()->clearFile($_POST['page_file_var']);
+                W3cApp::template()->clearFile($_POST['page_file_var']);
             }
             return $this->_json_return(0,"模块已从区域移除",["areaid"=>$area,"mark"=>$mark]);
         }
@@ -234,7 +235,7 @@ class blockCtrl extends mainCtrl{
 			
 		}
 		if(false==empty($_POST['page_file_var'])){
-            \W3cApp::template()->clearFile($_POST['page_file_var']);
+            W3cApp::template()->clearFile($_POST['page_file_var']);
 		}
 		if($block_info){
             return $this->_json_return(0,"模块已添加",$block_info);
@@ -325,8 +326,8 @@ class blockCtrl extends mainCtrl{
                     }
                 }
             }else {
-                \W3cApp::template()->setPageBlockManager($pageblock);
-                $data= array_merge($data,\W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']));
+                W3cApp::template()->setPageBlockManager($pageblock);
+                $data= array_merge($data,W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']));
                 return $this->_view_return(array("error"=>"0",
                     "msg"=>$info['id']?"修改成功":"添加成功","param"=>$data,
                     "action"=>"prototype",
@@ -346,7 +347,7 @@ class blockCtrl extends mainCtrl{
 		$block_t=null;
 		$bid=intval($bid);
 		$html=$this->_tpl("block/prototype");
-		$html->url=\W3cApp::route("block/save_prototype");
+		$html->url=W3cApp::route("block/save_prototype");
 		if($bid){//修改
 
             $pageblock=self::_pb();
@@ -464,7 +465,7 @@ class blockCtrl extends mainCtrl{
 			$block_=self::_pb()->newBlock($b_info);
 			$block_->submitCache(Str::xss_filter($_POST['cache_content']),$args);
             if($_POST['page_file_var']){
-                \W3cApp::template()->clearFile($_POST['page_file_var']);
+                W3cApp::template()->clearFile($_POST['page_file_var']);
             }
             return $this->_json_return(0,"缓存已保存",array(
 			"blockid"=>$bid,
@@ -515,8 +516,8 @@ class blockCtrl extends mainCtrl{
                 $block->tpl=$_POST['tpl_val'];
                 if($block->save()){
                     if($_POST['page_file_var']){
-                        \W3cApp::template()->setPageBlockManager($pageblock);
-                        $data= \W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']);
+                        W3cApp::template()->setPageBlockManager($pageblock);
+                        $data= W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']);
                         $data["mark"]=$block['mark'];
                         $data["remarks"]=$block['remarks'];
                         $data["id"]=$block['id'];
@@ -544,8 +545,8 @@ class blockCtrl extends mainCtrl{
             $block->tpl="-1";
 			if($pageblock->saveTemplate($_POST['bid'],$_POST['tpl_content'])&&$block->save()){
                 if($_POST['page_file_var']){
-                    \W3cApp::template()->setPageBlockManager($pageblock);
-                    $data= \W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']);
+                    W3cApp::template()->setPageBlockManager($pageblock);
+                    $data= W3cApp::template()->clearFile($_POST['page_file_var'],$_POST['zyqtpl']);
                     $data["mark"]=$block['mark'];
                     $data["remarks"]=$block['remarks'];
                     $data["id"]=$block['id'];
@@ -642,7 +643,7 @@ class blockCtrl extends mainCtrl{
         $html=$this->_tpl("block/init");
 
         $pageblock=self::_pb();
-        $this->_assign("init_action",\W3cApp::route("block/init_action"));
+        $this->_assign("init_action",W3cApp::route("block/init_action"));
         $this->_assign("block_id",$bid);
         $types=$pageblock->blockTypes(false);
         if($bid>0){
@@ -790,7 +791,7 @@ class blockCtrl extends mainCtrl{
         $all_blocks=self::_pb()->getInis(true);
 		foreach ($all_blocks as $k=>$type)
         {
-            \W3cApp::template()->clearTplCache("web/block_prototype", "B-".str_replace("\\","-",$k));
+            W3cApp::template()->clearTplCache("web/block_prototype", "B-".str_replace("\\","-",$k));
         }
         return $this->_json_return(0,"",$all_blocks);
 	}

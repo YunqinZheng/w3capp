@@ -1,0 +1,52 @@
+<style>
+	.imgs{margin-left:135px;margin-top:20px;}
+	.imgs li{float:left; width: 19%;margin-left:2px;}
+	.imgs li:hover{background: #fff;}
+	.imgs img{height: 100px;max-width:100%;margin:5px;}
+	.deleteimg{float: right;margin-right:5px}
+</style>
+/*?$editdata=$this->edit_data?$this->edit_data:array (
+);?*/<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">标题:</span><p class="inct"><input type="text" name="title" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline cchannel"><span class="labt">所属栏目:</span><p class="inct"><select name="channel_id">/*? echo self::arrayToOptions($this->model_channels,$editdata['channel_id']);?*/</select></p></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo Str::htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo Str::htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline cdatetime"><span class="labt">发布时间:</span><div class="inct"><input type="text" id="dateline" name="dateline" value="/*?echo $editdata['dateline']?date('Y-m-d H:i:s',$editdata['dateline']):'';?*/"/><div style="position:relative;"><div id="datelineca" style="display:none;" class="ca_sel"></div></div><script>request_js("date",function(){date_view("dateline",0)});</script></div></div>
+<div class="formline cdiycode">
+<input type="hidden" name="photo_list" value="/*?echo $editdata['photo_list'];?*/"/>
+<div class="photo_list"><ul class="imgs">
+	/*? if($this->edit_data['photo_list'])$img_list=explode(',',$this->edit_data['photo_list']); ?*/
+		<!--? if($this->edit_data['photo_list'])foreach($img_list as $key=>$val){?-->
+			<li><a class="deleteimg" onclick="delImg('/*?echo $val?*/',this)">删除</a><img src="/*?echo $val?*/"/></li>
+		<!--?}?-->
+	</ul>
+	
+	</div>
+</div>
+<script>
+	function openfiles(){
+		window.open("{APP_PATH}Material/ckeditor_pic/mselect/",null,"width=780px,height=550px,status=no,toolbar=no,menubar=no");
+		return false;
+	}
+	function delImg(url,obj){
+		if($("input[name=photo_list]").val().search(url)>-1){
+			var url=$("input[name=photo_list]").val().replace(url,"").replace(",,",",").replace(/^,/,"").replace(",$","");
+			$("input[name=photo_list]").val(url);
+			obj.parentNode.remove();
+		}
+	}
+	function imgselected(urls){
+		for(var i=0;i<urls.length;i++){
+			var url=urls[i];
+			$(".photo_list ul").append('<li><a class="deleteimg" onclick="delImg(&#39;'+url+'&#39;,this)">删除</a><img src="'+url+'"/></li>');
+			var _url=$("input[name=photo_list]").val();
+			if(_url==""){
+				$("input[name=photo_list]").val(url);
+			}else{
+				$("input[name=photo_list]").val(_url+","+url);
+			}
+		}
+		
+	}
+</script>
+<div class="formline button"><span class="labt">&nbsp;</span><a onclick="openfiles()">添加图片</a></div>
+<input type="hidden" value="YToxMTp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjEwOiJjaGFubmVsX2lkIjtzOjc6ImNoYW5uZWwiO3M6ODoia2V5d29yZHMiO3M6NDoidGV4dCI7czoxMToiZGVzY3JpcHRpb24iO3M6ODoidGV4dGFyZWEiO3M6ODoiZGF0ZWxpbmUiO3M6ODoiZGF0ZXRpbWUiO3M6MTA6InBob3RvX2xpc3QiO3M6NzoiZGl5Y29kZSI7czozOiJ0cGwiO3M6NjoiaGlkZGVuIjtzOjQ6InR5cGUiO3M6NjoiaGlkZGVuIjtzOjQ6Im1hcmsiO3M6NjoiaGlkZGVuIjtzOjc6InJlbWFya3MiO3M6NjoiaGlkZGVuIjtzOjExOiJ1cGRhdGVfdGltZSI7czo2OiJoaWRkZW4iO30=" name="data_/*?echo $this->cookie_pre;?*/"/>

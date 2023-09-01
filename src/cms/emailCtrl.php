@@ -1,6 +1,6 @@
 <?php
 namespace cms\controller;
-use w3c\helper\EmailSmtp;
+use w3capp\helper\EmailSmtp;
 class emailCtrl extends mainCtrl{
 	protected $server="smtp.ym.163.com";
 	protected $server_user="system@w3capp.com";

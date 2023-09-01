@@ -1,5 +1,5 @@
 <?php
-namespace w3c\helper;
+namespace w3capp\helper;
 class Image{
 	protected $loading_type;
 	protected $loading_file;

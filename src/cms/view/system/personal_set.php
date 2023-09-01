@@ -1,4 +1,4 @@
-<?php use w3c\helper\Str;?>
+<?php use w3capp\helper\Str;?>
 <form method="post" action="{APP_PATH}system//*?echo $this->form_action?*/">
 	<div>
 /*?$editdata=$this->edit_data?$this->edit_data:array (

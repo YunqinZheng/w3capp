@@ -1,5 +1,6 @@
 <?php
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_page_layout数据记录类
  * @property string $id id
@@ -11,7 +12,7 @@ namespace common\model;
  * @property string $parent_lay 上级布局
  * @property string $parent_cell 上级网格
  */
-class PageLayoutRecord extends \W3cRecord{
+class PageLayoutRecord extends Record{
 
     static public function recordName(){
         return 'page_layout';

@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_page_block数据记录类
  * @property string $id id
@@ -7,7 +8,7 @@ namespace common\model;
  * @property string $block_mark 模块标记
  * @property string $mark_time 记录时间
  */
-class PageBlockRecord extends \W3cRecord{
+class PageBlockRecord extends Record{
     
     static public function recordName(){
         return 'page_block';

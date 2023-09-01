@@ -1,0 +1,42 @@
+<!--include::common/header-->
+	<div class="pagetop">/*? echo $this->title?*/</div>
+	<div class="opbox-top">
+		<form method="post">
+			<div class="infrom">
+				<input name="id" type="hidden" value="/*?echo $this->member_info['id']?*/">
+				<div class="text_t"><span class="labt">会员名称：</span><p class="inct"><input type="text" required="required" name="name" value="/*?echo $this->member_info['name']?*/"></p></div>
+				<div class="text_t"><span class="labt">密码：</span><p class="inct"><input type="password"/*?if(!$this->member_info['id']){?*/ required="required"/*?}?*/ name="password" ></p></div>
+				<div class="text_t"><span class="labt">email：</span><p class="inct"><input type="email" required="required" name="email" value="/*?echo $this->member_info['email']?*/"></p></div>
+				<div class="text_t"><span class="labt">会员组：</span><p class="inct">
+					<select name="groupid">/*?
+						foreach($this->group_list as $group_id => $group){
+							$selected=$this->member_info['groupid']==$group_id?"selected":"";
+							echo '<option value="'.$group_id.'" '.$selected.'>'.$group['name'].'</option>';
+						}
+						?*/</select>
+					</p></div>	
+				<div class="text_t"><span class="labt">手机号码：</span><p class="inct"><input type="text" name="mobile" value="/*?echo $this->member_info['mobile']?*/"></p></div>	
+				<div class="text_t"><span class="labt">&nbsp;</span>
+					<p class="inct">
+						<input id="file_pic_headimg" data_input="headimg" type="file" data="/*?echo $member_info['headimg']?'{URL_ROOT}data/member/original_img/'.$member_info['headimg']:"";?*/"/>
+						<input name="headimg" type="hidden" value="/*?echo $this->member_info['headimg'];?*/"/>
+						<input name="old_headimg" type="hidden" value="/*?echo $this->member_info['headimg'];?*/" />
+						</p></div>
+				<div class="inct">
+				<button type="button" onclick="window.location.href='{APP_PATH}member/manager'">返回</button>
+				<button type="submit">提交</button>
+				</div>
+			</div>
+		</form>
+	</div>
+<script type="text/javascript">
+    if(typeof FileReader == "function"){
+        request_js("html5uploader",function(){
+            up2local_pic("file_pic_headimg","会员头像","member/manager/headimg_upload/");
+        },1);
+    }else{
+        msg_box.create_short("您的浏览器不支持上传！");
+    }
+
+</script>
+<!--include::common/footer-->

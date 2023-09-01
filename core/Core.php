@@ -5,7 +5,7 @@ class Core{
     protected static $all_db_m=array();
     protected static $assign_val=array();
     protected static $db_drivers=array();
-
+	public static $app;
     /**
      * 数据库实例
      * @param $db_driver
@@ -15,8 +15,7 @@ class Core{
     static public function _dbInstance($db_driver,$config_i){
         $key_driver=$db_driver.$config_i;
         if(empty(self::$db_drivers[$key_driver])){
-            require_once W3CA_MASTER_PATH."core/driver/".$db_driver.".php";
-            $driver_class="\\w3c\\driver\\".$db_driver;
+            $driver_class="\\w3capp\\driver\\".$db_driver;
             $config=(array)W3cApp::$db_config[$db_driver][$config_i];
             self::$db_drivers[$key_driver]=$driver_class::init($config);
             return self::$db_drivers[$key_driver];
@@ -73,7 +72,7 @@ class Core{
 	protected function queryFor($key,$def_call=null){
 		$val=$this->__get($key);
 		if($val)return $val;
-		return \W3cApp::$instance->_query($key,$def_call);
+		return W3cApp::$instance->_query($key,$def_call);
 	}
     static protected function check_form_hash($hash,$time_df=60){
         $dat=0;

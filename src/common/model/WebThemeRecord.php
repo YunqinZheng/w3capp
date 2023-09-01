@@ -1,5 +1,6 @@
 <?php 
 namespace common\model;
+use w3capp\Record;
 /**
  * w3ca_web_theme数据记录类
  * @property string $id id
@@ -10,7 +11,7 @@ namespace common\model;
  * @property string $refresh_var refresh_var
  * @property string $file_var 调用文件参数据
  */
-class WebThemeRecord extends \W3cRecord{
+class WebThemeRecord extends Record{
     
     static public function recordName(){
         return 'web_theme';

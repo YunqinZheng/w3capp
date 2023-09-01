@@ -3,6 +3,7 @@ namespace cms\controller;
 use common\model\Channel;
 use common\model\SiteNavigation;
 use cms\model\ContentType;
+use w3capp\W3cApp;
 
 class channelCtrl extends mainCtrl{
     private $cids;
@@ -48,7 +49,7 @@ class channelCtrl extends mainCtrl{
 				if(array_key_exists('innav_'.$cid,$_POST)){
                     $data['innav']=intval($_POST['innav_'.$cid]);
 				    if($data['innav']){
-                        SiteNavigation::saveChannelNav($cid, $_POST['ch_name_'.$cid], \W3cApp::route($_POST['path_'.$cid]),1);
+                        SiteNavigation::saveChannelNav($cid, $_POST['ch_name_'.$cid], W3cApp::route($_POST['path_'.$cid]),1);
                     }else{
                         SiteNavigation::deleteChannelNav($cid);
                     }
@@ -74,8 +75,8 @@ class channelCtrl extends mainCtrl{
 			if($channel->save()){
                 $cid=$channel->primary();
 				if($_POST['innav'])
-                    SiteNavigation::saveChannelNav($cid, $_POST['ch_name'], \W3cApp::route($_POST['path']),$_POST['innav']);
-                return $this->_referer_to("添加成功！",$_POST['sub_t']==1?\W3cApp::route("channel/index"):"","right");
+                    SiteNavigation::saveChannelNav($cid, $_POST['ch_name'], W3cApp::route($_POST['path']),$_POST['innav']);
+                return $this->_referer_to("添加成功！",$_POST['sub_t']==1?W3cApp::route("channel/index"):"","right");
 			}else{
                 return $this->_referer_to("添加失败！");
 			}
@@ -104,11 +105,11 @@ class channelCtrl extends mainCtrl{
             $cnnm->setAttributes($data);
 			if($cnnm->save()){
 				if($_POST['innav']){
-                    SiteNavigation::saveChannelNav($cnnm->id, $_POST['ch_name'], \W3cApp::route($_POST['path']),$_POST['innav']);
+                    SiteNavigation::saveChannelNav($cnnm->id, $_POST['ch_name'], W3cApp::route($_POST['path']),$_POST['innav']);
                 }else{
                     SiteNavigation::deleteChannelNav($cnnm->id);
 				}
-				$this->_referer_to("修改成功！",\W3cApp::route("channel/index"),"right");
+				$this->_referer_to("修改成功！",W3cApp::route("channel/index"),"right");
 				return;
 			}
             return $this->_referer_to("栏目修改失败！");
@@ -127,12 +128,12 @@ class channelCtrl extends mainCtrl{
 		if(empty($cnnm)){
 		    echo "内容模型不存在！";
 		}else{
-            return $this->_referer_to(null,($cnnm['static_path']?$cnnm['static_path']:\W3cApp::route($cnnm['path'])));
+            return $this->_referer_to(null,($cnnm['static_path']?$cnnm['static_path']:W3cApp::route($cnnm['path'])));
 		}
 	}
 	function del_channel($ids){
 		if(Channel::deleteAll(['id'=>explode(",",$ids)])){
-            return $this->_referer_to("删除成功!",\W3cApp::route("channel"),"right");
+            return $this->_referer_to("删除成功!",W3cApp::route("channel"),"right");
 		}else{
             return $this->_message("删除出错!");
 		}

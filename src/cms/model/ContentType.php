@@ -4,8 +4,8 @@ use common\model\ChannelFormRecord;
 use common\model\ChannelTypeRecord;
 use common\model\SiteConfig;
 use common\model\SysFeatureMenu;
-use helper\ContentForm;
-use w3c\helper\Str;
+use w3capp\helper\ContentForm;
+use w3capp\helper\Str;
 
 class ContentType extends ChannelTypeRecord {
 

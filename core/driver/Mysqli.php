@@ -1,6 +1,6 @@
 <?php
-namespace w3c\driver;
-use w3c\helper\Str;
+namespace w3capp\driver;
+use w3capp\helper\Str;
 
 /**
  * mysql类

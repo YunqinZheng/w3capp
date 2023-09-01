@@ -7,14 +7,14 @@ use common\model\BlockRecord;
 use common\model\SiteConfig;
 use member\model\Member;
 use member\model\MemberGroup;
-use w3c\helper\Str;
+use w3capp\helper\Str;
+use w3capp\Controller;
 
-class W3cEnterCtrl extends \W3cController{
+class W3cEnterCtrl extends Controller{
 
     protected $template;
 	function __construct(){
 		$this->site_set=SiteConfig::getConfigs();
-        require_once W3CA_MASTER_PATH."core/W3cTemplate.php";
 		if(stripos($_SERVER['HTTP_USER_AGENT'],'mobile')>0||array_key_exists('mobile_type',$_GET)&&$_GET['mobile_type']=='w3capp'){
 			$this->theme_id=$this->site_set['style_mobile'];
 
@@ -22,7 +22,7 @@ class W3cEnterCtrl extends \W3cController{
 			if(empty($theme->name)){
 				throw new \Exception('主题不在：'.$this->theme_id);
 			}
-            \W3cApp::template()->setTplDir(W3CA_THEME_TPL.$this->site_set['style_mobile'].'/');
+            self::$app->template()->setTplDir(W3CA_THEME_TPL.$this->site_set['style_mobile'].'/');
             $this->theme=$theme;
 		}else{
             $this->theme_id=$this->site_set['style'];
@@ -30,7 +30,7 @@ class W3cEnterCtrl extends \W3cController{
 			if(empty($theme->name)){
 				throw new \Exception('主题不在：'.$this->theme_id);
 			}
-            \W3cApp::template()->setTplDir(W3CA_THEME_TPL.$this->site_set['style'].'/');
+            self::$app->template()->setTplDir(W3CA_THEME_TPL.$this->site_set['style'].'/');
 			$this->theme=$theme;
 		}
 		
@@ -46,7 +46,7 @@ class W3cEnterCtrl extends \W3cController{
             $theme=$this->theme;
 
             if($theme['language']){
-                \W3cApp::template()->setLanguageFile(W3CA_THEME_TPL.$this->theme_id."/".$theme['language']);
+                self::$app->template()->setLanguageFile(W3CA_THEME_TPL.$this->theme_id."/".$theme['language']);
             }
             $const['{THEME_PATH}']=W3CA_URL_ROOT."data/theme/".$theme['install_dir']."/";
             if($theme['file_var']){
@@ -64,8 +64,8 @@ class W3cEnterCtrl extends \W3cController{
 		$blocki=BlockRecord::firstAttr(['mark'=>$bid]);
 		$block_t=PageBlock::newBlock($blocki);
 		$block_t->page=$page;
-		if(\W3cApp::$hold_response){
-			\W3cApp::setResponse(200,["Content-Type"=>"text/html; charset=".W3CA_DB_CHAR_SET],$block_t->content());
+		if(self::$app->$hold_response){
+			self::$app->setResponse(200,["Content-Type"=>"text/html; charset=".W3CA_DB_CHAR_SET],$block_t->content());
 		}else{
 			header("Content-Type:text/html; charset=".W3CA_DB_CHAR_SET);
 			echo $block_t->content();
@@ -80,7 +80,7 @@ class W3cEnterCtrl extends \W3cController{
 	        //返回模板编译信息
 	        $view->return_page=true;
         }
-        \W3cApp::template()->setPageBlockManager(new PageBlock());
+        self::$app->template()->setPageBlockManager(new PageBlock());
 	    return $view;
 	}
 	public function _query($key,$default){

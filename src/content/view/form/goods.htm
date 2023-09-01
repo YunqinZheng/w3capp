@@ -1,0 +1,17 @@
+/*?$editdata=empty($edit_data)?array (
+  'title' => '',
+  'keywords' => '',
+  'description' => '',
+  'image' => '',
+):$edit_data;?*/<input name="content_id" value="/*?echo $editdata['id'];?*/" type="hidden"/><div class="formline ctext"><span class="labt">商品名称:</span><p class="inct"><input type="text" name="title" value="/*?echo Str::htmlchars($editdata['title']);?*/"/></p></div>
+<div class="formline cchannel"><span class="labt">所属栏目:</span><p class="inct"><select name="channel_id">/*? echo self::arrayToOptions($channels,$editdata['channel_id']);?*/</select></p></div>
+<div class="formline ctext"><span class="labt">关键字:</span><p class="inct"><input type="text" name="keywords" value="/*?echo Str::htmlchars($editdata['keywords']);?*/"/></p></div>
+<div class="formline ctextarea"><span class="labt">描述:</span><p class="inct"><textarea name="description" >/*? echo Str::htmlchars($editdata['description']);?*/</textarea></p></div>
+<div class="formline ctext"><span class="labt">查看数:</span><p class="inct"><input type="text" name="views" value="/*?echo Str::htmlchars($editdata['views']);?*/"/></p></div>
+<div class="formline cpicupload"><script src="{URL_ROOT}static/yunfile/jquery.uploadify.min.js"></script><span class="labt">图片</span><div class="inct"><input name="image" type="hidden" /><input id="file_pic_image" name="f_pic_image" type="file" data="/*?echo $editdata['image'];?*/"/>
+		<link rel="stylesheet" href="{URL_ROOT}static/yunfile/upload.css"><script>
+		up2local_pic("file_pic_image","图片");
+		</script></div>
+</div>
+
+		<input type="hidden" value="YToxMTp7czo1OiJ0aXRsZSI7czo0OiJ0ZXh0IjtzOjEwOiJjaGFubmVsX2lkIjtzOjc6ImNoYW5uZWwiO3M6ODoia2V5d29yZHMiO3M6NDoidGV4dCI7czoxMToiZGVzY3JpcHRpb24iO3M6ODoidGV4dGFyZWEiO3M6NToidmlld3MiO3M6NDoidGV4dCI7czo1OiJpbWFnZSI7czo5OiJwaWN1cGxvYWQiO3M6MzoidHBsIjtzOjY6ImhpZGRlbiI7czo0OiJ0eXBlIjtzOjY6ImhpZGRlbiI7czo0OiJtYXJrIjtzOjY6ImhpZGRlbiI7czo3OiJyZW1hcmtzIjtzOjY6ImhpZGRlbiI7czoxMToidXBkYXRlX3RpbWUiO3M6NjoiaGlkZGVuIjt9" name="data_/*?echo $this->cookie_pre?*/"/>
