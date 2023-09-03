@@ -33,7 +33,7 @@ class contentCtrl extends MemberEnterCtrl{
             }
             if($content_record['channel_id']){
                 $channel=new Channel(['id'=>$content_record['channel_id']]);
-                return $this->_referer_to(null,\W3cApp::route("Web/".$channel['path']."/".$content_record['id']));
+                return $this->_referer_to(null,\self::$app->route("Web/".$channel['path']."/".$content_record['id']));
             }else{
                 return $this->_referer_to("内容未设置栏目！");
             }

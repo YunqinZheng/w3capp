@@ -20,7 +20,7 @@ class MemberGroup extends MemberGroupRecord {
         if(self::$group_list){
             return self::$group_list;
         }
-		$cache=\W3cApp::$instance->_cache();
+		$cache=\self::$app->instance->_cache();
         if($cache->valueExists(self::recordName())){
             self::$group_list=unserialize($cache->value(self::recordName()));
         }else{

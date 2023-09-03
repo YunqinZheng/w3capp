@@ -1,6 +1,6 @@
 <?php
 namespace cms\controller;
-use w3capp\W3cApp;
+
 /**
  * 针对mysql生成代码
  * Class coderCtrl
@@ -22,7 +22,7 @@ class coderCtrl extends mainCtrl{
         }
         closedir($dp);
         $table_pre='';
-        foreach (W3cApp::$db_config as  $conf){
+        foreach (self::$app->db_config as  $conf){
             $config=(array)current($conf);
             $table_pre=$config['tab_pre'];
             break;
@@ -38,8 +38,8 @@ class coderCtrl extends mainCtrl{
         $this->_tpl("system/model_tpl")->includeTpl("");
         $content="<?php \n".ob_get_contents();
         ob_end_clean();
-        if(W3cApp::$holder_response){
-            W3cApp::setResponse(200,["Content-Type"=>"text/plain",'Content-Disposition'=>'attachment; filename='.$_POST['class_name'].".php"],$content);
+        if(self::$app->holder_response){
+            self::$app->setResponse(200,["Content-Type"=>"text/plain",'Content-Disposition'=>'attachment; filename='.$_POST['class_name'].".php"],$content);
         }else{
             header("content-type:text/plain;");
             header('Content-Disposition: attachment; filename='.$_POST['class_name'].".php");
@@ -57,8 +57,8 @@ class coderCtrl extends mainCtrl{
         $this->_tpl("system/controller_tpl")->output();
         $content="<?php \n".ob_get_contents();
         ob_end_clean();
-        if(W3cApp::$holder_response){
-            return W3cApp::setResponse(200,["Content-Type"=>"text/plain",'Content-Disposition'=>'attachment; filename='.$_POST['class_name'].".php"],$content);
+        if(self::$app->holder_response){
+            return self::$app->setResponse(200,["Content-Type"=>"text/plain",'Content-Disposition'=>'attachment; filename='.$_POST['class_name'].".php"],$content);
         }else{
 
             header("content-type:text/plain;");
@@ -80,7 +80,7 @@ class coderCtrl extends mainCtrl{
                 return $this->_message($table."：表不存在！");
             }
         }else{
-            return $this->_message(W3cApp::$install_config['db_default']."：数据驱动不支持该功能！");
+            return $this->_message(self::$app->install_config['db_default']."：数据驱动不支持该功能！");
         }
         return false;
     }

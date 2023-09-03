@@ -35,8 +35,8 @@ class BlockExp {
             }
         }
         $file_name=date('Y-m-d').".block";
-        if(W3cApp::$holder_response){
-            return W3cApp::setResponse(200,["Content-type"=>"application/json;",
+        if(self::$app->holder_response){
+            return self::$app->setResponse(200,["Content-type"=>"application/json;",
                 'Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\Str::toJson($export_result));
         }else{
             header('Content-type: application/json;');
@@ -47,7 +47,7 @@ class BlockExp {
     }
     public function exportFile($file_var,$areas,$marks)
     {
-        $cache_tpl_file=W3CA_PATH.$this->export_dir.$file_var;
+        $cache_tpl_file=W3CA_MASTER_PATH.$this->export_dir.$file_var;
         if(file_exists($cache_tpl_file)){
             $this->block_areas=[];
             $this->file_var=$file_var;
@@ -84,8 +84,8 @@ class BlockExp {
             }
         }
         $file_name=preg_replace('/\d|(\.php)/','',$this->file_var).".json";
-        if(W3cApp::$holder_response){
-            return W3cApp::setResponse(200,['Content-type'=>'application/json;','Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\str::toJson($export_result));
+        if(self::$app->holder_response){
+            return self::$app->setResponse(200,['Content-type'=>'application/json;','Content-Disposition'=>'attachment; filename="'.$file_name.'"'],\w3c\helper\str::toJson($export_result));
         }else{
             header('Content-type: application/json;');
             header('Content-Disposition: attachment; filename="'.$file_name.'"');
@@ -147,7 +147,7 @@ class BlockExp {
             $this->block_manager->areaAdd($key,$value['blocks']);
         }
         if($file){
-            W3cApp::template()->clearFile($file);
+            self::$app->template()->clearFile($file);
         }
         return true;
     }

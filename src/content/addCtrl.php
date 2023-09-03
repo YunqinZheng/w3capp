@@ -8,7 +8,7 @@ class addCtrl extends mainCtrl{
     function _index($ctt){
         $c_info=ContentType::record(["content_mark"=>$ctt])->getAttributes();
         $error_url=$_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:
-            \W3cApp::route("content/index/".$ctt);
+            \self::$app->route("content/index/".$ctt);
         if(empty($c_info)){
             $this->_referer_to("内容模型不存在",$error_url);
             return ;
@@ -22,7 +22,7 @@ class addCtrl extends mainCtrl{
         $html=$this->_tpl("content_input");
         $html->title="内容发布";
         $html->mate_path=W3CA_URL_ROOT.Material::mainDir();
-        $html->action_url=\W3cApp::route("content/save/".$ctt);
+        $html->action_url=\self::$app->route("content/save/".$ctt);
         $html->display_button=true;
         $html->output("ct".$ctt);
     }

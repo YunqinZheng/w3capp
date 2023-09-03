@@ -70,10 +70,10 @@ class saveCtrl extends mainCtrl{
         }
         if($content_id){
             \W3cUI::message($msg."成功","right", array(
-                array("href"=>\W3cApp::route("content/view/".$ctt."/".$content_id),"text"=>"查看","target"=>"_blank"),
-                array("href"=>\W3cApp::route("content/add/".$ctt),"text"=>"继续添加","target"=>""),
-                array("href"=>\W3cApp::route("content/index/".$ctt),"text"=>"管理","target"=>""),
-                array("href"=>\W3cApp::route("content/edit/".$ctt."/".$content_id),"text"=>"编辑","target"=>"")));
+                array("href"=>\self::$app->route("content/view/".$ctt."/".$content_id),"text"=>"查看","target"=>"_blank"),
+                array("href"=>\self::$app->route("content/add/".$ctt),"text"=>"继续添加","target"=>""),
+                array("href"=>\self::$app->route("content/index/".$ctt),"text"=>"管理","target"=>""),
+                array("href"=>\self::$app->route("content/edit/".$ctt."/".$content_id),"text"=>"编辑","target"=>"")));
         }else{
             $this->_message($msg."出错");
         }

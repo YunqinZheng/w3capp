@@ -20,13 +20,13 @@ class MemberEnterCtrl extends W3cEnterCtrl{
 	    $this->login_member=Member::loginMember();
 		if($this->login_member==null){
 		    if(empty($_POST)){
-                $this->_referer_to(null,\W3cApp::route("member/main/login",array('referer'=>$_SERVER['REQUEST_URI'])));
+                $this->_referer_to(null,\self::$app->route("member/main/login",array('referer'=>$_SERVER['REQUEST_URI'])));
             }else{
-                $this->_json_return(1,"",\W3cApp::route("member/main/login"));
+                $this->_json_return(1,"",\self::$app->route("member/main/login"));
             }
             return true;
 		}else if($this->login_member->isForbid()){
-            return $this->_show_message("您已被禁止登录！","error",[["href"=>\W3cApp::route("member/main/logout"),"text"=>"确定"]]);
+            return $this->_show_message("您已被禁止登录！","error",[["href"=>\self::$app->route("member/main/logout"),"text"=>"确定"]]);
         }
 		return parent::_check_operation($funName);
 	}

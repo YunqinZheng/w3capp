@@ -5,7 +5,7 @@ use common\model\WebThemeRecord;
 class Theme extends WebThemeRecord{
     public function uninstall(){
         if(empty($this->install_dir))return false;
-        self::deleteDir(W3CA_PATH."data/theme/".$this->install_dir);
+        self::deleteDir(W3CA_MASTER_PATH."data/theme/".$this->install_dir);
         return $this->delete();
     }
     private static function deleteDir($dirName){
@@ -25,7 +25,7 @@ class Theme extends WebThemeRecord{
     }
     public function refreshFileVar($new_var=false){
         if(!$this->install_dir)return false;
-        $style_target=W3CA_PATH."data/theme/".$this->install_dir."/";
+        $style_target=W3CA_MASTER_PATH."data/theme/".$this->install_dir."/";
 
         if(!$this->file_var||$new_var)
         {
@@ -49,8 +49,8 @@ class Theme extends WebThemeRecord{
         if(empty($theme_json['language']))$theme_json['language']='';
         $style_rs=W3CA_THEME_TPL.$dir."/".$theme_json['style_dir'];
         $target_dir=empty($this->install_dir)?("t_".uniqid()."_".W3CA_YUN_DAT):$this->install_dir;
-        //[DOCUMENT_ROOT]W3CA_PATH.
-        $style_target=W3CA_PATH."data/theme/".$target_dir."/";
+        //[DOCUMENT_ROOT]W3CA_MASTER_PATH.
+        $style_target=W3CA_MASTER_PATH."data/theme/".$target_dir."/";
         if(is_dir($style_target)==false&&false==@mkdir($style_target,0777,true)||false==is_writable($style_target)){
             return array("error"=>"theme mkdir error：".$style_target);
         }
@@ -78,7 +78,7 @@ class Theme extends WebThemeRecord{
             $theme_var['image']="static/image/colorful.png";
         }else{
             $theme_var['image']="data/theme/t_".$dir.str_replace("/","",$theme_json['theme_image']);
-            $f_img=W3CA_PATH.$theme_var['image'];
+            $f_img=W3CA_MASTER_PATH.$theme_var['image'];
             if(!file_exists($f_img))@copy(W3CA_THEME_TPL.$dir."/".$theme_json['theme_image'],$f_img);
         }
         $theme_var['install_dir']=$target_dir;
@@ -158,7 +158,7 @@ class Theme extends WebThemeRecord{
                             $theme_var['image']="static/image/colorful.png";
                         }else{
                             $theme_var['image']="data/theme/t_".$file.str_replace("/","",$theme_json['theme_image']);
-                            $f_img=W3CA_PATH.$theme_var['image'];
+                            $f_img=W3CA_MASTER_PATH.$theme_var['image'];
                             if(!file_exists($f_img))@copy(W3CA_THEME_TPL.$file."/".$theme_json['theme_image'],$f_img);
                         }
                         $theme_var['id']=$file;

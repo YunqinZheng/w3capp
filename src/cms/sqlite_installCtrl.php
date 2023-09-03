@@ -9,7 +9,7 @@ use w3capp\InstallConfig;
 use w3capp\UI;
 class sqlite_installCtrl extends Controller{
     public function __construct(){
-        if(is_file("./data/install.config.php")&&(empty($_GET[W3cApp::URI_KEY])||$_GET[W3cApp::URI_KEY]!="mysql_install/success")){
+        if(is_file("./data/install.config.php")&&(empty($_GET[self::$app->URI_KEY])||$_GET[self::$app->URI_KEY]!="mysql_install/success")){
 			if(W3CA_OPEN_DEBUG){
 				return $this->_show_message('删除<strong>data/install.config.php</strong>文件才能进行安装!');
 			}else{
@@ -25,14 +25,14 @@ class sqlite_installCtrl extends Controller{
         if(false==class_exists("PDO",false)){
             return $this->_message("php PDO not open");
         }
-        if(false==is_writeable(W3CA_PATH."data")){
+        if(false==is_writeable(W3CA_MASTER_PATH."data")){
             return $this->_message("/data dir not write able");
         }
         if(empty($_POST['db_file'])){
             return $this->_message("db file is empty");
         }else{
             $db_file=$_POST['db_file'];
-            if(strpos($db_file,W3CA_PATH)===0){
+            if(strpos($db_file,W3CA_MASTER_PATH)===0){
                 return $this->_message("db file path is error;the path can't been read by http");
             }
             if(file_exists($db_file)&&empty($_POST['drop_table'])){
@@ -42,7 +42,7 @@ class sqlite_installCtrl extends Controller{
         try{
 
             $pdo=SqlitePDO::init(["dsn"=>"sqlite:".$db_file]);
-            $sql_file=W3CA_PATH."data/install_sqlite.sql";
+            $sql_file=W3CA_MASTER_PATH."data/install_sqlite.sql";
             if(!is_file($sql_file)){
                 return $this->_message("data/install_sqlite.sql not found!");
             }
@@ -68,7 +68,7 @@ class sqlite_installCtrl extends Controller{
             if($cache->saveValue("init_post",serialize($_POST),600)===false){
                 return $this->_message("cache error!!");
             }else{
-                return $this->_referer_to(null,"install.php?".W3cApp::URI_KEY."=sqlite_install/init_admin&name=".$pre_val['name']);
+                return $this->_referer_to(null,"install.php?".self::$app->URI_KEY."=sqlite_install/init_admin&name=".$pre_val['name']);
             }
 
         }catch (\PDOException $e){
@@ -100,9 +100,9 @@ class sqlite_installCtrl extends Controller{
                         $installer=new InstallConfig();
                         if($installer->save(array('dsn'=>"sqlite:".$init_val['db_file'],"tab_pre"=>$init_val['db_table_pre']),
                             "SqlitePDO","W3cMyAdapter")){
-                            W3cApp::$install_config=$installer;
-                            W3cApp::$db_config=$installer->db_config;
-                            W3cApp::$entrance="index.php";
+                            self::$app->install_config=$installer;
+                            self::$app->db_config=$installer->db_config;
+                            self::$app->entrance="index.php";
                             //header("location:".app_path()."w3c_install/complete");
                             //$this->_tpl("system/install_success")->output();
                             $theme=new Theme(["id"=>"default"]);

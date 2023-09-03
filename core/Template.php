@@ -390,7 +390,8 @@ class Template extends Core{
 	    if(!file_exists($load_file)){
 	        mkdir($load_file);
 	    }
-	    $load_file.='/'.W3CA_YUN_DAT.str_replace([W3CA_MASTER_PATH,"/","\\",":","?"],'',$tplfile);
+	    $key_dat=self::$app->getConfig("random_key");
+	    $load_file.='/'.$key_dat.str_replace([W3CA_MASTER_PATH,"/","\\",":","?"],'',$tplfile);
 	    if(file_exists($load_file)==false||filemtime($tplfile)>filemtime($load_file)){
 	        $this->tpl_const=array_merge(self::$app->instance->_tpl_const(),$this->tpl_const);
 	        $tpl_ct=$this->template($tplfile);
@@ -415,18 +416,19 @@ class Template extends Core{
 	}
 	protected function tplKey($dir_key){
 	    $cache=new Cache();
-	    $dir_keys=$cache->value(W3CA_YUN_DAT."tpl2dir");
+        $key_dat=self::$app->getConfig("random_key");
+	    $dir_keys=$cache->value($key_dat."tpl2dir");
 
 	    if($dir_keys){
             $dir_i=strpos($dir_keys,$this->tpl_dirs[0]);
             if($dir_i===false){
                 $dir_keys=$dir_keys.$this->tpl_dirs[0];
-                $cache->saveValue(W3CA_YUN_DAT."tpl2dir",$dir_keys);
+                $cache->saveValue($key_dat."tpl2dir",$dir_keys);
                 $dir_i=strpos($dir_keys,$this->tpl_dirs[0]);
             }
         }else{
-            $dir_keys=W3CA_YUN_DAT.$this->tpl_dirs[0];
-            $cache->saveValue(W3CA_YUN_DAT."tpl2dir",$dir_keys);
+            $dir_keys=$key_dat.$this->tpl_dirs[0];
+            $cache->saveValue($key_dat."tpl2dir",$dir_keys);
             $dir_i=strpos($dir_keys,$this->tpl_dirs[0]);
         }
         return $dir_i.W3CA_REWRITE_URL.$dir_key;

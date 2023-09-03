@@ -55,7 +55,7 @@ class SiteConfig extends Record{
         return self::saveConfigs($set);
     }
     static public function indexTPL($dir){
-        $tpl_file=W3CA_PATH."TPL/$dir/index.htm";
+        $tpl_file=W3CA_MASTER_PATH."TPL/$dir/index.htm";
         if(file_exists($tpl_file)){
             return ['file'=>$tpl_file,"code"=>file_get_contents($tpl_file)];
         }else{
@@ -63,7 +63,7 @@ class SiteConfig extends Record{
         }
     }
     static function saveIndexTPL($dir,$code){
-        $tpl_file=W3CA_PATH."TPL/$dir/index.htm";
+        $tpl_file=W3CA_MASTER_PATH."TPL/$dir/index.htm";
         return file_put_contents($tpl_file,$code);
     }
     static public function saveConfigs($sets){
@@ -77,7 +77,7 @@ class SiteConfig extends Record{
 
 
     static public function clearCache(){
-        $cache_dir=W3CA_PATH."data/cache/";
+        $cache_dir=W3CA_MASTER_PATH."data/cache/";
         $d=dir($cache_dir);
         while(false !== ($file = $d->read())) {
             if($file!='.'&&$file!='..'){

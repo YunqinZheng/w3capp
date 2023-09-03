@@ -32,7 +32,7 @@ class avatarCtrl extends W3cEnterCtrl{
                     $member->headimg=$uinf->save_as;
 					if($member->save()){
 						if($old_img)
-							@unlink(W3CA_PATH.$member->originalAvatarDir().$old_img);
+							@unlink(W3CA_MASTER_PATH.$member->originalAvatarDir().$old_img);
 						$member->makeAvatarXYSize($uinf->save_as,intval($_POST['img_x']),intval($_POST['img_y']),intval($_POST['img_size']));
 						$member->storeLogin();
 						$er=$member->getError();

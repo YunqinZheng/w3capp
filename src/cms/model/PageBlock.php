@@ -61,7 +61,7 @@ class PageBlock extends Core {
      */
 	static function tplCacheFile($id,$content=""){
 
-		$file=W3CA_PATH.'data/cache/block/tpl_'.$id;
+		$file=W3CA_MASTER_PATH.'data/cache/block/tpl_'.$id;
         if($content){
             $ext=BlockExtendRecord::record(['block_id'=>$id],true);
             $ext->template=$content;
@@ -172,7 +172,7 @@ class PageBlock extends Core {
 			            if(isset($ini[0])){
 			                foreach ($ini as $class_block){
 			                    $icon_file=$full_path."/assets/".$class_block['class'].".png";
-                                if(file_exists($icon_file)&&copy($icon_file,W3CA_PATH."data/theme/$file-".$class_block['class'].".png")){
+                                if(file_exists($icon_file)&&copy($icon_file,W3CA_MASTER_PATH."data/theme/$file-".$class_block['class'].".png")){
                                     $class_block['icon_url']="data/theme/$file-".$class_block['class'].".png";
                                 }else{
                                     $class_block['icon_url']="static/image/block.png";

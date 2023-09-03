@@ -19,8 +19,8 @@ class Material extends MaterialRecord{
         return "";
     }
     static function mainDir(){
-        if(!is_dir(W3CA_PATH.self::$store_dir)){
-            @mkdir(W3CA_PATH.self::$store_dir);
+        if(!is_dir(W3CA_MASTER_PATH.self::$store_dir)){
+            @mkdir(W3CA_MASTER_PATH.self::$store_dir);
         }
         return self::$store_dir;
     }
@@ -37,7 +37,7 @@ class Material extends MaterialRecord{
             $files=self::findAll($condition);
             $del_ids=[];
             foreach($files as $file){
-                $file_path=W3CA_PATH.self::mainDir().$file['file'];
+                $file_path=W3CA_MASTER_PATH.self::mainDir().$file['file'];
                 $del_ids[]=$file['id'];
                 if(file_exists($file_path)){
                     @unlink($file_path);

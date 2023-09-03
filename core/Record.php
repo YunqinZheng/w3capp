@@ -109,7 +109,7 @@ class Record implements \ArrayAccess,\Iterator{
 
 
     public static function adapterClass(){
-        return W3cApp::$install_config['db_adapter'];
+        return self::$app->install_config['db_adapter'];
     }
     /**
      * @return W3cappAdapter

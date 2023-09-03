@@ -62,9 +62,9 @@ class FeatureMenu extends SysFeatureMenu {
 	}
 
 	static function put_to_cache($tree){
-		file_put_contents(W3CA_PATH.self::$f_c, serialize($tree));
+		file_put_contents(W3CA_MASTER_PATH.self::$f_c, serialize($tree));
 	}
     static function get_from_cache(){
-		return unserialize(file_get_contents(W3CA_PATH.self::$f_c));
+		return unserialize(file_get_contents(W3CA_MASTER_PATH.self::$f_c));
 	}
 }

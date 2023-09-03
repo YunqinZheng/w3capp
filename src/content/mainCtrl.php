@@ -15,7 +15,7 @@ class mainCtrl extends \cms\controller\mainCtrl{
             return $this->_referer_to("内容模型不在!");
         }
         $ctpinfo=$type->getAttributes();
-        \W3cApp::template()->setPageBlockManager(new PageBlock());
+        \self::$app->template()->setPageBlockManager(new PageBlock());
         $html=$this->_tpl($ctt."_list");
         if(empty($_GET['page'])&&empty($_POST['page'])){
             $page=1;

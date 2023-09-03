@@ -18,13 +18,13 @@ class SysUser extends SysUserRecord{
     }
     static function getLoginUser(){
         if(empty(self::$login_user)){
-            if(W3cApp::startSession()==false){
+            if(self::$app->startSession()==false){
                 die("session error");
             }
-            if(empty(W3cApp::getSession()->sys_user_id)){
+            if(empty(self::$app->getSession()->sys_user_id)){
                 self::$login_user=new self();
             }else{
-                self::$login_user=new self(['id'=>W3cApp::getSession()->sys_user_id]);
+                self::$login_user=new self(['id'=>self::$app->getSession()->sys_user_id]);
             }
         }
         return self::$login_user;
@@ -74,18 +74,18 @@ class SysUser extends SysUserRecord{
         }
     }
     function login(){
-        if(W3cApp::startSession()==false){
+        if(self::$app->startSession()==false){
             die("session error");
         }
         $this->readRole();
-        W3cApp::getSession()->sys_user_id=$this->id;
+        self::$app->getSession()->sys_user_id=$this->id;
     }
 
     function logout(){
-        if(W3cApp::startSession()==false){
+        if(self::$app->startSession()==false){
             die("session error");
         }
-        W3cApp::getSession()->sys_user_id="";
+        self::$app->getSession()->sys_user_id="";
         //$_SESSION['sys_user_id']="";
         self::$login_user=null;
     }

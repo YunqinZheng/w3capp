@@ -56,9 +56,9 @@ class publishCtrl extends contentCtrl{
         //    $this->_referer_to("没有设置频道栏目");
         //    return ;
         //}
-        \W3cApp::template()->getTplConst("FORM_TPL",$modelinfo['member_form']);
-        \W3cApp::template()->getTplConst("FORM_MODEL",$identify);
-        \W3cApp::template()->getTplConst("FORM_NAME",$modelinfo['type_name']);
+        \self::$app->template()->getTplConst("FORM_TPL",$modelinfo['member_form']);
+        \self::$app->template()->getTplConst("FORM_MODEL",$identify);
+        \self::$app->template()->getTplConst("FORM_NAME",$modelinfo['type_name']);
         $html=$this->_tpl("Member/content_publish");
         $html->content_model=$content_model;
         $html->default_channel=$cid;

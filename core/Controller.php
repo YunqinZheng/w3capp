@@ -10,8 +10,8 @@ class Controller extends Core {
 		return true;
 	}
 	public function index($arg=null){
-		if(W3cApp::$holder_response){
-			W3cApp::setResponse(200,["Content-Type:text/html;charset=".W3CA_DB_CHAR_SET],"<b>Welcome to W3CApp!</b>");
+		if(self::$app->holder_response){
+			self::$app->setResponse(200,["Content-Type:text/html;charset=".W3CA_DB_CHAR_SET],"<b>Welcome to W3CApp!</b>");
 		}else{
 			echo "<b>Welcome to W3CApp!</b>";
 		}
@@ -36,13 +36,13 @@ class Controller extends Core {
 	public function _tpl_const(){
 		return array(
 		"{ACTION}"=>$this->action,
-		'{URL_ROOT}'=>W3cApp::getConfig("app_dir"),
+		'{URL_ROOT}'=>self::$app->getConfig("app_dir"),
 		'{THEME_PATH}'=>'',
         '{REF_VAR}'=>'',
-		'{APP_PATH}'=>W3cApp::route(""),
-        '{GV_INPUT}'=>W3cApp::$rewriteurl?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
-		'{?||&}'=>W3cApp::$rewriteurl?'?':'&',
-		'{&||?}'=>W3cApp::$rewriteurl?'&':'?',
+		'{APP_PATH}'=>self::$app->route(""),
+        '{GV_INPUT}'=>self::$app->rewriteurl?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
+		'{?||&}'=>self::$app->rewriteurl?'?':'&',
+		'{&||?}'=>self::$app->rewriteurl?'&':'?',
 		'/*?'=>'<?php ','?*/'=>' ?>','<!--?'=>"<?php ","?-->"=>" ?>");
 	}
 
@@ -74,8 +74,8 @@ class Controller extends Core {
 			$content=\w3c\helper\Str::toJson(array('error'=>$error,"message"=>$message,"data"=>$data->toArray()));
 		}else
 			$content=\w3c\helper\Str::toJson(array('error'=>$error,"message"=>$message,"data"=>$data));
-		if(W3cApp::$holder_response){
-			W3cApp::setResponse(200,["Content-Type"=>"application/json; charset=".W3CA_DB_CHAR_SET],$content);
+		if(self::$app->holder_response){
+			self::$app->setResponse(200,["Content-Type"=>"application/json; charset=".W3CA_DB_CHAR_SET],$content);
 		}else{
 			header("Content-Type: application/json; charset=".W3CA_DB_CHAR_SET);
 			echo $content;
@@ -99,8 +99,8 @@ class Controller extends Core {
 	//$msg 为null时直接跳转
     function _referer_to($msg,$url="",$type="error"){
 		if($msg==null&&$url){
-			if(W3cApp::$holder_response){
-				W3cApp::setResponse(302,["Location"=>$url],"");
+			if(self::$app->holder_response){
+				self::$app->setResponse(302,["Location"=>$url],"");
 			}else{
 				header("Location: ".$url);
 				exit;
@@ -110,9 +110,9 @@ class Controller extends Core {
     }
     protected function _tpl($tpl)
     {
-        if(W3cApp::$ctrl_app){
-            $app_view_path=W3CA_MASTER_PATH.'app/'.W3cApp::$ctrl_app.'/view/';
-            W3cApp::template()->setTplDir($app_view_path);
+        if(self::$app->ctrl_app){
+            $app_view_path=W3CA_MASTER_PATH.'app/'.self::$app->ctrl_app.'/view/';
+            self::$app->template()->setTplDir($app_view_path);
         }
         $view = new UI($tpl);
         return $view;

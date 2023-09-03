@@ -15,15 +15,15 @@ class delCtrl extends mainCtrl{
             }
         }
         if($_POST['rid']&&$result){
-            $url=$_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:\W3cApp::route("content/add/".$ctt);
+            $url=$_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:\self::$app->route("content/add/".$ctt);
             \W3cUI::message("删除成功","right", array(
                 array("href"=>$url,"text"=>"返回","target"=>""),
-                array("href"=>\W3cApp::route("content/index/".$ctt),"text"=>"内容管理","target"=>"")));
+                array("href"=>\self::$app->route("content/index/".$ctt),"text"=>"内容管理","target"=>"")));
         }else{
-            $url=$_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:\W3cApp::route("content/add/".$ctt);
+            $url=$_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:\self::$app->route("content/add/".$ctt);
             \W3cUI::message("删除出错","errer", array(
                 array("href"=>$url,"text"=>"返回","target"=>""),
-                array("href"=>\W3cApp::route("content/index/".$ctt),"text"=>"内容管理","target"=>"")));
+                array("href"=>\self::$app->route("content/index/".$ctt),"text"=>"内容管理","target"=>"")));
         }
     }
 }

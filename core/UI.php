@@ -24,8 +24,8 @@ class UI extends Core {
 
 	static function show404(){
         $content='<html><body><h1 style="font-size:72px;margin:100px;text-align:center; text-shadow: 0px 0px 10px #F44336;color: #ddd;text-shadow: 0px 0px 10px #2c3542;">404</h1></body></html>';
-        if(W3cApp::$holder_response){
-            W3cApp::setResponse(404,[],$content);
+        if(self::$app->holder_response){
+            self::$app->setResponse(404,[],$content);
         }else{
 
             header("HTTP/1.1 404 Not Found");
@@ -99,7 +99,7 @@ class UI extends Core {
      * @param string $type
      */
 	static function referer($msg,$url="",$type="error"){
-		$url=strtr($url,W3cApp::$instance->_tpl_const());
+		$url=strtr($url,self::$app->instance->_tpl_const());
 	    self::message($msg,$type,array(array("href"=>$url?$url:$_SERVER['HTTP_REFERER'],"text"=>"返回")),false,0);
 	}
 
@@ -117,8 +117,8 @@ class UI extends Core {
         if(is_array($return_value)){
             $value=Str::toJson($return_value);
             $content='<html><head></head><body><script type="w3capp/js">editv.oncallback('.$value.',"w3capp");</script>w3cappscript</body></html>';
-            if(W3cApp::$holder_response){
-                W3cApp::setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
+            if(self::$app->holder_response){
+                self::$app->setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
             }else{
                 header("Content-Type:text/html;charset=".W3CA_DB_CHAR_SET);
                 echo $content;
@@ -128,8 +128,8 @@ class UI extends Core {
         }else{
             $body_attr=' action="'.$return_value->return_action.'" error=0 code=""';
             $content='<html><body title="'.$return_value->title.'" '.$body_attr.'>'.strtr($value,array("<script>"=>"<script type=\"w3capp/js\">","text/javascript"=>"w3capp/js","application/javascript"=>"w3capp/js")).'</body></html>';
-            if(W3cApp::$holder_response){
-                W3cApp::setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
+            if(self::$app->holder_response){
+                self::$app->setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
             }else{
                 header("Content-Type:text/html;charset=".W3CA_DB_CHAR_SET);
                 echo $content;
@@ -153,26 +153,26 @@ class UI extends Core {
         if($this->tpl){
 	        $this->tpl_mark=$tpl_mark;
             extract(self::$assign_val);
-			if(empty(W3cApp::$instance)){
+			if(empty(self::$app->instance)){
 				throw new Exception('控制器未无成初始化！');
 			}
-	        include W3cApp::template()->parse($this->tpl, $tpl_mark);
+	        include self::$app->template()->parse($this->tpl, $tpl_mark);
 	    }
     }
 	function output($tpl_mark=""){
-	    if(W3cApp::$holder_response){
+	    if(self::$app->holder_response){
             ob_start();
             $this->includeTpl($tpl_mark);
             $content=ob_get_contents();
 	        ob_end_clean();
-            W3cApp::setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
+            self::$app->setResponse(200,["Content-Type"=>"text/html;charset=".W3CA_DB_CHAR_SET],$content);
         }else{
             $this->includeTpl($tpl_mark);
         }
 	}
 	public function outInfo($file){
 		$this->return_page=true;
-		include W3CA_PATH.W3cApp::template()->getExportDir().$file;
+		include W3CA_MASTER_PATH.self::$app->template()->getExportDir().$file;
 	}
     function assign($key,$val){
 	    parent::_assign($key,$val);
@@ -278,8 +278,8 @@ class UI extends Core {
     protected function outputParam(){
         $ctrl_path=empty($this->edit_page_controler)?"cms/block":$this->edit_page_controler;
         $block_api=["file_var"=>$this->file_var,"addform"=>"addblockform","page_arg"=>["tpl"=>$this->tpl,"tpl_mark"=>$this->tpl_mark,"tpl_dir"=>$this->tpl_dir,"attachs"=>$this->attach_block_marks],
-            "edit_ctrl_url"=>W3cApp::route($ctrl_path)];
-        $page_param=W3cApp::template()->readParseParam($this->file_var);
+            "edit_ctrl_url"=>self::$app->route($ctrl_path)];
+        $page_param=self::$app->template()->readParseParam($this->file_var);
         $block_api['blocks_info']=$this->all_blocks_info;
         $block_api['view_ids']=$page_param['view_ids'];
         $block_api['block_areas']=$page_param['block_areas'];
@@ -290,8 +290,8 @@ class UI extends Core {
         if($this->frame_layout){
             $block_api['frame_layout']=$this->frame_layout;
         }
-        if(W3cApp::$holder_response){
-            W3cApp::setResponse(200,["Content-Type"=>"application/json; charset=".W3CA_DB_CHAR_SET],Str::toJson(array('error'=>0,"message"=>'',"data"=>$block_api)));
+        if(self::$app->holder_response){
+            self::$app->setResponse(200,["Content-Type"=>"application/json; charset=".W3CA_DB_CHAR_SET],Str::toJson(array('error'=>0,"message"=>'',"data"=>$block_api)));
         }else{
             header("Content-Type: application/json; charset=".W3CA_DB_CHAR_SET);
             echo Str::toJson(array('error'=>0,"message"=>'',"data"=>$block_api));
@@ -303,7 +303,7 @@ class UI extends Core {
 	    if(empty($init_info))return;
         $all_blocks=array();
 	    foreach ($init_info as $info){
-            $all_blocks[$info['mark']]=W3cApp::$instance->_init_block($info);
+            $all_blocks[$info['mark']]=self::$app->instance->_init_block($info);
 			$this->all_blocks_info[$info['mark']]=$info;
 	    }
         $this->all_blocks=$all_blocks;
@@ -317,7 +317,7 @@ class UI extends Core {
 	protected function loadBlock($mark){
 	    $block_obj=$this->all_blocks[$mark];
 	    if($block_obj){
-	        W3cApp::$instance->_display_block($block_obj,$this->block_args[$mark]);
+	        self::$app->instance->_display_block($block_obj,$this->block_args[$mark]);
 	    }
 	}
 

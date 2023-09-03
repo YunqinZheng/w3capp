@@ -22,8 +22,8 @@ class W3cAppAdapter{
         $this->table=$table;
     }
     protected function dbDriver(){
-        reset(W3cApp::$db_config);
-        return key(W3cApp::$db_config);
+        reset(self::$app->db_config);
+        return key(self::$app->db_config);
     }
     protected function dbConfigIndex(){
         return 0;

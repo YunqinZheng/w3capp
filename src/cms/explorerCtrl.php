@@ -54,7 +54,7 @@ class explorerCtrl extends mainCtrl{
 			$this->_json_return(1,"file null");
 		}
 		$names=explode(".",$_POST['bz']);
-		$store_file=W3CA_PATH.Material::mainDir().trim($_POST['file_name'],"/");
+		$store_file=W3CA_MASTER_PATH.Material::mainDir().trim($_POST['file_name'],"/");
 		if(!file_exists($store_file)){
 			$this->_json_return(1,"file not exists:".$store_file);
 		}
@@ -63,7 +63,7 @@ class explorerCtrl extends mainCtrl{
 				$dirs=explode("/",$_POST['file_name']);
 				$dirs[count($dirs)-1]=Uploader::storeName().".".end($names);
 				$file_name=implode("/",$dirs);
-				rename($store_file,W3CA_PATH.Material::mainDir().$file_name);
+				rename($store_file,W3CA_MASTER_PATH.Material::mainDir().$file_name);
 				if(empty($_POST['classify']))$_POST['classify']="file";
 				$add_=array('bz'=>$_POST['bz'],"file"=>$file_name,"classify"=>$_POST['classify'],"dateline"=>time(),"size"=>$_POST['file_size']);
 				$mt=new Material($add_);
@@ -73,7 +73,7 @@ class explorerCtrl extends mainCtrl{
 			}else{
 				$mf=Material::firstAttr(['file'=>$_POST['replace_file']]);
 				if($mf){
-					rename($store_file,W3CA_PATH.Material::mainDir().$_POST['replace_file']);
+					rename($store_file,W3CA_MASTER_PATH.Material::mainDir().$_POST['replace_file']);
 				}else{
 					$this->_json_return(1,"上传文件出错！替换文件不存在");
 				}
@@ -85,11 +85,11 @@ class explorerCtrl extends mainCtrl{
 				$this->_json_return(1,"theme not found!");
 			}
 			if(empty($_POST['replace_file'])){
-				$tofile=W3CA_PATH.'data/theme/'.$theme->install_dir."/".$_POST['sub_path'].$_POST['bz'];
+				$tofile=W3CA_MASTER_PATH.'data/theme/'.$theme->install_dir."/".$_POST['sub_path'].$_POST['bz'];
 				//str_replace(["/",".blob"],["-",""],$_POST['file_name']).".".end($names)
 				rename($store_file,$tofile);
 			}else{
-				rename($store_file,W3CA_PATH.'data/theme/'.$theme->install_dir."/".$_POST['sub_path']."/".$_POST['replace_file']);
+				rename($store_file,W3CA_MASTER_PATH.'data/theme/'.$theme->install_dir."/".$_POST['sub_path']."/".$_POST['replace_file']);
 			}
 		}
 		$this->_json_return(0,"文件保存成功!");
@@ -145,7 +145,7 @@ class explorerCtrl extends mainCtrl{
     function picform(){
 
         echo json_encode(array("formData"=>array("token"=>self::_form_hash(),"classify"=>"image"),
-            "uploader"=>W3cApp::route('cms/explorer/pic_post'),
+            "uploader"=>self::$app->route('cms/explorer/pic_post'),
             "fileObjName"=>"file","multi"=>false,
             "fileTypeExts"=>"*.jpg;*.jpeg;*.gif;*.png;",
             "fileSizeLimit"=>"2MB"));

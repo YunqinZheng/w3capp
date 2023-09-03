@@ -19,7 +19,7 @@ class themeCtrl extends mainCtrl{
         $theme=new Theme(['id'=>$theme_name]);
         $theme_json=$theme->install();
         if(empty($theme_json['error'])){
-            return $this->_json_return(0,"'".$theme_json['name']."'安装成功！",W3cApp::route("site/theme"));
+            return $this->_json_return(0,"'".$theme_json['name']."'安装成功！",self::$app->route("site/theme"));
         }else{
             return $this->_json_return(1,$theme_json['error'],"");
         }
@@ -80,7 +80,7 @@ class themeCtrl extends mainCtrl{
     public function uninstall($theme_name){
         $theme=new Theme(['id'=>$theme_name]);
         if($theme->uninstall()){
-            $this->_json_return(0,"主题已删除!",W3cApp::route("site/theme"));
+            $this->_json_return(0,"主题已删除!",self::$app->route("site/theme"));
         }else{
             $this->_json_return(1,"删除出错!","");
         }

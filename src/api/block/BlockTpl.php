@@ -149,13 +149,13 @@ class BlockTpl extends \W3cCore {
 	    if(self::$is_obstart){
 	        $data=$this->loadData($args);
 	        $item_edit_mark='';
-	        include \W3cApp::template()->file($this->tplFile(),'block');
+	        include self::$app->template()->file($this->tplFile(),'block');
 
 	    }else{
 	        self::$is_obstart=true;
 	        ob_start();
 	        $data=$this->loadData($args);
-            include \W3cApp::template()->file($this->tplFile(),'block');
+            include self::$app->template()->file($this->tplFile(),'block');
 	        $tmp=ob_get_contents();
 	        ob_end_clean();
 	        self::$is_obstart=false;

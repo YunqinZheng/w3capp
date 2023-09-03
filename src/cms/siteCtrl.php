@@ -17,7 +17,7 @@ class siteCtrl extends mainCtrl{
         $themes=Theme::getInstalledTheme();
 		$html->assign("themes",$themes);
 		$html->assign("set_data",$sets);
-		$html->action_url=W3cApp::route("site/save");
+		$html->action_url=self::$app->route("site/save");
 		$html->output();
 	}
 	/**

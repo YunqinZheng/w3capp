@@ -26,7 +26,7 @@ class modelCtrl extends mainCtrl{
 			if(empty($_POST['file_url'])){
                 return $this->_view_return(array("msg"=>"no file_url!","error"=>1));
 			}
-			$file=W3CA_PATH.Material::mainDir().$_POST['file_url'];
+			$file=W3CA_MASTER_PATH.Material::mainDir().$_POST['file_url'];
 			if(file_exists($file)){
 				$ct=new ContentType();
 				if($ct->import(false==empty($_POST['import_im']),$file)){
@@ -62,8 +62,8 @@ class modelCtrl extends mainCtrl{
 		}
         $content= "-- ".json_encode($ct->getAttributes())."\n";
         $content.= $ct->exportSql();
-		if(W3cApp::$holder_response){
-            return W3cApp::setResponse(200,["Content-Type"=>"text/plain;",
+		if(self::$app->holder_response){
+            return self::$app->setResponse(200,["Content-Type"=>"text/plain;",
                 "Content-Disposition"=>"p_w_upload; filename=".$mark.'.sql',
                 "Pragma"=>"no-cache","Expires"=>"0"],$content);
 
@@ -156,8 +156,8 @@ class modelCtrl extends mainCtrl{
 	    if($_POST['ch_iden']){
 	        $iden=$_POST['ch_iden'];
         }
-	    if(W3cApp::$holder_response){
-	        return W3cApp::setResponse(200,["Content-Type"=>"text/plain;",'Content-Disposition'=>'attachment; filename='.$iden.".php"],ContentType::recordCode($iden));
+	    if(self::$app->holder_response){
+	        return self::$app->setResponse(200,["Content-Type"=>"text/plain;",'Content-Disposition'=>'attachment; filename='.$iden.".php"],ContentType::recordCode($iden));
         }else{
             header("Content-Type:text/plain;");
             header('Content-Disposition: attachment; filename='.$iden.".php");
@@ -174,7 +174,7 @@ class modelCtrl extends mainCtrl{
 		$html=$this->_tpl("model/form");
 		$html->form_info=ContentType::record(['content_mark'=>$iden])->getAttributes();
 		$html->form_columns=ChannelFormRecord::findAll(['content_mark'=>$iden],"orderi");
-		$html->update_url=W3cApp::route("model/form_update/".$iden);
+		$html->update_url=self::$app->route("model/form_update/".$iden);
 		$html->model_id=$iden;
 		$html->output();
 	}
@@ -229,8 +229,8 @@ class modelCtrl extends mainCtrl{
             $contnets='<!-- '.$iden.$content_type['type_name']."表单 -->\n";
             $contnets.=$form_helper->create_form($columns2);
         }
-        if(W3cApp::$holder_response){
-            return W3cApp::setResponse(200,["Content-Type"=>"application/force-download;","Content-Disposition"=>"attachment; filename=".$file_name],$contnets);
+        if(self::$app->holder_response){
+            return self::$app->setResponse(200,["Content-Type"=>"application/force-download;","Content-Disposition"=>"attachment; filename=".$file_name],$contnets);
         }else{
             header("Content-Type: application/force-download;");
             header("Content-Disposition: attachment; filename=".$file_name);

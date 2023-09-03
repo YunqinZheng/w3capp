@@ -28,7 +28,7 @@ class mainCtrl extends W3cEnterCtrl{
             return \W3cUI::show404();
         }
         if($mbr['id']==$id){
-            return $this->_referer_to(null,\W3cApp::route('member/'.$mbr['name']));
+            return $this->_referer_to(null,\self::$app->route('member/'.$mbr['name']));
 
         }
         $html->title=$mbr['name']."--会员信息";
@@ -39,7 +39,7 @@ class mainCtrl extends W3cEnterCtrl{
 		if(!$arg){
 		    if($_GET['token']){
 		        if(Member::loginByToken($_GET['token'])){
-                    $this->_referer_to(null,\W3cApp::route('member/index'));
+                    $this->_referer_to(null,\self::$app->route('member/index'));
                 }
 		        return ;
             }
@@ -66,7 +66,7 @@ class mainCtrl extends W3cEnterCtrl{
             }else{
                 return $this->_json_return(0,$info['name'].",欢迎回来.",["url"=>
                     $_POST['referer']&&strpos($_POST['referer'],'member/login')===false
-                    &&strpos($_POST['referer'],'member/logout')===false?$_POST['referer']:\W3cApp::route("member/index")]);
+                    &&strpos($_POST['referer'],'member/logout')===false?$_POST['referer']:\self::$app->route("member/index")]);
             }
         }else{
             return $this->_json_return(1,"用户'{$_POST['username']}'密码不正确.");
@@ -138,7 +138,7 @@ class mainCtrl extends W3cEnterCtrl{
                 if(false==empty($_POST['app_id'])){
                     $this->_m(":OAuth")->updateData(['member_id'=>$mb->primary()],['appid'=>$_POST['appid'],'open_id'=>$_POST['open_id']]);
                 }
-                return $this->_json_return(0,"",["url"=>\W3cApp::route("member/index")]);
+                return $this->_json_return(0,"",["url"=>\self::$app->route("member/index")]);
             }else{
                 return $this->_json_return(1,"注册失败。",$mb->getError());
             }
@@ -163,7 +163,7 @@ class mainCtrl extends W3cEnterCtrl{
             case 2:
                 //转到个人中心
                 if($funName=="register"||$funName=='login'||$funName=="build"||$funName="login_action"){
-                    $this->_referer_to(null,\W3cApp::route("member/index"));
+                    $this->_referer_to(null,\self::$app->route("member/index"));
                     return true;
                 }
                 if($funName=="logout")

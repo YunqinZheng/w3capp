@@ -34,7 +34,7 @@ class SiteNavigation extends Record{
     }
     static public function getSeting($parent_id=''){
         if(empty(self::$seting)){
-			$cache=\W3cApp::$instance->_cache();
+			$cache=\self::$app->instance->_cache();
             $seting_val=$cache->value("site_natset");
             if($seting_val){
                 self::$seting=unserialize($seting_val);
@@ -60,7 +60,7 @@ class SiteNavigation extends Record{
         return $list;
     }
     static public function removeByParent($parent_id){
-        \W3cApp::$instance->_cache()->delete("site_natset");
+        \self::$app->instance->_cache()->delete("site_natset");
         return self::deleteAll(['parent_id'=>$parent_id]);
     }
     static public function saveChannelNav($chid,$name,$url,$nav_type){
@@ -89,7 +89,7 @@ class SiteNavigation extends Record{
         if($nav->save()===false){
             throw new \Exception("保存出错");
         }
-        \W3cApp::$instance->_cache()->delete("site_natset");
+        \self::$app->instance->_cache()->delete("site_natset");
     }
     static public function setNavByKey($key,$name,$url,$display){
         self::$seting[$key]=array('name'=>$name,"url"=>$url,"display"=>$display);
@@ -98,7 +98,7 @@ class SiteNavigation extends Record{
         self::getSeting();
         if(empty(self::$seting[$key]))return;
         unset(self::$seting[$key]);
-        \W3cApp::$instance->_cache()->saveValue("site_natset",serialize(self::$seting));
+        \self::$app->instance->_cache()->saveValue("site_natset",serialize(self::$seting));
         self::deleteAll(['id'=>$key]);
     }
     static public function deleteChannelNav($chid){
@@ -126,7 +126,7 @@ class SiteNavigation extends Record{
                 $nav->setAttributes($val);
                 $nav->save();
             }
-            \W3cApp::$instance->_cache()->delete("site_natset");
+            \self::$app->instance->_cache()->delete("site_natset");
         }
     }
 }

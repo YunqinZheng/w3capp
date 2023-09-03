@@ -11,7 +11,7 @@ class Cache{
         $this->$init_fun();
     }
     protected function fileInit(){
-        $this->fileStoreDir=W3CA_PATH."data/store/";
+        $this->fileStoreDir=W3CA_MASTER_PATH."data/store/";
     }
     public function redisInit(){
         $this->redis = new \Redis();
@@ -53,7 +53,7 @@ class Cache{
         $ft=$f."%t%";
         $r=file_put_contents($f,$val);
         if($expire>0){
-            file_put_contents($ft,W3CA_UTC_TIME+$expire);
+            file_put_contents($ft,time()+$expire);
         }else if(file_exists($ft)){
             unlink($ft);
         }
@@ -63,7 +63,7 @@ class Cache{
         $f=$this->fileName($key);
         $ft=$f."%t%";
         if(file_exists($f."%t%")){
-            if(W3CA_UTC_TIME-file_get_contents($ft)>0){
+            if(time()-file_get_contents($ft)>0){
                 return null;
             }
         }
@@ -79,19 +79,19 @@ class Cache{
     protected function fileValueExists($key){
         $f=$this->fileName($key);
         if(file_exists($f."%t%")){
-            return W3CA_UTC_TIME-file_get_contents($f."%t%")<0;
+            return self::$app->getConfig("random_key")-file_get_contents($f."%t%")<0;
         }
         return file_exists($f);
     }
 
     protected function fileName($key){
         if(strlen($key)<4){
-            return $this->fileStoreDir."0/.".urlencode($key.W3CA_YUN_DAT);
+            return $this->fileStoreDir."0/.".urlencode($key.self::$app->getConfig("random_key"));
         }
         $dir=$this->fileStoreDir.ord($key{3})."/";
         if(!file_exists($dir)){
             mkdir($dir,0777,true);
         }
-        return $dir.".".urlencode($key.W3CA_YUN_DAT);
+        return $dir.".".urlencode($key.self::$app->getConfig("random_key"));
     }
 }

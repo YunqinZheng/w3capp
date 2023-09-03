@@ -2,7 +2,7 @@
 namespace api\block\query;
 use common\model\Channel;
 use cms\model\Material;
-use w3capp\W3cApp;
+
 
 class Content extends \api\block\BlockTpl{
     public function loadData($args)
@@ -42,7 +42,7 @@ class Content extends \api\block\BlockTpl{
             if(empty($item['channel_id'])||empty($c_list[$item['channel_id']])){
                 $item['url']="#".$item['id'];
             }else{
-                $item['url']=W3cApp::route($c_list[$item['channel_id']]."/".$item['id'].".html");
+                $item['url']=self::$app->route($c_list[$item['channel_id']]."/".$item['id'].".html");
             }
             if(empty($item['pic_url'])){
                 $item['pic_url']=Material::filePath($item['pic'],"static/image/item_image.png");

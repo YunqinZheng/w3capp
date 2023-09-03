@@ -7,14 +7,14 @@ use w3capp\UI;
 use w3capp\InstallConfig
 class mysql_installCtrl extends Controller {
     public function __construct(){
-        if(is_file("./data/install.config.php")&&(empty($_GET[W3cApp::URI_KEY])||$_GET[W3cApp::URI_KEY]!="mysql_install/success")){
+        if(is_file("./data/install.config.php")&&(empty($_GET[self::$app->URI_KEY])||$_GET[self::$app->URI_KEY]!="mysql_install/success")){
 			if(W3CA_OPEN_DEBUG){
 				return $this->_message('删除<strong>data/install.config.php</strong>文件才能进行安装!');
 			}else{
 				return UI::show404();
 			}
         }
-		W3cApp::template()->setDefaultTplPath(W3CA_MASTER_PATH.'app/common/view/');
+		self::$app->template()->setDefaultTplPath(W3CA_MASTER_PATH.'app/common/view/');
     }
     public function index($a=null)
     {
@@ -24,14 +24,14 @@ class mysql_installCtrl extends Controller {
         if(false==class_exists("PDO",false)){
             return $this->_message("php PDO not open");
         }
-        if(false==is_writeable(W3CA_PATH."data")){
+        if(false==is_writeable(W3CA_MASTER_PATH."data")){
             return $this->_message("/data dir not write able");
         }
         try{
 
             $pdo=new \PDO("mysql:host=".$_POST['db_host'].";port=".$_POST['db_port'].";dbname=".$_POST['db_name'],$_POST['db_user'],$_POST['db_pass']
                 ,array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.W3CA_DB_CHAR_SET));
-            $sql_file=W3CA_PATH."data/install_mysql.sql";
+            $sql_file=W3CA_MASTER_PATH."data/install_mysql.sql";
             if(!is_file($sql_file)){
                 return $this->_message("data/install.sql not found!");
             }
@@ -78,7 +78,7 @@ class mysql_installCtrl extends Controller {
             if($cache->saveValue("init_post",serialize($_POST))===false){
                 return $this->_message("cache error!!");
             }else{
-                return $this->_referer_to(null,"install.php?".W3cApp::URI_KEY."=mysql_install/init_admin&name=".$pre_val['name']);
+                return $this->_referer_to(null,"install.php?".self::$app->URI_KEY."=mysql_install/init_admin&name=".$pre_val['name']);
             }
 
         }catch (\PDOException $e){
@@ -115,14 +115,14 @@ class mysql_installCtrl extends Controller {
                             'user'=>$init_val['db_user'],"pwd"=>$init_val['db_pass'],"tab_pre"=>$init_val['db_table_pre']),
                         "MysqlPDO","W3cMyAdapter"
                         )){
-                            W3CApp::$install_config=$installer;
-                            W3CApp::$db_config=$installer->db_config;
-                            W3cApp::$entrance="index.php";
+                            self::$app->install_config=$installer;
+                            self::$app->db_config=$installer->db_config;
+                            self::$app->entrance="index.php";
                             $theme=new Theme(['id'=>"default"]);
                             $theme_rs=$theme->install();
                             if(empty($theme_rs['error'])){
 								
-                                return $this->_referer_to(null,"install.php?".W3cApp::URI_KEY."=success");
+                                return $this->_referer_to(null,"install.php?".self::$app->URI_KEY."=success");
                             }else{
                                 return $this->_message($theme_rs['error']);
                             }

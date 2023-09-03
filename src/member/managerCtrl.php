@@ -33,7 +33,7 @@ class managerCtrl extends \cms\controller\mainCtrl{
 	function login($id){
 	    $mb=new Member(['id'=>$id]);
 	    $token=urlencode($mb->getToken());
-        return $this->_referer_to(null,ctrl_url(['member',$mb['name']]).(\W3cApp::$rewriteurl?'?token='.$token:'&token='.$token));
+        return $this->_referer_to(null,ctrl_url(['member',$mb['name']]).(\self::$app->rewriteurl?'?token='.$token:'&token='.$token));
 
     }
 	function edit($id){
@@ -53,7 +53,7 @@ class managerCtrl extends \cms\controller\mainCtrl{
             $mb->setAttributes($data);
 			if($mb->save()){
 				if($_POST['old_headimg']!=$_POST['headimg_data']){
-					@unlink(W3CA_PATH.$this->member_model->originalAvatarDir().$_POST['old_headimg']);
+					@unlink(W3CA_MASTER_PATH.$this->member_model->originalAvatarDir().$_POST['old_headimg']);
 				}
                 return $this->_referer_to("修改已经保存!",\ctrl_url("member/manager"),"right");
 			}else{
@@ -72,7 +72,7 @@ class managerCtrl extends \cms\controller\mainCtrl{
 			$mb=new Member($data);
 			if($mb->save()){
                 return $this->_show_message("会员已经添加!","right",[['href'=>\ctrl_url("member/manager"),'text'=>"返回列表"],
-                    ['href'=>\W3cApp::route("member/manager/add"),'text'=>"继续添加"]]);
+                    ['href'=>\self::$app->route("member/manager/add"),'text'=>"继续添加"]]);
 			}else{
                 return $this->_referer_to("会员添加失败!");
             }

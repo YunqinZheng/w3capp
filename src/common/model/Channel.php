@@ -105,7 +105,7 @@ class Channel extends ChannelRecord{
     }
     static function tplInfo($file){
         $wstyle=SiteConfig::getSetting("style");
-        $tpl_file=W3CA_PATH."TPL/$wstyle/content/$file.htm";
+        $tpl_file=W3CA_MASTER_PATH."TPL/$wstyle/content/$file.htm";
         if(file_exists($tpl_file)){
             return ['file'=>$tpl_file,"code"=>file_get_contents($tpl_file)];
         }else{
@@ -114,7 +114,7 @@ class Channel extends ChannelRecord{
     }
     static function saveTpl($file,$code){
         $wstyle=SiteConfig::getSetting("style");
-        $tpl_file=W3CA_PATH."TPL/$wstyle/content/$file.htm";
+        $tpl_file=W3CA_MASTER_PATH."TPL/$wstyle/content/$file.htm";
         return file_put_contents($tpl_file,$code);
     }
     /**
@@ -124,7 +124,7 @@ class Channel extends ChannelRecord{
         $rtpls1=array('list_'=>"list_.htm(默认)");
         $rtpls2=array('view_'=>"view_.htm(默认)");
         $wstyle=SiteConfig::getSetting("style");
-        $tpl_dir=W3CA_PATH."TPL/".$wstyle."/content";
+        $tpl_dir=W3CA_MASTER_PATH."TPL/".$wstyle."/content";
         if ($dh = opendir($tpl_dir)) {
             while (($file_name = readdir($dh)) !== false) {
                 if(filetype($tpl_dir.'/'.$file_name)=='file'){

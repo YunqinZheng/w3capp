@@ -5,6 +5,7 @@ class Core{
     protected static $all_db_m=array();
     protected static $assign_val=array();
     protected static $db_drivers=array();
+    //W3cAppCom
 	public static $app;
     /**
      * 数据库实例
@@ -16,7 +17,7 @@ class Core{
         $key_driver=$db_driver.$config_i;
         if(empty(self::$db_drivers[$key_driver])){
             $driver_class="\\w3capp\\driver\\".$db_driver;
-            $config=(array)W3cApp::$db_config[$db_driver][$config_i];
+            $config=(array)self::$app->db_config[$db_driver][$config_i];
             self::$db_drivers[$key_driver]=$driver_class::init($config);
             return self::$db_drivers[$key_driver];
         }else{
@@ -24,8 +25,8 @@ class Core{
         }
     }
     public static function _db(){
-        reset(W3cApp::$db_config);
-        return self::_dbInstance(key(W3cApp::$db_config),0);
+        reset(self::$app->db_config);
+        return self::_dbInstance(key(self::$app->db_config),0);
     }
 
 
@@ -72,12 +73,13 @@ class Core{
 	protected function queryFor($key,$def_call=null){
 		$val=$this->__get($key);
 		if($val)return $val;
-		return W3cApp::$instance->_query($key,$def_call);
+		return self::$app->instance->_query($key,$def_call);
 	}
     static protected function check_form_hash($hash,$time_df=60){
         $dat=0;
-        for ($i=0;$i<strlen(W3CA_YUN_DAT);$i++){
-            $dat+=ord(W3CA_YUN_DAT[$i])*$i;
+        $dat_k=self::$app->getConfig("random_key");
+        for ($i=0;$i<strlen($dat_k);$i++){
+            $dat+=ord($dat_k[$i])*$i;
         }
         if($dat>100000)$dat=$dat%100000;
         $dt=time()-19870118-($dat^hexdec($hash));
@@ -85,8 +87,9 @@ class Core{
     }
     static protected function _form_hash(){
         $dat=0;
-        for ($i=0;$i<strlen(W3CA_YUN_DAT);$i++){
-            $dat+=ord(W3CA_YUN_DAT[$i])*$i;
+        $dat_k=self::$app->getConfig("random_key");
+        for ($i=0;$i<strlen($dat_k);$i++){
+            $dat+=ord($dat_k[$i])*$i;
         }
         if($dat>100000)$dat=$dat%100000;
 
@@ -96,7 +99,7 @@ class Core{
 	static function _preCookie(){
         if(empty($_COOKIE['pre'])){
             $pr="w3ca".chr(rand(65, 90));
-            W3cApp::setCookie(["pre",$pr,10000,"/"]);
+            self::$app->setCookie(["pre",$pr,10000,"/"]);
             return $pr;
         }else{
             return $_COOKIE['pre'];

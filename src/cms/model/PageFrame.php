@@ -239,7 +239,7 @@ class PageFrame extends PageFrameRecord{
                 $bcss=empty($css_list[$block_mark])?"":(" ".$css_list[$block_mark]);
                 $tpl.="<div id=\"".$id."\" class=\"block$bcss\"><?";
                 $tpl.='php if(array_key_exists("'.$block_mark.'",$this->all_blocks)){
-                    W3cApp::$instance->_display_block($this->all_blocks["'.$block_mark.'"],$this->block_args["'.$block_mark.'"]);
+                    self::$app->instance->_display_block($this->all_blocks["'.$block_mark.'"],$this->block_args["'.$block_mark.'"]);
                 }';
                 $tpl.="?></div>";
             }
@@ -367,10 +367,10 @@ class PageFrame extends PageFrameRecord{
             //.$this->remain();
         }
         if(array_key_exists('css_file',$info)){
-            self::saveCss($this->block_css,W3CA_PATH.$info['css_file']);
+            self::saveCss($this->block_css,W3CA_MASTER_PATH.$info['css_file']);
         }
         if(false==empty($info['page_file_var'])){
-            W3cApp::template()->clearFile($info['page_file_var']);
+            self::$app->template()->clearFile($info['page_file_var']);
         }
         return $this->save();
     }

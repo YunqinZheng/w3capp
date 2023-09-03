@@ -8,7 +8,7 @@ use member\model\Member;
 class forumCtrl extends W3cEnterCtrl{
 	function index($a=null){
 	    if(empty($a)||$a=="index.php")
-		return $this->_referer_to(null,\W3cApp::route("/"));
+		return $this->_referer_to(null,\self::$app->route("/"));
 	}
 	public function thread($id)
 	{

@@ -14,8 +14,8 @@ class InstallConfig implements \ArrayAccess {
             $this->config['random_key']=$_COOKIE['install_random_key'];
         }
         //创建必要的目录
-        $mkdirs=[W3CA_PATH.'data/',W3CA_PATH.'data/inc/editarea/',W3CA_PATH.'data/cache/template/',W3CA_PATH.'data/cache/block/'
-        ,W3CA_PATH."data/store/0/",W3CA_PATH."data/material",W3CA_PATH."data/member/original_img/",W3CA_PATH.'data/member/avatar/',W3CA_PATH.'data/theme/'];
+        $mkdirs=[W3CA_MASTER_PATH.'data/',W3CA_MASTER_PATH.'data/inc/editarea/',W3CA_MASTER_PATH.'data/cache/template/',W3CA_MASTER_PATH.'data/cache/block/'
+        ,W3CA_MASTER_PATH."data/store/0/",W3CA_MASTER_PATH."data/material",W3CA_MASTER_PATH."data/member/original_img/",W3CA_MASTER_PATH.'data/member/avatar/',W3CA_MASTER_PATH.'data/theme/'];
         foreach($mkdirs as $dir){
             if(false==is_dir($dir)&&false==mkdir($dir,0777,true)||false==is_writable($dir)){
                 die ("$dir need write able");
@@ -63,7 +63,7 @@ class InstallConfig implements \ArrayAccess {
         $this->config['db_config'][$db_type][]=$db_config;
         //$this->config['db_default']=$db_type;
         $this->config['db_adapter']=$db_adapter;
-        return file_put_contents(W3CA_PATH."data/install.config.php",'<?php return '.var_export($this->config,true).";");
+        return file_put_contents(W3CA_MASTER_PATH."data/install.config.php",'<?php return '.var_export($this->config,true).";");
     }
 
 }

@@ -7,8 +7,9 @@ class W3cAppSession{
 
     }
     public function start($session_id){
+        $key=self::$app->getConfig("random_key");
         if(self::$session_id)return self::$session_id;
-        session_name("w3cs".W3CA_YUN_DAT);
+        session_name("w3cs".$key);
         $sn=session_name();
         if($session_id){
             self::$session_id=$session_id;

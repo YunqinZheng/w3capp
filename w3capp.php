@@ -1,5 +1,7 @@
 <?php
-
+if(!defined('W3CA_MASTER_PATH')){
+    die("W3CA_MASTER_PATH not defined");
+}
 if(!defined('W3CA_OPEN_DEBUG'))
 	define('W3CA_OPEN_DEBUG',true);
 

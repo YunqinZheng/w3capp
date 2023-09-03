@@ -36,10 +36,10 @@ class Member extends \common\model\MemberRecord {
      */
     static function login($name,$password){
 
-        if(\W3cApp::startSession()==false){
+        if(\self::$app->startSession()==false){
             die("session error");
         }
-        if(empty(\W3cApp::getSession()->member_info)){
+        if(empty(\self::$app->getSession()->member_info)){
             if($name&&$password){
                 $mb=self::record(["or"=>["name"=>$name,"email"=>$name]]);
                 if($mb['password']==md5($password.$mb['salt'])){
@@ -48,13 +48,13 @@ class Member extends \common\model\MemberRecord {
 					$mb->lastlogtime=time();
 					$mb->save();
                     unset($info['password'],$info['salt']);
-                    \W3cApp::getSession()->member_info=serialize($info);
+                    \self::$app->getSession()->member_info=serialize($info);
                     self::$member_info=$info;
                     return 2;
                 }
             }
         }else{
-            self::$member_info=unserialize(\W3cApp::getSession()->member_info);
+            self::$member_info=unserialize(\self::$app->getSession()->member_info);
             if(self::$member_info['id']) return 2;
         }
 
@@ -66,7 +66,7 @@ class Member extends \common\model\MemberRecord {
 	}
     static function loginById($member_id){
 
-        if(\W3cApp::startSession()==false){
+        if(\self::$app->startSession()==false){
             die("session error");
         }
         $info=new self(["id"=>$member_id]);
@@ -80,7 +80,7 @@ class Member extends \common\model\MemberRecord {
         if($cookie_pre==$pre&&self::check_form_hash($hash,15)){
             $mb=new self(['id'=>$user_id]);
             if(substr($mb['password'],2,6)==$pwd_sub){
-                \W3cApp::startSession();
+                \self::$app->startSession();
                 $info=$mb->getAttributes();
                 $_SESSION['member_info']=serialize($info);
                 self::$member_info=$info;
@@ -99,7 +99,7 @@ class Member extends \common\model\MemberRecord {
     }
     static function info($key=null){
 
-        if(\W3cApp::startSession()==false){
+        if(\self::$app->startSession()==false){
             die("session error");
         }
         if(self::$member_info){
@@ -115,18 +115,18 @@ class Member extends \common\model\MemberRecord {
 
     static function logout(){
 
-        if(\W3cApp::startSession()==false){
+        if(\self::$app->startSession()==false){
             die("session error");
         }
         $_SESSION['member_info']="";
 
     }
     static function avatarPath($member_id){
-    	if(!is_writable(W3CA_PATH.'data/member/avatar')){
+    	if(!is_writable(W3CA_MASTER_PATH.'data/member/avatar')){
     		throw new \Exception('dir:data/member/avatar not found');
     	}
         if($member_id<=500){
-            $sys_dir=W3CA_PATH."data/member/avatar/0x00";
+            $sys_dir=W3CA_MASTER_PATH."data/member/avatar/0x00";
             if(!file_exists($sys_dir))
                 @mkdir($sys_dir);
             return "data/member/avatar/0x00/".$member_id;
@@ -137,7 +137,7 @@ class Member extends \common\model\MemberRecord {
             for($i=0,$l=2;$l<$len;$l=$l+2){
                 $path2=$path2.substr($path, $l*$i++,2)."/";
             }
-            $sys_dir=W3CA_PATH."data/member/avatar/".$path2;
+            $sys_dir=W3CA_MASTER_PATH."data/member/avatar/".$path2;
             if(!file_exists($sys_dir))
                 @mkdir($sys_dir);
             return "data/member/avatar/".$path."/".($member_id%1000);
@@ -145,25 +145,25 @@ class Member extends \common\model\MemberRecord {
     }
 
     function makeAvatar($image){
-        $file_img=W3CA_PATH.$this->originalAvatarDir().$image;
+        $file_img=W3CA_MASTER_PATH.$this->originalAvatarDir().$image;
 		$image_opt=new Image();
         $image_opt->loadImage($file_img);
         $path=self::avatarPath($this->id);
         $ext=stripos($image,".gif")?"gif":"jpeg";
 
         foreach(self::$avatar_size_list as $k=>$v){
-            $image_opt->copyImageArea($v,$v,W3CA_PATH.$path."_".$k.".".$ext,$ext);
+            $image_opt->copyImageArea($v,$v,W3CA_MASTER_PATH.$path."_".$k.".".$ext,$ext);
         }
     }
     function makeAvatarXYSize($image,$x,$y,$src_size){
-        $file_img=W3CA_PATH.$this->originalAvatarDir().$image;
+        $file_img=W3CA_MASTER_PATH.$this->originalAvatarDir().$image;
 		$image_opt=new Image();
         $image_opt->loadImage($file_img);
         $path=self::avatarPath($this->id);
         $ext=stripos($image,".gif")?"gif":"jpeg";
 
         foreach(self::$avatar_size_list as $k=>$v){
-			$file=W3CA_PATH.$path."_".$k.".".$ext;
+			$file=W3CA_MASTER_PATH.$path."_".$k.".".$ext;
 			if(file_exists($file))unlink($file);
             if(false==$image_opt->copyImageXYSize($x,$y,$src_size,$src_size,$v,$v,$file,$ext)){
 				$this->errors[]="image copy size:".$src_size." error";
@@ -171,7 +171,7 @@ class Member extends \common\model\MemberRecord {
         }
     }
     static function originalAvatarDir(){
-    	if(false==is_writable(W3CA_PATH.'data/member/original_img')){
+    	if(false==is_writable(W3CA_MASTER_PATH.'data/member/original_img')){
     		throw new \Exception("dir:data/member/original_img not found");
     	}
         return "data/member/original_img/";
@@ -197,7 +197,7 @@ class Member extends \common\model\MemberRecord {
      */
     static public function loginMember(){
         if(empty($_COOKIE['login_key'])){
-            if(\W3cApp::startSession()==false){
+            if(\self::$app->startSession()==false){
                 return null;
             }
             if(empty($_SESSION['member_info'])){
@@ -223,7 +223,7 @@ class Member extends \common\model\MemberRecord {
         }
     }
     public function storeLogin(){
-        if(empty($_COOKIE['login_key'])&&\W3cApp::startSession()){
+        if(empty($_COOKIE['login_key'])&&\self::$app->startSession()){
             $_SESSION['member_info']=serialize($this->getAttributes());
         }
     }
@@ -235,12 +235,12 @@ class Member extends \common\model\MemberRecord {
     public function avatar($size){
         $path=Member::avatarPath($this->id);
         $img_path=$path."_".$size.".jpeg";
-        $avatar=W3CA_PATH.$img_path;
+        $avatar=W3CA_MASTER_PATH.$img_path;
         if(file_exists($avatar)){
             return W3CA_URL_ROOT.$img_path;
         }
         $img_path=$path."_".$size.".gif";
-        $avatar=W3CA_PATH.$img_path;
+        $avatar=W3CA_MASTER_PATH.$img_path;
         if(file_exists($avatar)){
             return W3CA_URL_ROOT.$img_path;
         }
