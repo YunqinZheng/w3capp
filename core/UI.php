@@ -1,6 +1,7 @@
 <?php
 namespace w3capp;
 use w3capp\helper\Str;
+use w3capp\helper\ArgList;
 class UI extends Core {
 	var $block_args;
     protected $tpl;
@@ -15,7 +16,7 @@ class UI extends Core {
 
 	function __construct($tpl=""){
         $this->cookie_pre=self::_preCookie();
-	    $this->block_args=new \w3c\helper\ArgList();
+	    $this->block_args=new ArgList();
 	    $this->block_marks=array();
 	    $this->tpl=$tpl;
 		$this->attach_block_marks=[];

@@ -1,7 +1,7 @@
 <?php
 namespace w3capp;
-use W3cApp\helper\Str;
-
+use w3capp\helper\Str;
+use w3capp\helper\Cache;
 
 /**
  * Class W3CApp
@@ -40,8 +40,11 @@ class W3cAppCom{
 		Core::$app=$this;
 		$this->config=$this->initConfig();
 		self::$db_config=$this->config['db_config'];
+		Cache::$file_key=$this->getConfig("random_key");
+
 	}
 	protected function initConfig(){
+		
 		return require(W3CA_MASTER_PATH."data/install.config.php");
 	}
 	
@@ -173,7 +176,7 @@ class W3cAppCom{
 	public function setConfig($config,$v=""){
 		if($v&&is_string($config)){
 			$this->config[$config]=$v;
-		}else if(is_array($config)){
+		}else{
 			$this->config=$config;
 			self::$db_config=$config['db_config'];
 		}

@@ -38,7 +38,6 @@ class SqlitePDO implements DataInterface{
 		$this->last_sql=$pre_sql="insert INTO ".$table." (".implode(",", $columns).") values (".implode(',', array_fill(0, count($columns), '?')).")";
 		$prep=$this->pdo_obj->prepare($pre_sql);
 		if(!$prep){
-            print_r($prep->errorInfo());
 		    die("sqlite error:".$pre_sql);
         }
 		$pre_val=array();
@@ -73,9 +72,21 @@ class SqlitePDO implements DataInterface{
 		return $prep->execute($bindParam);
 	}
 
-	public function execute($sql){
+	public function execute($sql,$bind=null,$id=false){
 		$this->last_sql=$sql;
-		return $this->pdo_obj->exec($sql);
+		if($bind){
+			$prep=$this->pdo_obj->prepare($sql);
+			if($prep->execute($bind)===false){
+				throw new \ErrorException(var_export($prep->errorInfo(),true));
+				return false;
+			}
+			return true;
+		}
+		if($this->pdo_obj->exec($sql)==false){
+			throw new \ErrorException(var_export($this->pdo_obj->errorInfo(),true));
+			return false;
+		}
+		return true;
 	}
 	public function alterColumnType($table,$column,$type){
 	    $table_info=$this->getFirst("select * from sqlite_master where name='$table' and type='table'");

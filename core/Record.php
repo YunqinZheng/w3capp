@@ -99,23 +99,15 @@ class Record implements \ArrayAccess,\Iterator{
         $modal=static::myAdapter();
         return $modal->commend("insert")->setData($data)->setFilter($replace)->execute();
     }
-    /**
-     * @return \driver\DataInterface
-     */
-    /*public function d(){
-        return $this->m()->db();
-    }
-    */
-
-
-    public static function adapterClass(){
-        return self::$app->install_config['db_adapter'];
+    //
+    public static function adapterName(){
+        return '';
     }
     /**
      * @return W3cappAdapter
      */
     public static function myAdapter(){
-        $model= Core::_adapter(static::recordName(),static::adapterClass(),'');//db_record_adapter
+        $model= Core::_adapter(static::recordName(),static::adapterName(),'');//db_record_adapter
         return $model;
     }
     function __get($name)

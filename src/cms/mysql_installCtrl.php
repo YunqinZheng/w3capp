@@ -7,14 +7,14 @@ use w3capp\UI;
 use w3capp\InstallConfig
 class mysql_installCtrl extends Controller {
     public function __construct(){
-        if(is_file("./data/install.config.php")&&(empty($_GET[self::$app->URI_KEY])||$_GET[self::$app->URI_KEY]!="mysql_install/success")){
+        if(is_file("./data/install.config.php")){
 			if(W3CA_OPEN_DEBUG){
 				return $this->_message('删除<strong>data/install.config.php</strong>文件才能进行安装!');
 			}else{
 				return UI::show404();
 			}
         }
-		self::$app->template()->setDefaultTplPath(W3CA_MASTER_PATH.'app/common/view/');
+		self::$app->template()->setTplDir(W3CA_MASTER_PATH.'app/common/view/');
     }
     public function index($a=null)
     {

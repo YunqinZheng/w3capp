@@ -4,6 +4,7 @@ class Cache{
     var $type;
     protected $fileStoreDir;
     protected $redis;
+	public static $file_key;
     public function __construct($type="file")
     {
         $this->type=$type;
@@ -79,19 +80,19 @@ class Cache{
     protected function fileValueExists($key){
         $f=$this->fileName($key);
         if(file_exists($f."%t%")){
-            return self::$app->getConfig("random_key")-file_get_contents($f."%t%")<0;
+            return time()-file_get_contents($f."%t%")<0;
         }
         return file_exists($f);
     }
 
     protected function fileName($key){
         if(strlen($key)<4){
-            return $this->fileStoreDir."0/.".urlencode($key.self::$app->getConfig("random_key"));
+            return $this->fileStoreDir."0/.".urlencode($key.self::$file_key);
         }
         $dir=$this->fileStoreDir.ord($key{3})."/";
         if(!file_exists($dir)){
             mkdir($dir,0777,true);
         }
-        return $dir.".".urlencode($key.self::$app->getConfig("random_key"));
+        return $dir.".".urlencode($key.self::$file_key);
     }
 }

@@ -28,7 +28,7 @@ class Template extends Core{
         $this->export_dir='data/cache/template/';
         if(!is_dir(W3CA_MASTER_PATH.$this->export_dir)){
             if(@mkdir(W3CA_MASTER_PATH.$this->export_dir,0777,true)==false){
-                throw new Exception('mkdir error: '.$this->export_dir);
+                throw new \Exception('mkdir error: '.$this->export_dir);
             }
         }
     }
@@ -411,7 +411,7 @@ class Template extends Core{
             }
         }
 		//模板不存在
-        echo '模板不存在:' . $name;
+        echo 'Template not found:' . $name;
         return null;
 	}
 	protected function tplKey($dir_key){
@@ -431,7 +431,7 @@ class Template extends Core{
             $cache->saveValue($key_dat."tpl2dir",$dir_keys);
             $dir_i=strpos($dir_keys,$this->tpl_dirs[0]);
         }
-        return $dir_i.W3CA_REWRITE_URL.$dir_key;
+        return $dir_i.$dir_key;
     }
 
     /**
@@ -468,7 +468,7 @@ class Template extends Core{
 	    $viewname=str_replace("/", "_", $fname);
 		$this->file_var=$file_name=$this->tplKey($dir_key).$viewname.".php";
 	    $load_file=W3CA_MASTER_PATH.$this->export_dir.$file_name;
-		$this->div_ini_id=10000+W3CA_UTC_TIME%10000;
+		$this->div_ini_id=10000+self::$app->utc_time%10000;
 		$file_var="\$this->file_var";
 	    $class_cont="<?php ".$file_var."='".$file_name."';";
 	    if(file_exists($load_file)==false||filemtime($tplfile)>filemtime($load_file)){
@@ -506,13 +506,13 @@ class Template extends Core{
                 "block_areas"=>$this->edit_export,
                 "tpl_dirs"=>$this->tpl_dirs]);
 
-	        $class_cont.=$class_vars."\$this->blocksInit($infos_var); self::$app->template()->clearTimeout(".$file_var.",array(\"".implode("\",\"",$this->tpl_list)."\"));?>".$tpl_ct;
+	        $class_cont.=$class_vars."\$this->blocksInit($infos_var); self::\$app->template()->clearTimeout(".$file_var.",array(\"".implode("\",\"",$this->tpl_list)."\"));?>".$tpl_ct;
 	        if(file_put_contents($load_file, preg_replace('/([;\}\{])\s*\?><\?php/','$1',$class_cont))&&$this->block_manager){
                 $this->block_manager->updateBlock($file_name,$this->load_blocks);
             }
             try{
                 $this->checkSyntax($load_file);
-            }catch (Exception $e){
+            }catch (\Exception $e){
                 unlink($load_file);
                 throw $e;
             }
@@ -528,7 +528,7 @@ class Template extends Core{
     {
         // If it is not a file or we can't read it throw an exception
         if(!is_file($fileName) || !is_readable($fileName))
-            throw new Exception("Cannot read file ".$fileName);
+            throw new \Exception("Cannot read file ".$fileName);
 
         // windows 要用全路径：D:\\wamp64\\bin\\php\\php5.6.25\\
         $output = shell_exec('php -l "'.$fileName.'"');
@@ -537,7 +537,7 @@ class Template extends Core{
 
         // If the error text above was matched, throw an exception containing the syntax error
         if($count > 0)
-            throw new Exception(trim($syntaxError));
+            throw new \Exception(trim($syntaxError));
 
     }
 	//清除过期模板

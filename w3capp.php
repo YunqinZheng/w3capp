@@ -32,7 +32,7 @@ spl_autoload_register(function($classn){
 		}else if(strpos($classn,'api\\block\\')===0){
 			include_once W3CA_MASTER_PATH.'app/'.str_replace("\\",'/',$classn).".php";
 		}else if(strpos($classn,'w3capp\\')===0){
-			$file=W3CAPP_LIB_DIR.'/core/'.strtr($classn,["\\"=>"/"]).".php";
+			$file=W3CAPP_LIB_DIR.'/'.strtr($classn,["w3capp\\"=>"core/","\\"=>"/"]).".php";
 			require_once $file;
 		}
 	}else{

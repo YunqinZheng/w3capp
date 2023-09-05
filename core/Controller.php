@@ -36,7 +36,8 @@ class Controller extends Core {
 	public function _tpl_const(){
 		return array(
 		"{ACTION}"=>$this->action,
-		'{URL_ROOT}'=>self::$app->getConfig("app_dir"),
+		"{CHAR_SET}"=>W3CA_DB_CHAR_SET,
+		'{URL_ROOT}'=>self::$app->getConfig("url_dir"),
 		'{THEME_PATH}'=>'',
         '{REF_VAR}'=>'',
 		'{APP_PATH}'=>self::$app->route(""),
@@ -91,7 +92,6 @@ class Controller extends Core {
         $v->widthHtml=$widthHtml;
         $v->out_index=$out_index;
         $v->output();
-        exit;
     }
     function _message($msg,$type="error"){
         $this->_show_message($msg,$type,[]);

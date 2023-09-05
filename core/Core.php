@@ -14,10 +14,17 @@ class Core{
      * @return \driver\DataInterface
      */
     static public function _dbInstance($db_driver,$config_i){
+		$db_list=null;
+		if(!$db_driver){
+			$db_list=self::$app->getConfig("db_config");
+			reset($db_list);
+			$db_driver=key($db_list);
+		}
         $key_driver=$db_driver.$config_i;
         if(empty(self::$db_drivers[$key_driver])){
+			if(!$db_list)$db_list=self::$app->getConfig("db_config");
             $driver_class="\\w3capp\\driver\\".$db_driver;
-            $config=(array)self::$app->db_config[$db_driver][$config_i];
+            $config=(array)$db_list[$db_driver][$config_i];
             self::$db_drivers[$key_driver]=$driver_class::init($config);
             return self::$db_drivers[$key_driver];
         }else{
@@ -25,12 +32,12 @@ class Core{
         }
     }
     public static function _db(){
-        reset(self::$app->db_config);
-        return self::_dbInstance(key(self::$app->db_config),0);
+        return self::_dbInstance("",0);
     }
 
 
     static function _adapter($record,$adapter_class,$instance_name){
+		if(!$adapter_class)$adapter_class="w3capp\\W3cAppAdapter";
         if(!$instance_name)return new $adapter_class($record);
         if(empty(self::$all_db_m[$instance_name])){
             $mod=new $adapter_class($record);

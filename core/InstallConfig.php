@@ -60,6 +60,7 @@ class InstallConfig implements \ArrayAccess {
         $this->config[$name]=$value;
     }
     public function save($db_config,$db_type,$db_adapter){
+		$this->config['random_key']=dechex(time()%100000+rand(1000,9000));
         $this->config['db_config'][$db_type][]=$db_config;
         //$this->config['db_default']=$db_type;
         $this->config['db_adapter']=$db_adapter;
