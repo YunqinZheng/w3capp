@@ -1,6 +1,11 @@
 {
-    "name": "w3capp/lite",
+    "name": "yunqin/w3capp",
     "description": "w3capp frame base source code.",
+    "homepage": "http://www.w3capp.com/",
+    "keywords": [
+        "w3capp",
+        "framework"
+    ],
     "type": "library",
     "require-dev": {
         "workerman/workerman": "^4.0"
@@ -14,6 +19,6 @@
     ],
     "require": {},
     "autoload": {
-        "psr-4": {"w3capp\\": ""}
+        "psr-4": {"w3capp\\": "core"}
     }
 }
