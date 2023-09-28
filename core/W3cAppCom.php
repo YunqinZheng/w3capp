@@ -31,7 +31,7 @@ class W3cAppCom{
 	//模板类
 	private static $wtpl;
     //W3cAppSession
-    protected $session;
+    private $session;
     protected $response;
     protected $cookies;
     protected $uri_key="g";
@@ -92,7 +92,7 @@ class W3cAppCom{
     }
     
     public function getSession(){
-        if(!$this->session)$this->session=new W3cAppSession();
+        if(!$this->session)$this->session=new W3cAppSession($this->getConfig("random_key"));
         return $this->session;
     }
     //会清cookie和response
@@ -121,7 +121,7 @@ class W3cAppCom{
 	 * @return 返回控制器类名
 	 */
 	protected function pathParse($req_uri){
-
+		
 		if($req_uri==""){
 			$ctrl_name=$this->defaultCtrl();
             $this->actions=["index"];
@@ -199,7 +199,7 @@ class W3cAppCom{
 					$req_uri=substr($req_uri,$app_len);
 				}
             }
-            $req_uri=trim($req_uri,'/');
+            $req_uri=trim($req_uri,'/.');
             
             $search_=strpos($req_uri,"?");
             if($search_!==FALSE) {
@@ -236,25 +236,31 @@ class W3cAppCom{
 
 		if(empty($uri)){
             $uri=$this->getUri();
-        }
+        }else{
+			$uri=ltrim($uri,"/.");
+		}
         $ctrlname=$this->pathParse($uri);
 		$this->instance=new $ctrlname();
         $this->ctrl_name=$ctrlname;
 		$arg=$this->instance->_action_routing($this->actions);
         $fun=trim(array_shift($arg),"_");
         $this->instance->action=$fun;
+		if(W3CA_OPEN_DEBUG) echo "Instance:".$ctrlname." action:".$fun."\n";
 		if($this->instance->_check_operation($fun)&&method_exists($this->instance, $fun)){
             if($this->holder_response&&$this->response){
+				if(W3CA_OPEN_DEBUG)echo "Controller response is return\n";
                 return ;
             }
             $crm=new \ReflectionMethod($this->instance,$fun);
             $farg=$crm->getParameters();
             if(count($farg)<count($arg)){
+				if(W3CA_OPEN_DEBUG)echo "Controller Function(".$fun.") Parameters no match!\n";
                 return UI::show404();
             }
             if($crm->isPublic()){
                 return $crm->invokeArgs($this->instance,$arg);
             }else{
+				if(W3CA_OPEN_DEBUG)echo "Controller Function(".$fun.") is not Public!\n";
                 return UI::show404();
             }
 

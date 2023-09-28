@@ -3,13 +3,14 @@ namespace w3capp;
 use w3capp\helper\Str;
 class W3cAppSession{
     static $session_id;
-    public function __construct(){
-
+	var $sskey;
+    public function __construct($key){
+		$this->sskey=$key;
     }
     public function start($session_id){
-        $key=self::$app->getConfig("random_key");
+
         if(self::$session_id)return self::$session_id;
-        session_name("w3cs".$key);
+        session_name("w3cs".$this->sskey);
         $sn=session_name();
         if($session_id){
             self::$session_id=$session_id;
