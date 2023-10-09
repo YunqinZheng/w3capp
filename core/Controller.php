@@ -21,6 +21,7 @@ class Controller extends Core {
 	 * 获取控制器内部的路由规则
 	 */ 
 	public function _action_routing($uri){
+		
 		if(empty($uri)){
 			return array('index');
 		}else {
@@ -41,9 +42,9 @@ class Controller extends Core {
 		'{THEME_PATH}'=>'',
         '{REF_VAR}'=>'',
 		'{APP_PATH}'=>self::$app->route(""),
-        '{GV_INPUT}'=>self::$app->rewriteurl?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
-		'{?||&}'=>self::$app->rewriteurl?'?':'&',
-		'{&||?}'=>self::$app->rewriteurl?'&':'?',
+        '{GV_INPUT}'=>self::$app->rewriteurl()?'':'<input name="g" value="<?php echo urlencode($_GET[\'g\']) ?>" type="hidden"/>',
+		'{?||&}'=>self::$app->rewriteurl()?'?':'&',
+		'{&||?}'=>self::$app->rewriteurl()?'&':'?',
 		'/*?'=>'<?php ','?*/'=>' ?>','<!--?'=>"<?php ","?-->"=>" ?>");
 	}
 

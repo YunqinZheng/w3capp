@@ -217,7 +217,7 @@ class Template extends Core{
             if(!$lp2){
                 return $content;
             }
-            $parent_explain=new W3cTplParent($parent_tpl);
+            $parent_explain=new TplParent($parent_tpl);
             if($parent_explain->tplHasParsed()==false){
                 $parent_explain->setTplContent($this->template($this->tpl($parent_tpl)));
             }
@@ -225,7 +225,7 @@ class Template extends Core{
             $content=$lp1.$this->explainParent($parent_explain->extendsExplain($lp2)).$this->explainParent($lp3);
         }else{
             list($lp1,$lp2)=explode("<!--parent_file_//w3capp.com-->",$content);
-            $parent_explain=new W3cTplParent($parent_tpl);
+            $parent_explain=new TplParent($parent_tpl);
             if($parent_explain->tplHasParsed()==false){
                 $parent_explain->setTplContent($this->template($this->tpl($parent_tpl)));
             }

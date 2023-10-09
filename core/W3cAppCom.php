@@ -136,6 +136,7 @@ class W3cAppCom{
                 $this->ctrl_app=$dir_path[0];
                 $ctrl_name=$dir_path[0].'\\controller\\'.$dir_path[1]."Ctrl";
                 if(include_once W3CA_MASTER_PATH.'app/'.array_shift($dir_path).'/'.$dir_path[0]."Ctrl.php"){
+					if(empty($dir_path[1]))$dir_path[1]='index';
                     array_shift($dir_path);
                     $this->actions=$dir_path;
                 }else{
@@ -150,7 +151,7 @@ class W3cAppCom{
                 //ctrl_url
                 //
                 if(false==file_exists($ctrl_file)){
-                    $this->actions=["index",$req_uri];
+                    $this->actions=[$req_uri];
                     return $this->defaultCtrl();
                 }
                 include_once $ctrl_file;
